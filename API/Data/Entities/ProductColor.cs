@@ -7,7 +7,7 @@ namespace API.Data.Entities
     {
         public ProductColor()
         {
-            Quantities = new HashSet<Quantity>();
+            ProductVariants = new HashSet<ProductVariant>();
         }
 
         public int Id { get; set; }
@@ -16,6 +16,6 @@ namespace API.Data.Entities
 
         public virtual Color Color { get; set; } = null!;
         public virtual Product Product { get; set; } = null!;
-        public virtual ICollection<Quantity> Quantities { get; set; }
+        public virtual ICollection<ProductVariant> ProductVariants { get; set; }
     }
 }

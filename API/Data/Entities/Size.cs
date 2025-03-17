@@ -7,7 +7,7 @@ namespace API.Data.Entities
     {
         public Size()
         {
-            Quantities = new HashSet<Quantity>();
+            ProductVariants = new HashSet<ProductVariant>();
         }
 
         public int Id { get; set; }
@@ -15,6 +15,6 @@ namespace API.Data.Entities
         public DateTime? CreateAt { get; set; }
         public DateTime? UpdateAt { get; set; }
 
-        public virtual ICollection<Quantity> Quantities { get; set; }
+        public virtual ICollection<ProductVariant> ProductVariants { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace API.Data.Entities
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<ProductColor> ProductColors { get; set; } = null!;
         public virtual DbSet<ProductImage> ProductImages { get; set; } = null!;
-        public virtual DbSet<Quantity> Quantities { get; set; } = null!;
+        public virtual DbSet<ProductVariant> ProductVariants { get; set; } = null!;
         public virtual DbSet<Size> Sizes { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UserLike> UserLikes { get; set; } = null!;
@@ -343,27 +343,27 @@ namespace API.Data.Entities
                     .HasConstraintName("product_image_product_id_fkey");
             });
 
-            modelBuilder.Entity<Quantity>(entity =>
+            modelBuilder.Entity<ProductVariant>(entity =>
             {
-                entity.ToTable("quantity");
+                entity.ToTable("product_variant");
 
                 entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Amount).HasColumnName("amount");
 
                 entity.Property(e => e.ProductColorId).HasColumnName("product_color_id");
 
                 entity.Property(e => e.ProductId).HasColumnName("product_id");
 
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
+
                 entity.Property(e => e.SizeId).HasColumnName("size_id");
 
                 entity.HasOne(d => d.ProductColor)
-                    .WithMany(p => p.Quantities)
+                    .WithMany(p => p.ProductVariants)
                     .HasForeignKey(d => d.ProductColorId)
                     .HasConstraintName("quantity_product_color_id_fkey");
 
                 entity.HasOne(d => d.Size)
-                    .WithMany(p => p.Quantities)
+                    .WithMany(p => p.ProductVariants)
                     .HasForeignKey(d => d.SizeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("quantity_size_id_fkey");
