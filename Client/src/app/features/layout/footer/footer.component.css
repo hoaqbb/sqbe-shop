@@ -1,0 +1,50 @@
+footer {
+    line-height: 1.5;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+p, h4 {
+    color: black;
+}
+
+/* Social media section */
+.social-media-section {
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+}
+
+.social-media-section h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.social-icons a i,
+.social-icons img {
+padding: 5px;
+    width: 30px;
+    height: 30px;
+}
+
+.certification img {
+    height: 45%;
+    width: 45%;
+    margin-top: 15px;
+}
+
+/* Divider & icon styling */
+.divider {
+    width: 60px;
+    background-color: #000;
+    height: 2px;
+    margin: 0.5rem 0;
+}
+
+.social-icons a {
+    font-size: 1.5rem;
+    color: #000;
+}
