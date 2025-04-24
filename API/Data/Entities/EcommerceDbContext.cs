@@ -68,14 +68,20 @@ namespace API.Data.Entities
                     .HasMaxLength(50)
                     .HasColumnName("cart_id");
 
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
+                entity.Property(e => e.ProductVariantId).HasColumnName("product_variant_id");
 
-                entity.Property(e => e.QuantityId).HasColumnName("quantity_id");
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
 
                 entity.HasOne(d => d.Cart)
                     .WithMany(p => p.CartItems)
                     .HasForeignKey(d => d.CartId)
                     .HasConstraintName("cart_item_cart_id_fkey");
+
+                entity.HasOne(d => d.ProductVariant)
+                    .WithMany(p => p.CartItems)
+                    .HasForeignKey(d => d.ProductVariantId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("cart_item_product_variant_fk");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -85,17 +91,14 @@ namespace API.Data.Entities
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CreateAt)
-                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("create_at")
-                    .HasDefaultValueSql("now()");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .HasColumnName("name");
 
-                entity.Property(e => e.UpdateAt)
-                    .HasColumnType("timestamp without time zone")
-                    .HasColumnName("update_at");
+                entity.Property(e => e.UpdateAt).HasColumnName("update_at");
             });
 
             modelBuilder.Entity<Color>(entity =>
@@ -109,17 +112,14 @@ namespace API.Data.Entities
                     .HasColumnName("color_code");
 
                 entity.Property(e => e.CreateAt)
-                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("create_at")
-                    .HasDefaultValueSql("now()");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(15)
                     .HasColumnName("name");
 
-                entity.Property(e => e.UpdateAt)
-                    .HasColumnType("timestamp without time zone")
-                    .HasColumnName("update_at");
+                entity.Property(e => e.UpdateAt).HasColumnName("update_at");
             });
 
             modelBuilder.Entity<Order>(entity =>
@@ -139,9 +139,8 @@ namespace API.Data.Entities
                     .HasColumnName("amount");
 
                 entity.Property(e => e.CreateAt)
-                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("create_at")
-                    .HasDefaultValueSql("now()");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(e => e.DeliveryMethod).HasColumnName("delivery_method");
 
@@ -168,9 +167,7 @@ namespace API.Data.Entities
 
                 entity.Property(e => e.Status).HasColumnName("status");
 
-                entity.Property(e => e.UpdateAt)
-                    .HasColumnType("timestamp without time zone")
-                    .HasColumnName("update_at");
+                entity.Property(e => e.UpdateAt).HasColumnName("update_at");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
@@ -216,9 +213,8 @@ namespace API.Data.Entities
                     .HasColumnName("amount");
 
                 entity.Property(e => e.CreateAt)
-                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("create_at")
-                    .HasDefaultValueSql("now()");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(e => e.Method)
                     .HasMaxLength(50)
@@ -238,9 +234,7 @@ namespace API.Data.Entities
                     .HasMaxLength(100)
                     .HasColumnName("transaction_id");
 
-                entity.Property(e => e.UpdateAt)
-                    .HasColumnType("timestamp without time zone")
-                    .HasColumnName("update_at");
+                entity.Property(e => e.UpdateAt).HasColumnName("update_at");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
@@ -262,9 +256,8 @@ namespace API.Data.Entities
                 entity.Property(e => e.CategoryId).HasColumnName("category_id");
 
                 entity.Property(e => e.CreateAt)
-                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("create_at")
-                    .HasDefaultValueSql("now()");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(3000)
@@ -273,6 +266,10 @@ namespace API.Data.Entities
                 entity.Property(e => e.Discount).HasColumnName("discount");
 
                 entity.Property(e => e.IsVisible).HasColumnName("is_visible");
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(50)
+                    .HasColumnName("modified by");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(100)
@@ -284,9 +281,7 @@ namespace API.Data.Entities
                     .HasMaxLength(100)
                     .HasColumnName("slug");
 
-                entity.Property(e => e.UpdateAt)
-                    .HasColumnType("timestamp without time zone")
-                    .HasColumnName("update_at");
+                entity.Property(e => e.UpdateAt).HasColumnName("update_at");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
@@ -376,17 +371,14 @@ namespace API.Data.Entities
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CreateAt)
-                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("create_at")
-                    .HasDefaultValueSql("now()");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(15)
                     .HasColumnName("name");
 
-                entity.Property(e => e.UpdateAt)
-                    .HasColumnType("timestamp without time zone")
-                    .HasColumnName("update_at");
+                entity.Property(e => e.UpdateAt).HasColumnName("update_at");
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -396,9 +388,8 @@ namespace API.Data.Entities
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CreateAt)
-                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("create_at")
-                    .HasDefaultValueSql("now()");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(e => e.DateOfBirth).HasColumnName("date_of_birth");
 
@@ -435,13 +426,9 @@ namespace API.Data.Entities
                     .HasColumnName("role")
                     .HasDefaultValueSql("'Customer'::character varying");
 
-                entity.Property(e => e.TokenExpiryTime)
-                    .HasColumnType("timestamp without time zone")
-                    .HasColumnName("token_expiry_time");
+                entity.Property(e => e.TokenExpiryTime).HasColumnName("token_expiry_time");
 
-                entity.Property(e => e.UpdateAt)
-                    .HasColumnType("timestamp without time zone")
-                    .HasColumnName("update_at");
+                entity.Property(e => e.UpdateAt).HasColumnName("update_at");
             });
 
             modelBuilder.Entity<UserLike>(entity =>
@@ -451,9 +438,8 @@ namespace API.Data.Entities
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CreateAt)
-                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("create_at")
-                    .HasDefaultValueSql("now()");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(e => e.ProductId).HasColumnName("product_id");
 

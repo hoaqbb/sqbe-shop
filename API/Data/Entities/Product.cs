@@ -22,6 +22,7 @@ namespace API.Data.Entities
         public DateTime? UpdateAt { get; set; }
         public int? CategoryId { get; set; }
         public bool IsVisible { get; set; }
+        public string? ModifiedBy { get; set; }
 
         public virtual Category? Category { get; set; }
         public virtual ICollection<ProductColor> ProductColors { get; set; }

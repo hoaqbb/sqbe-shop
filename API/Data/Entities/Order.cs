@@ -14,7 +14,7 @@ namespace API.Data.Entities
         public string? Note { get; set; }
         public decimal Amount { get; set; }
         public short Status { get; set; }
-        public DateTime CreateAt { get; set; }
+        public DateTime? CreateAt { get; set; }
         public DateTime? UpdateAt { get; set; }
         public int? UserId { get; set; }
         public int? PaymentId { get; set; }
