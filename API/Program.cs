@@ -1,3 +1,5 @@
+using API.Extensions;
+
 namespace API
 {
     public class Program
@@ -13,6 +15,10 @@ namespace API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddCorsServices();
+            builder.Services.AddApplicationServices(builder.Configuration);
+            builder.Services.AddMappingService();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -23,6 +29,8 @@ namespace API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors();
 
             app.UseAuthorization();
 

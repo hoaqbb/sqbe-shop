@@ -1,5 +1,6 @@
 ﻿using API.Data.Entities;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace API.Repositories
@@ -7,6 +8,7 @@ namespace API.Repositories
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly EcommerceDbContext _context;
+        private readonly IMapper _mapper;
         private IDbContextTransaction _transaction;
         private bool _disposedValue;
 
@@ -14,6 +16,8 @@ namespace API.Repositories
         {
             _context = context;
         }
+
+        public IAccountRepository AccountRepository => new AccountRepository(_context);
 
         public async Task BeginTransactionAsync()
         {

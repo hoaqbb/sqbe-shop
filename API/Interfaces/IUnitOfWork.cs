@@ -2,6 +2,7 @@
 {
     public interface IUnitOfWork
     {
+        IAccountRepository AccountRepository { get; }
         Task<bool> SaveChangesAsync();
         Task BeginTransactionAsync();
         Task CommitAsync();
