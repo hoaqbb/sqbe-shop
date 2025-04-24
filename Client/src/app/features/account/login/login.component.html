@@ -1,0 +1,37 @@
+<div class="container login-layout">
+  <div class="row" style="width: 90%">
+    <h2 class="mb-3">ĐĂNG NHẬP</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <app-text-input
+        [formControl]="loginForm.controls['email']"
+        [label]="'Email'"
+        [type]="'email'"
+      >
+      </app-text-input>
+      <app-text-input
+        [formControl]="loginForm.controls['password']"
+        [label]="'Mật khẩu'"
+        [type]="'password'"
+      >
+      </app-text-input>
+
+      <div class="row mb-3" *ngIf="validationErrors.length > 0">
+        <small *ngFor="let error of validationErrors" class="text-danger"
+          >*{{ error }}</small
+        >
+      </div>
+
+      <div class="list-group">
+        <button class="animated-btn login-btn mb-3" type="submit">
+          ĐĂNG NHẬP
+        </button>
+        <div class="mb-4" id="google-btn"></div>
+      </div>
+      <div class="d-flex justify-content-center gap-1">
+        <a>Quên mật khẩu?</a>
+        <span class="text-secondary">hoặc </span>
+        <a routerLink="/account/register">Đăng ký</a>
+      </div>
+    </form>
+  </div>
+</div>

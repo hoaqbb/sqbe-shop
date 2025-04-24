@@ -1,0 +1,60 @@
+.login-layout {
+  margin: 0 auto;
+  width: 40%;
+  padding: 100px 0;
+}
+
+input {
+  height: 50px;
+  border-radius: 0;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
+form {
+  width: 100%;
+  /* max-width: 400px;  */
+}
+
+h6.mb-1::after {
+  content: " *";
+  color: red;
+}
+
+button {
+  position: relative;
+  display: inline-block;
+  padding: 10px 28px;
+  line-height: normal;
+  color: #fff;
+  border: 1px solid #000;
+  border-radius: 0;
+  text-transform: uppercase;
+  font-size: 12px;
+  text-align: center;
+  letter-spacing: 1px;
+  background-color: transparent;
+  -webkit-transition: color 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+    border 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  transition: color 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+    border 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  z-index: 1;
+  overflow: hidden;
+}
+
+.login-btn {
+  /* width: 100%; */
+  font-size: medium;
+  font-weight: bolder;
+}

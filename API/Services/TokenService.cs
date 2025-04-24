@@ -13,10 +13,12 @@ namespace API.Services
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _config;
+        private readonly string _googleClientId;
 
         public TokenService(IConfiguration config)
         {
             _config = config;
+            _googleClientId = _config.GetSection("GoogleClientId").Value;
         }
 
         public string GenerateAccessToken(IEnumerable<Claim> claims)
@@ -61,7 +63,45 @@ namespace API.Services
                 return Convert.ToBase64String(randomNumber);
             }
         }
-        
+
+        public ClaimsPrincipal GetPrincipalFromAccessToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["SecretKey"])),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            //Kiểm tra xem securityToken có thực sự là một JwtSecurityToken không (kiểu ép kiểu an toàn)
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null //Token có phải là JWT không
+                || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, //Token có sử dụng thuật toán HMAC SHA-256 để ký không
+                    StringComparison.InvariantCultureIgnoreCase)) //so sánh không phân biệt hoa thường.
+                throw new Exception("Invalid Token!");
+
+            return principal;
+        }
+
+        public void RemoveTokenInsideCookies(HttpContext httpContext)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                IsEssential = true,
+                Secure = true,
+                SameSite = SameSiteMode.None
+            };
+
+            httpContext.Response.Cookies.Delete("accessToken", cookieOptions);
+            httpContext.Response.Cookies.Delete("refreshToken", cookieOptions);
+        }
+
         public void SetTokenInsideCookies(TokenDto tokenDto, HttpContext httpContext)
         {
             httpContext.Response.Cookies.Append("accessToken", tokenDto.AccessToken,
@@ -82,6 +122,25 @@ namespace API.Services
                     IsEssential = true,
                     SameSite = SameSiteMode.None
                 });
+        }
+
+        public async Task<GoogleJsonWebSignature.Payload?> VerifyGoogleToken(string googleToken)
+        {
+            try
+            {
+                var settings = new GoogleJsonWebSignature.ValidationSettings()
+                {
+                    Audience = new List<string> { _googleClientId }
+                };
+
+                var payload = await GoogleJsonWebSignature.ValidateAsync(googleToken);
+                return payload;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
         }
     }
 }

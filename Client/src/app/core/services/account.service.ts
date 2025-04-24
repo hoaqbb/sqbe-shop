@@ -19,6 +19,18 @@ export class AccountService {
     );
   }
 
+  login(model: any) {
+    return this.http.post<User>(this.baseUrl + "/api/Accounts/login", model).pipe(
+      tap((res: User) => this.setCurrentUserSource(res))
+    );
+  }
+
+  signInWithGoogle(token: string) {
+    return this.http.post<User>(this.baseUrl + "/api/Accounts/login-with-google", {token: token}).pipe(
+      tap((res: User) => this.setCurrentUserSource(res))
+    );
+  }
+
   setCurrentUserSource(user: User) {
     this.currentUser.set(user);
     localStorage.setItem('user', JSON.stringify(user));

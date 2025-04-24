@@ -5,6 +5,9 @@ import { CalendarModule } from 'primeng/calendar';
 import { AccountService } from '../../../core/services/account.service';
 import { Router, RouterLink } from '@angular/router';
 import { TextInputComponent } from '../../../shared/components/text-input/text-input.component';
+import { environment } from '../../../../environments/environment.development';
+import { ToastrService } from 'ngx-toastr';
+declare var google: any;
 
 @Component({
   selector: 'app-register',
@@ -17,17 +20,20 @@ export class RegisterComponent implements OnInit{
   registerForm: FormGroup;
   validationErrors: string[] = [];
   maxYear: Date;
+  googleClientId = environment.googleClientId;
 
   constructor(
     private accountService: AccountService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
     this.initializeForm();
     this.maxYear = new Date();
     this.maxYear.setFullYear(this.maxYear.getFullYear() - 16);
+    this.initializeGoogleBtn();
   }
 
   initializeForm() {
@@ -66,6 +72,26 @@ export class RegisterComponent implements OnInit{
         console.log(error);
         (this.validationErrors.push(error.error))
       },
+    });
+  }
+
+  initializeGoogleBtn() {
+    google.accounts.id.initialize({
+      client_id: this.googleClientId,
+      callback: (res: any) => {
+        this.accountService.signInWithGoogle(res.credential).subscribe({
+          next: () => this.router.navigateByUrl('/'),
+          error: (err) => {
+            this.toastr.error(err.error);
+          }
+        });
+      },
+    });
+
+    google.accounts.id.renderButton(document.getElementById('google-btn'), {
+      size: 'large',
+      shape: 'square',
+      text: 'signup_with',
     });
   }
 }
