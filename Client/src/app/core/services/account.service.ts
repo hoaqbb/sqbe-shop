@@ -35,4 +35,21 @@ export class AccountService {
     this.currentUser.set(user);
     localStorage.setItem('user', JSON.stringify(user));
   }
+
+  logout() {
+    return this.http.post(this.baseUrl + "/api/Accounts/logout", {}).pipe(
+      tap(() => {
+        this.removeCurrentUserSource();
+      }
+    ));
+  }
+  
+  refreshToken() {
+    return this.http.post(this.baseUrl + "/api/Accounts/refresh-token", {})
+  }
+
+  removeCurrentUserSource() {
+    this.currentUser.set(null);
+    localStorage.removeItem('user');
+  }
 }

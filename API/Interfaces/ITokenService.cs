@@ -12,6 +12,7 @@ namespace API.Interfaces
         List<Claim> GenerateClaims(User user);
         ClaimsPrincipal GetPrincipalFromAccessToken(string token);
         void SetTokenInsideCookies(TokenDto tokenDto, HttpContext httpContext);
+        void RemoveTokenInsideCookies(HttpContext httpContext);
         Task<GoogleJsonWebSignature.Payload?> VerifyGoogleToken(string googleToken);
     }
 }

@@ -18,6 +18,7 @@ namespace API
             builder.Services.AddCorsServices();
             builder.Services.AddApplicationServices(builder.Configuration);
             builder.Services.AddMappingService();
+            builder.Services.AddAuthenticationServices(builder.Configuration);
 
             var app = builder.Build();
 
@@ -32,6 +33,7 @@ namespace API
 
             app.UseCors();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

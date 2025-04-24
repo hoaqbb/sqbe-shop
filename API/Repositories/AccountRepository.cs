@@ -76,6 +76,14 @@ namespace API.Repositories
             return user;
         }
 
+        public async Task RemoveUserTokenAsync(User user)
+        {
+            user.RefreshToken = null;
+            user.TokenExpiryTime = null;
+
+            _context.Update(user);
+        }
+
         private void HashPassword(string password, out byte[] passwordHash, out byte[] key)
         {
             using var hmac = new HMACSHA512();

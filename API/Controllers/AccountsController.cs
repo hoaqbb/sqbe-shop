@@ -2,7 +2,9 @@
 using API.DTOs.UserDtos;
 using API.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -141,6 +143,79 @@ namespace API.Controllers
             }, HttpContext);
 
             return Ok(_mapper.Map<UserDto>(user));
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult> RefreshToken()
+        {
+            HttpContext.Request.Cookies.TryGetValue("accessToken", out string? accessToken);
+            HttpContext.Request.Cookies.TryGetValue("refreshToken", out string? refreshToken);
+
+            if (accessToken == null || refreshToken == null) return BadRequest("Invalid client request!");
+
+            try
+            {
+                var principal = _tokenService.GetPrincipalFromAccessToken(accessToken);
+
+                var isPrincipalContainUserId = Int32.TryParse(principal.FindFirst(ClaimTypes.NameIdentifier)?.Value, out Int32 userId);
+
+                if (!isPrincipalContainUserId)
+                {
+                    _tokenService.RemoveTokenInsideCookies(HttpContext);
+                    return Unauthorized();
+                }
+
+                var user = await _unitOfWork.AccountRepository.FindByIdAsync(userId);
+                if (user == null
+                    || user.RefreshToken != refreshToken
+                    || user.TokenExpiryTime <= DateTime.UtcNow)
+                {
+                    //remove the cookie save token
+                    _tokenService.RemoveTokenInsideCookies(HttpContext);
+                    return BadRequest("Invalid client request!");
+                }
+
+                var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
+                var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+                user.RefreshToken = newRefreshToken;
+                _unitOfWork.AccountRepository.Update(user);
+                await _unitOfWork.SaveChangesAsync();
+
+                _tokenService.SetTokenInsideCookies(new TokenDto
+                {
+                    AccessToken = newAccessToken,
+                    RefreshToken = newRefreshToken
+                }, HttpContext);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _tokenService.RemoveTokenInsideCookies(HttpContext);
+                return BadRequest("Invalid token!");
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("logout")]
+        public async Task<ActionResult> Revoke()
+        {
+            if(!Int32.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out Int32 userId))
+                return Unauthorized();
+
+            var user = await _unitOfWork.AccountRepository.FindByIdAsync(userId);
+            if (user == null) return BadRequest();
+
+            await _unitOfWork.AccountRepository.RemoveUserTokenAsync(user);
+
+            //remove refresh and access token cookie
+            _tokenService.RemoveTokenInsideCookies(HttpContext);
+            if(await _unitOfWork.SaveChangesAsync())
+                return NoContent();
+
+            return BadRequest();
         }
     }
 }
