@@ -98,6 +98,10 @@ namespace API.Data.Entities
                     .HasMaxLength(50)
                     .HasColumnName("name");
 
+                entity.Property(e => e.Slug)
+                    .HasMaxLength(20)
+                    .HasColumnName("slug");
+
                 entity.Property(e => e.UpdateAt).HasColumnName("update_at");
             });
 
@@ -269,7 +273,7 @@ namespace API.Data.Entities
 
                 entity.Property(e => e.ModifiedBy)
                     .HasMaxLength(50)
-                    .HasColumnName("modified by");
+                    .HasColumnName("modified_by");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(100)
@@ -308,7 +312,7 @@ namespace API.Data.Entities
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.ProductColors)
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("product_color_product_id_fkey");
+                    .HasConstraintName("product_color_product_fk");
             });
 
             modelBuilder.Entity<ProductImage>(entity =>
@@ -335,7 +339,7 @@ namespace API.Data.Entities
                     .WithMany(p => p.ProductImages)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("product_image_product_id_fkey");
+                    .HasConstraintName("product_image_product_fk");
             });
 
             modelBuilder.Entity<ProductVariant>(entity =>
@@ -355,13 +359,13 @@ namespace API.Data.Entities
                 entity.HasOne(d => d.ProductColor)
                     .WithMany(p => p.ProductVariants)
                     .HasForeignKey(d => d.ProductColorId)
-                    .HasConstraintName("quantity_product_color_id_fkey");
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("product_variant_product_color_fk");
 
                 entity.HasOne(d => d.Size)
                     .WithMany(p => p.ProductVariants)
                     .HasForeignKey(d => d.SizeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("quantity_size_id_fkey");
+                    .HasConstraintName("product_variant_size_fk");
             });
 
             modelBuilder.Entity<Size>(entity =>
@@ -448,7 +452,7 @@ namespace API.Data.Entities
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.UserLikes)
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("user_like_product_id_fkey");
+                    .HasConstraintName("user_like_product_fk");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserLikes)

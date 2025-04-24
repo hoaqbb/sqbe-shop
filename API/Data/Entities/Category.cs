@@ -14,6 +14,7 @@ namespace API.Data.Entities
         public string? Name { get; set; }
         public DateTime? CreateAt { get; set; }
         public DateTime? UpdateAt { get; set; }
+        public string? Slug { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }
     }

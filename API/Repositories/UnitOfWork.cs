@@ -18,6 +18,7 @@ namespace API.Repositories
         }
 
         public IAccountRepository AccountRepository => new AccountRepository(_context);
+        public ICategoryRepository CategoryRepository =>  new CategoryRepository(_context);
 
         public async Task BeginTransactionAsync()
         {

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md fixed-top">
+<nav #navBar class="navbar navbar-expand-md fixed-top">
   <div class="container">
     <a class="navbar-brand" routerLink="/">
       <img src="assets/logo.png" alt="Logo" />
@@ -17,65 +17,37 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav me-auto mb-2 mb-md-0">
         <li class="nav-item">
-          <a
-            class="nav-link"
-            aria-current="page"
-            routerLink="/collections/all"
+          <a class="nav-link" aria-current="page" routerLink="/collections/all"
             >SHOP ALL</a
           >
         </li>
+        @if (shopService.categories()) { @for (cat of shopService.categories();
+        track $index) {
         <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/collections/top"
-            >TOPS</a
-          >
+          <a class="nav-link" routerLink="/collections/{{ cat.slug }}">{{
+            cat.name | uppercase
+          }}</a>
+        </li>
+        } }
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/collections/sale">SALE</a>
         </li>
         <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/collections/bottom"
-            >BOTTOMS</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/collections/outerwear"
-            >OUTERWEAR</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/collections/bag"
-            >BAGS</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/collections/accessory"
-            >ACCESSORIES</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/collections/sale"
-            >SALE</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/recruitment"
-            >RECRUITMENT</a
-          >
+          <a class="nav-link" routerLink="/recruitment">RECRUITMENT</a>
         </li>
       </ul>
 
       <ul class="navbar-nav me-0 mb-2 mb-md-0">
+        @if(accountService.currentUser) {
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            aria-current="page"
+            routerLink="/account"
+            >TÀI KHOẢN</a
+          >
+        </li>
+        } @if(accountService.currentUser === null) {
         <li class="nav-item">
           <a
             class="nav-link"
@@ -91,6 +63,7 @@
             >ĐĂNG KÝ</a
           >
         </li>
+        }
         <li class="nav-item">
           <a class="nav-link">TÌM KIẾM</a>
         </li>
