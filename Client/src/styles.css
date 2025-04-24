@@ -5,3 +5,35 @@
     font-style: normal;
     font-weight: 400;
   }
+
+  .animated-btn:hover {
+    color: black;
+    background-color: white;
+  }
+  
+  .animated-btn:hover::before {
+    -webkit-transform-origin: right center;
+    transform-origin: right center;
+    -webkit-transform: scale(0, 1);
+    transform: scale(0, 1);
+  }
+  
+  .animated-btn::before {
+    position: absolute;
+    content: '';
+    display: block;
+    left: -2px;
+    top: 0;
+    right: -2px;
+    bottom: 0;
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+    -webkit-transform-origin: left center;
+    transform-origin: left center;
+    z-index: -1;
+    background-color: #000;
+    -webkit-transition: -webkit-transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    transition: -webkit-transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    transition: transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    transition: transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86), -webkit-transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  }

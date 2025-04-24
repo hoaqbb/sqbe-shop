@@ -1,0 +1,28 @@
+<div class="form-group my-3">
+    <input
+        [class.is-invalid]='control.touched && control.invalid'
+        type={{type}}
+        class="form-control"
+        [formControl]="control"
+        placeholder={{label}}>
+    <div *ngIf="control.hasError('required')" 
+        class="invalid-feedback">
+        *Vui lòng nhập {{label}}
+    </div>
+    <div *ngIf="control.hasError('minlength')"
+        class="invalid-feedback">
+        *{{label}} có độ dài tối thiểu {{control.errors.minlength['requiredLength']}} ký tự
+    </div>
+    <div *ngIf="control.hasError('maxlength')"
+        class="invalid-feedback">
+        *{{label}} có độ dài tối đa {{control.errors.maxlength['requiredLength']}} ký tự
+    </div>
+    <div *ngIf="control.hasError('email')"
+        class="invalid-feedback">
+        *Email không hợp lệ
+    </div>
+    <div *ngIf="control.hasError('isMatching')"
+        class="invalid-feedback">
+        *Mật khẩu không trùng khớp
+    </div>
+</div>

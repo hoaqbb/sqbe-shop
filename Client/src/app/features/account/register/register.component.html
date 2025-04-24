@@ -1,0 +1,76 @@
+<div class="container register-layout">
+    <div class="row">
+        <h2 class="mb-3">ĐĂNG KÝ</h2>
+        <form [formGroup]="registerForm"
+            (ngSubmit)="register()">
+            <app-text-input 
+                [formControl]="registerForm.controls['lastName']"
+                [label]='"Họ"'>
+            </app-text-input>
+            <app-text-input 
+                [formControl]="registerForm.controls['firstName']"
+                [label]='"Tên"'>
+            </app-text-input>
+            <div class="d-flex my-3">
+                <div class="form-check">
+                    <input id="male" class="form-check-input" 
+                        formControlName="gender"
+                        type="radio" name="gender" value="0">
+                    <label class="form-check-label" for="male">
+                      Nam
+                    </label>
+                  </div>
+                  <div class="form-check ms-3">
+                    <input id="female" class="form-check-input" 
+                        formControlName="gender"
+                        type="radio" name="gender" value="1">
+                    <label class="form-check-label" for="female">
+                      Nữ
+                    </label>
+                  </div>
+            </div>
+            <div class="mb-3">
+                <p-calendar 
+                    [maxDate]="maxYear"
+                    styleClass="custom-calendar"
+                    formControlName="dateOfBirth" 
+                    name="dateOfBirth"
+                    [iconDisplay]="'input'" 
+                    [showIcon]="true" 
+                    inputId="dateOfBirth" 
+                    dateFormat="dd/mm/yy"
+                    placeholder="ngày/tháng/năm"
+                    />
+            </div>
+            <app-text-input 
+                [formControl]="registerForm.controls['email']"
+                [label]='"Email"'
+                [type]="'email'">
+            </app-text-input>
+            <app-text-input 
+                [formControl]="registerForm.controls['password']"
+                [label]='"Mật khẩu"'
+                [type]="'password'">
+            </app-text-input>
+            <app-text-input 
+                [formControl]="registerForm.controls['confirmPassword']"
+                [label]='"Nhập lại mật khẩu"'
+                [type]="'password'">
+            </app-text-input>
+            
+            <div class="row mb-3" *ngIf="validationErrors.length > 0">
+                <small *ngFor="let error of validationErrors" class="text-danger">*{{error}}</small>
+            </div>
+
+            <div class="list-group">
+                <button class="animated-btn signup-btn p-3" type="submit">
+                    ĐĂNG KÝ
+                </button>
+                <a class="mt-4" routerLink="/"><i class="pi pi-arrow-left" style="font-size: 1rem; font-weight: bold;"></i>
+                    Quay lại trang chủ
+                </a>
+            </div>
+            
+        </form>
+        
+</div>
