@@ -4,6 +4,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace API.Repositories
 {
@@ -51,11 +52,22 @@ namespace API.Repositories
             return await _dbSet.AsNoTracking().ToListAsync();
         }
 
-        public async Task<IReadOnlyList<TDto>> GetAllProjectedAsync<TDto>(AutoMapper.IConfigurationProvider config)
+        public async Task<IReadOnlyList<TDto>> GetAllProjectedAsync<TDto>(IMapper mapper)
         {
             return await _dbSet
-                .ProjectTo<TDto>(config)
+                .ProjectTo<TDto>(mapper.ConfigurationProvider)
                 .ToListAsync();
+        }
+
+        public async Task<TDto?> GetSingleProjectedAsync<TDto>(Expression<Func<T, bool>> predicate, IMapper mapper)
+        {
+            IQueryable<T> query = _dbSet.Where(predicate);
+
+            var product = await query
+                .ProjectTo<TDto?>(mapper.ConfigurationProvider)
+                .SingleOrDefaultAsync();
+
+            return product;
         }
 
         public void Update(T entity)

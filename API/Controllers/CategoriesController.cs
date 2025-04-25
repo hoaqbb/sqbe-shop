@@ -1,4 +1,4 @@
-﻿using API.DTOs.CategoryDto.cs;
+﻿using API.DTOs.CategoryDtos.cs;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;

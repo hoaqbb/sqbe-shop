@@ -1,5 +1,5 @@
 ﻿using API.Data.Entities;
-using API.DTOs.CategoryDto.cs;
+using API.DTOs.CategoryDtos.cs;
 using AutoMapper;
 
 namespace API.Helpers.MappingProfiles

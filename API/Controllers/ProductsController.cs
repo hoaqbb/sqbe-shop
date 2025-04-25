@@ -27,9 +27,23 @@ namespace API.Controllers
         public async Task<ActionResult> GetProducts()
         {
             var products = await _unitOfWork.ProductRepository
-                .GetAllProjectedAsync<ProductListDto>(_mapper.ConfigurationProvider);
+                .GetAllProjectedAsync<ProductListDto>(_mapper);
 
             return Ok(products);
+        }
+
+        [HttpGet("{slug}")]
+        public async Task<ActionResult> GetProductBySlug(string slug)
+        {
+            var product = await _unitOfWork.ProductRepository
+                .GetSingleProjectedAsync<ProductDetailDto>(
+                    (x => x.Slug == slug && x.IsVisible == true), 
+                    _mapper
+                );
+
+            if (product == null) return NotFound("Product not found!");
+
+            return Ok(product);
         }
     }
 }

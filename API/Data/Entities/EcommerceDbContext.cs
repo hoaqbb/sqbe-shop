@@ -362,6 +362,11 @@ namespace API.Data.Entities
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("product_variant_product_color_fk");
 
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductVariants)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("product_variant_product_fk");
+
                 entity.HasOne(d => d.Size)
                     .WithMany(p => p.ProductVariants)
                     .HasForeignKey(d => d.SizeId)

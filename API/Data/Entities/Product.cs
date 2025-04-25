@@ -9,6 +9,7 @@ namespace API.Data.Entities
         {
             ProductColors = new HashSet<ProductColor>();
             ProductImages = new HashSet<ProductImage>();
+            ProductVariants = new HashSet<ProductVariant>();
             UserLikes = new HashSet<UserLike>();
         }
 
@@ -27,6 +28,7 @@ namespace API.Data.Entities
         public virtual Category? Category { get; set; }
         public virtual ICollection<ProductColor> ProductColors { get; set; }
         public virtual ICollection<ProductImage> ProductImages { get; set; }
+        public virtual ICollection<ProductVariant> ProductVariants { get; set; }
         public virtual ICollection<UserLike> UserLikes { get; set; }
     }
 }
