@@ -1,0 +1,13 @@
+.image-row {
+    display: flex; 
+    justify-content: space-between; 
+}
+.image-row a {
+    flex: 1;
+    margin: 5px;
+    text-align: center; 
+}
+.image-row img {
+    max-width: 100%; 
+    height: auto; 
+}

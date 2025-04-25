@@ -51,10 +51,10 @@ namespace API.Repositories
             return await _dbSet.AsNoTracking().ToListAsync();
         }
 
-        public async Task<IReadOnlyList<TDto>> GetAllProjectedAsync<TDto>(IMapper mapper)
+        public async Task<IReadOnlyList<TDto>> GetAllProjectedAsync<TDto>(AutoMapper.IConfigurationProvider config)
         {
             return await _dbSet
-                .ProjectTo<TDto>(mapper.ConfigurationProvider)
+                .ProjectTo<TDto>(config)
                 .ToListAsync();
         }
 

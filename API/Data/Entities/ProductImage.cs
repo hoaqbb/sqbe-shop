@@ -9,8 +9,8 @@ namespace API.Data.Entities
         public string ImageUrl { get; set; } = null!;
         public bool IsMain { get; set; }
         public bool IsSub { get; set; }
-        public int? ProductId { get; set; }
         public string? PublicId { get; set; }
+        public Guid? ProductId { get; set; }
 
         public virtual Product? Product { get; set; }
     }

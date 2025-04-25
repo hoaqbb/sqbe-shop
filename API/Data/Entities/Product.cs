@@ -12,7 +12,7 @@ namespace API.Data.Entities
             UserLikes = new HashSet<UserLike>();
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; } = null!;
         public int Price { get; set; }
         public string? Description { get; set; }

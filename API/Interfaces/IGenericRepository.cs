@@ -6,7 +6,7 @@ namespace API.Interfaces
     public interface IGenericRepository<T> where T : class
     {
         Task<IReadOnlyList<T>> GetAllAsync();
-        Task<IReadOnlyList<TDto>> GetAllProjectedAsync<TDto>(IMapper mapper);
+        Task<IReadOnlyList<TDto>> GetAllProjectedAsync<TDto>(AutoMapper.IConfigurationProvider config);
         Task<T> FindByIdAsync(int id);
         Task<T> FindAsync(params object[] keyValues);
         Task AddAsync(T entity);

@@ -3,6 +3,7 @@ import { environment } from '../../../environments/environment.development';
 import { Category } from '../../shared/models/category';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
+import { Product } from '../../shared/models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -17,5 +18,9 @@ export class ShopService {
     return this.http.get<Category[]>(this.baseUrl + '/api/Categories').pipe(
       tap((res: Category[]) => this.categories.set(res))
     );
+  }
+
+  getProducts() {
+    return this.http.get<Product[]>(this.baseUrl + '/api/Products');
   }
 }

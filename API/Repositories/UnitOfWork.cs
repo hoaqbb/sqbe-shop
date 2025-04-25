@@ -8,7 +8,6 @@ namespace API.Repositories
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly EcommerceDbContext _context;
-        private readonly IMapper _mapper;
         private IDbContextTransaction _transaction;
         private bool _disposedValue;
 
@@ -19,6 +18,7 @@ namespace API.Repositories
 
         public IAccountRepository AccountRepository => new AccountRepository(_context);
         public ICategoryRepository CategoryRepository =>  new CategoryRepository(_context);
+        public IProductRepository ProductRepository => new ProductRepository(_context);
 
         public async Task BeginTransactionAsync()
         {

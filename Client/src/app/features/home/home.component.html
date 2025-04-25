@@ -1,0 +1,41 @@
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="item active">
+        <img src="./assets/banner1.png" alt="" style="width:100%; height: auto;">
+      </div>
+      <div class="item">
+        <img src="assets/banner1_2.png" alt="" style="width:100%; height: auto;">
+      </div>
+    </div>
+  </div>
+  <div class="image-row">
+    <a href="#">
+      <img src="assets/image1.png" alt="Ảnh 1">
+    </a>
+    <a href="#">
+      <img src="assets/image2.png" alt="Ảnh 2">
+    </a>
+    <a href="#">
+      <img src="assets/image3.png" alt="Ảnh 3">
+    </a>
+  </div>
+  <div>
+    <a href="#">
+      <img src="assets/image4.png" alt="Ảnh 4" style="width: -webkit-fill-available;"> </a>
+  </div>
+  
+  <div class="container" style="margin: 70px auto;">
+    <!-- <app-product-list [products]="products"></app-product-list> -->
+    @if(products){
+      <div class="container">
+          <div class="row">
+              @for (product of products ; track null) {
+                  <div class="col-3">
+                      <app-product-item [product]="product"></app-product-item>
+                  </div>
+              }
+          </div>
+      </div>
+      }
+  </div>
+  

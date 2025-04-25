@@ -6,6 +6,10 @@
     font-weight: 400;
   }
 
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
   .animated-btn:hover {
     color: black;
     background-color: white;

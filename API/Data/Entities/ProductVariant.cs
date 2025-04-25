@@ -14,7 +14,7 @@ namespace API.Data.Entities
         public int Quantity { get; set; }
         public int? ProductColorId { get; set; }
         public int SizeId { get; set; }
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
 
         public virtual ProductColor? ProductColor { get; set; }
         public virtual Size Size { get; set; } = null!;
