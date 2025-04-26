@@ -17,6 +17,7 @@ span {
     position: fixed !important; /* Đặt marquee cố định */
     bottom: 0; /* Giữ ở dưới cùng */
     left: 0;
+    z-index: 99;
 }
 
 .marquee-content {
