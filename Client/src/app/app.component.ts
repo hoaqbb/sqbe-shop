@@ -1,21 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from "./features/layout/header/header.component";
-import { FooterComponent } from "./features/layout/footer/footer.component";
+import { Router, RouterOutlet } from '@angular/router';
 import { AccountService } from './core/services/account.service';
 import { User } from './shared/models/user';
 import { ShopService } from './core/services/shop.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent],
+  imports: [RouterOutlet, CommonModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
-export class AppComponent implements OnInit{
-  
-  constructor(private accountService: AccountService, private shopService: ShopService) { }
+export class AppComponent implements OnInit {
+  constructor(
+    private accountService: AccountService,
+    private shopService: ShopService
+  ) {}
 
   ngOnInit(): void {
     this.setCurrentUser();
@@ -25,7 +26,7 @@ export class AppComponent implements OnInit{
   setCurrentUser() {
     const user: User = JSON.parse(localStorage.getItem('user'));
 
-    if(user) {
+    if (user) {
       this.accountService.currentUser.set(user);
     }
   }

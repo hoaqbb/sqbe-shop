@@ -13,6 +13,8 @@ namespace API.Helpers.MappingProfiles
                     src.ProductImages.FirstOrDefault(x => x.IsMain).ImageUrl))
                 .ForMember(dest => dest.SubPhoto, opt => opt.MapFrom(src =>
                     src.ProductImages.FirstOrDefault(x => x.IsSub).ImageUrl))
+                .ForMember(dest => dest.ProductColors, opt => opt.MapFrom(src =>
+                    src.ProductColors.Select(a => a.Color)))
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src =>
                     src.Category.Name));
 
