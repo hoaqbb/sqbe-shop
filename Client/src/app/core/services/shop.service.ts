@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment.development';
 import { Category } from '../../shared/models/category';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
-import { Product } from '../../shared/models/product';
+import { Product, ProductDetail } from '../../shared/models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +22,9 @@ export class ShopService {
 
   getProducts() {
     return this.http.get<Product[]>(this.baseUrl + '/api/Products');
+  }
+
+  getProductBySlug(slug: string) {
+    return this.http.get<ProductDetail>(this.baseUrl + '/api/Products/'+ slug);
   }
 }

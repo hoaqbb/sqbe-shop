@@ -1,0 +1,227 @@
+.color-box {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+}
+
+label input[type="radio"]#color {
+  visibility: hidden;
+}
+
+input.form-check-input#color {
+  height: 3px;
+  border-radius: 0;
+}
+
+#gender input[type="radio"] + label:before,
+input[type="radio"] + label:after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+:before,
+:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.color-selected .color-bar {
+  display: block;
+  width: 17px;
+  height: 1px;
+  margin-top: -10px;
+  margin-left: -1px;
+  font-size: 0;
+  border: 1px solid transparent;
+  background: transparent;
+}
+
+.color-box input:checked + .color-selected .color-bar {
+  background: #5f5f5f;
+}
+
+.size-container {
+  display: flex;
+  gap: 10px;
+}
+
+.size-options {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.size-box {
+  flex: 0 0 33.3333%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 1px solid black;
+  cursor: pointer;
+  background-color: white;
+  padding: 0;
+  height: 50px;
+}
+
+.size-box:last-child {
+  margin-right: 0;
+}
+
+.size-box input {
+  display: none;
+}
+
+.size-box span {
+  font-size: 20px;
+  font-weight: 400;
+  color: black;
+  display: block;
+  width: 100%;
+  height: 100%;
+  line-height: 50px;
+}
+
+.size-box input:checked + span {
+  background-color: black;
+  color: white;
+}
+
+.out-of-stock {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.out-of-stock span {
+  color: grey;
+}
+
+.out-of-stock input:checked + span {
+  background-color: grey;
+  color: white;
+}
+
+.out-of-stock:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(../../../../assets/slash.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  z-index: 10;
+}
+
+/* Price */
+.product-price {
+  padding: 10px 0;
+  font-family: "Oswald" !important;
+}
+
+.product-price span.pro-sale {
+  display: inline-block;
+  padding: 0.3125em 0.9375em;
+  margin-right: 20px;
+  background: #be1e2d;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 1em;
+  color: #fff;
+}
+
+.product-price span.pro-price {
+  font-size: 1.125em;
+  font-weight: 400;
+  font-family: "Oswald" !important;
+}
+
+.pro-price-del {
+  font-size: 1em;
+  color: #777a7b;
+  margin-left: 20px;
+  position: relative;
+  font-weight: 400;
+}
+
+.pro-price-del:after {
+  background-color: initial;
+  background-image: url(../../../../assets/slash.png) !important;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: 60px 40px;
+  content: "";
+  display: block;
+  height: 36px;
+  right: 0px;
+  z-index: 99;
+  position: absolute;
+  top: -5px;
+  width: 66px;
+}
+
+.size-choice {
+  display: block;
+}
+
+.button {
+  font-family: "Oswald" !important;
+  position: relative;
+  display: inline-block;
+  padding: 5px 28px;
+  line-height: normal;
+  color: #fff;
+  border-radius: 0;
+  text-transform: uppercase;
+  font-size: 12px;
+  text-align: center;
+  letter-spacing: 1px;
+  background-color: transparent;
+  -webkit-transition: color 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+    border 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  transition: color 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86),
+    border 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  z-index: 1;
+  overflow: hidden;
+}
+
+button.buy-now,
+button.add-to-cart {
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: none;
+  padding: 14px 15px;
+  line-height: 22px;
+  width: 100%;
+  margin-bottom: 5px;
+  border: 1px solid #000;
+}
+
+#buy-now {
+  background-color: #000;
+  color: #fff;
+}
+
+#add-to-cart {
+  color: #000;
+}
+
+/* Style gallery */
+::ng-deep .g-slider-content {
+  margin: 0 15px !important;
+  gap: 16px !important;
+}
+
+::ng-deep gallery-thumb {
+  background: none !important;
+}
+::ng-deep .g-active-thumb {
+  border: #000 solid 1px;
+}

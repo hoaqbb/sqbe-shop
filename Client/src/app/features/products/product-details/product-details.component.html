@@ -1,0 +1,145 @@
+@if(productDetail) {
+<div class="container" style="margin: 100px auto">
+  <div class="row">
+    <div
+      class="col-3"
+      style="display: flex; flex-direction: column; justify-content: center"
+    >
+      <h4>THÔNG TIN</h4>
+      <p [innerHTML]="productDetail.description"></p>
+      <p>
+        <strong>Lưu ý: </strong>Màu sắc sản phẩm có thể khác trên ảnh do điều
+        kiện ánh sáng khi chụp.
+      </p>
+      <p>Vận chuyển từ 2-3 ngày.<br />Thiết kế và sản xuất bởi SQ&BE.</p>
+      <p></p>
+    </div>
+
+    <div class="col-6 px-5">
+      <gallery
+        [items]="images"
+        style="background-color: white"
+        imageSize="contain"
+        thumbs="true"
+        thumbPosition="right"
+        thumbImageSize="cover"
+        disableThumbMouseScroll="false"
+        thumbHeight="80"
+        thumbWidth="50"
+        nav="false"
+        orientation="vertical"
+        scrollBehavior="smooth"
+      ></gallery>
+    </div>
+
+    <div class="col-3">
+      <div class="list-group">
+        <h3>{{ productDetail.name }}</h3>
+        @if(productDetail.discount > 0){
+        <div class="product-price" id="price-preview">
+          <span class="pro-sale">-{{ productDetail.discount }}%</span>
+
+          <span class="pro-price"
+            ><strong
+              >{{
+                productDetail.price
+                  | discount : productDetail.discount
+                  | number : "1.0" : "en-US"
+              }}đ</strong
+            ></span
+          >
+
+          <span class="pro-price-del"
+            >{{ productDetail.price | number : "1.0" : "en-US" }}đ</span
+          >
+        </div>
+
+        } @if(productDetail.discount <= 0){
+        <div class="product-price">
+          <span class="pro-price"
+            ><strong
+              >{{ productDetail.price | number : "1.0" : "en-US" }}đ</strong
+            ></span
+          >
+        </div>
+        }
+
+        <form #productForm="ngForm" autocomplete="off">
+          @if(colorVariants) {
+          <span>Màu sắc</span>
+          <div class="d-flex">
+            @for (color of colorVariants; track $index) {
+            <!-- kiểm tra mã màu có tồn tại ko -->
+            @if(color.colorCode){
+            <div class="list-group align-items-center">
+              <label
+                class="color-box my-2 me-2 cursor-pointer"
+                [ngStyle]="{ 'background-color': color.colorCode }"
+              >
+                <input
+                  id="color"
+                  class="form-check-input mt-4"
+                  type="radio"
+                  name="choseColor"
+                  [value]="color.colorCode"
+                  (change)="onColorChange(color)"
+                  [checked]="$index === 0"
+                />
+                <!-- This will check the first radio input -->
+                <span class="color-selected">
+                  <span class="color-bar">COLOR</span>
+                </span>
+              </label>
+            </div>
+            } }
+          </div>
+          <span class="size-choice">Kích thước</span>
+          <div class="mt-1 size-container">
+            @if(selectedColor) {
+            <div class="size-options">
+              @for (variant of selectedColor.sizeVariants; track $index) {
+              <!-- để cursor not-allowed lên lable -->
+              <label
+                class="size-box position-relative"
+                [ngClass]="{ 'out-of-stock': variant.quantity === 0 }"
+              >
+                <input
+                  class="form-check-input mt-4"
+                  type="radio"
+                  name="choseSize"
+                  [value]="variant.id"
+                  [disabled]="variant.quantity === 0"
+                  (change)="onSizeChange(variant.size)"
+                  [checked]="isFirstAvailableVariant(variant, $index)"
+                />
+                <span>{{ variant.size }}</span>
+              </label>
+              }
+            </div>
+            }
+          </div>
+          }
+
+          <div>
+            <button
+              type="button"
+              id="add-to-cart"
+              class="add-to-cart button mt-4"
+            >
+              <strong keylanguage="them_vao_gio" class="font-oswald lang"
+                >THÊM VÀO GIỎ</strong
+              >
+            </button>
+
+            <button type="button mt-3" id="buy-now" class="buy-now button mt-1">
+              <strong keylanguage="mua_ngay" class="font-oswald lang"
+                >MUA NGAY</strong
+              >
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+}

@@ -46,10 +46,7 @@
         ><strong>-{{ product.discount }}%</strong></span
       >
       <div class="col d-flex justify-content-center">
-        {{
-          (product.price * (100 - product.discount)) / 100
-            | number : "1.0" : "en-US"
-        }}đ
+        {{ product.price | discount: product.discount | number : "1.0" : "en-US" }}đ
       </div>
       <div class="price col d-flex justify-content-center text-secondary">
         {{ product.price | number : "1.0" : "en-US" }}đ
