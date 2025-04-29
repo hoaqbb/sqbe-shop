@@ -217,5 +217,49 @@ namespace API.Controllers
 
             return BadRequest();
         }
+
+        [Authorize]
+        [HttpPost("like-product/{id}")]
+        public async Task<ActionResult> LikeProduct(string id)
+        {
+            if (!Guid.TryParse(id, out Guid productId)
+                || !Int32.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userId))
+                return BadRequest("Invalid client request!");
+
+            var product = await _unitOfWork.ProductRepository.FindAsync(productId);
+            if (product == null) return NotFound("Product is not existed!");
+
+            if (await _unitOfWork.ProductRepository.IsProductLikedByCurrentUser(userId, productId))
+                return Conflict("Product is liked by current user!");
+
+            await _unitOfWork.AccountRepository.LikeProductAsync(userId, productId);
+
+            if (await _unitOfWork.SaveChangesAsync())
+                return Ok();
+
+            return BadRequest("Failed to like post!");
+        }
+
+        [Authorize]
+        [HttpDelete("unlike-product/{id}")]
+        public async Task<ActionResult> UnlikeProduct(string id)
+        {
+            if (!Guid.TryParse(id, out Guid productId)
+                || !Int32.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userId))
+                return BadRequest("Invalid client request!");
+
+            var product = await _unitOfWork.ProductRepository.FindAsync(productId);
+            if (product == null) return NotFound("Product is not existed!");
+
+            if (!await _unitOfWork.ProductRepository.IsProductLikedByCurrentUser(userId, productId))
+                return Conflict("Product is not liked by current user!");
+
+            await _unitOfWork.AccountRepository.UnlikeProductAsync(userId, productId);
+
+            if (await _unitOfWork.SaveChangesAsync())
+                return Ok();
+
+            return BadRequest("Failed to unlike post!");
+        }
     }
 }

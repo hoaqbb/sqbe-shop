@@ -64,6 +64,16 @@ namespace API.Repositories
             return user;
         }
 
+        public async Task LikeProductAsync(int userId, Guid productId)
+        {
+            var newLike = new UserLike
+            {
+                ProductId = productId,
+                UserId = userId
+            };
+            await _context.AddAsync(newLike);
+        }
+
         public async Task<User> RegisterAsync(User user, string password)
         {
             HashPassword(password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -82,6 +92,16 @@ namespace API.Repositories
             user.TokenExpiryTime = null;
 
             _context.Update(user);
+        }
+
+        public async Task UnlikeProductAsync(int userId, Guid productId)
+        {
+            var isLiked = await _context.UserLikes
+                .SingleOrDefaultAsync(x => x.ProductId == productId && x.UserId == userId);
+
+            if (isLiked == null) return;
+
+            _context.Remove(isLiked);
         }
 
         private void HashPassword(string password, out byte[] passwordHash, out byte[] key)

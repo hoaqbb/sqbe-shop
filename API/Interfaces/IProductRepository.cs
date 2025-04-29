@@ -6,5 +6,6 @@ namespace API.Interfaces
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
+        Task<bool> IsProductLikedByCurrentUser(int userId, Guid productId);
     }
 }

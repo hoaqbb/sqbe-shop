@@ -15,6 +15,13 @@ namespace API.Repositories
         {
             _context = context;
         }
-        
+
+        public async Task<bool> IsProductLikedByCurrentUser(int userId, Guid productId)
+        {
+            var isLiked = await _context.UserLikes
+                .AnyAsync(x => x.UserId == userId && x.ProductId == productId);
+
+            return isLiked;
+        }
     }
 }
