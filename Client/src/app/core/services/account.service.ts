@@ -52,4 +52,12 @@ export class AccountService {
     this.currentUser.set(null);
     localStorage.removeItem('user');
   }
+
+  likeProduct(productId: string) {
+    return this.http.post(this.baseUrl + "/api/Accounts/like-product/" + productId, {});
+  }
+
+  unlikeProduct(productId: string) {
+    return this.http.delete(this.baseUrl + "/api/Accounts/unlike-product/" + productId, {});
+  }
 }

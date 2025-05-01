@@ -16,7 +16,8 @@ namespace API.Helpers.MappingProfiles
                 .ForMember(dest => dest.ProductColors, opt => opt.MapFrom(src =>
                     src.ProductColors.Select(a => a.Color)))
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src =>
-                    src.Category.Name));
+                    src.Category.Name))
+                .ForMember(dest => dest.IsLikedByCurrentUser, opt => opt.Ignore());
 
             CreateMap<Product, ProductDetailDto>();
 

@@ -1,4 +1,5 @@
 ﻿using API.DTOs.ColorDtos;
+using System.Text.Json.Serialization;
 
 namespace API.DTOs.ProductDtos
 {
@@ -15,5 +16,7 @@ namespace API.DTOs.ProductDtos
         public string Slug { get; set; } = null!;
         public string Category { get; set; }
         public DateTime CreateAt { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public bool IsLikedByCurrentUser { get; set; } = false;
     }
 }

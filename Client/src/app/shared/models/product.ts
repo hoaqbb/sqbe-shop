@@ -13,6 +13,7 @@ export interface Product {
     slug: string
     category: string
     createAt: string
+    isLikedByCurrentUser: boolean
   }
 
   export interface ProductDetail {

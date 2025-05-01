@@ -11,9 +11,7 @@
     <img class="sub-image" src="{{ product.subPhoto }}" alt="" />
     <ul class="list-inline animate text-center">
       <li class="list-inline-item">
-        <button class="btn btn-dark">
-          MUA NGAY
-        </button>
+        <button class="btn btn-dark">MUA NGAY</button>
       </li>
       <li class="list-inline-item">
         <button class="btn btn-dark">THÊM VÀO GIỎ HÀNG</button>
@@ -32,10 +30,24 @@
         [ngStyle]="{ 'background-color': color.colorCode }"
       >
       </span>
-      }
-      <span class="position-absolute" style="right: 0"
-        ><i class="pi pi-heart" style="font-size: 1.2rem"></i
+      } @if (product.isLikedByCurrentUser) {
+      <span
+        class="position-absolute like-button liked cursor-pointer"
+        style="right: 0"
+        (click)="unlikeProduct(product.id); $event.stopPropagation()"
+        ><i
+          class="pi pi-heart-fill heart-icon"
+          style="color: #ff3040; font-size: 1.2rem"
+        ></i
       ></span>
+      } @else {
+      <span
+        class="position-absolute like-button unliked cursor-pointer"
+        style="right: 0"
+        (click)="likeProduct(product.id); $event.stopPropagation()"
+        ><i class="pi pi-heart heart-icon" style="font-size: 1.2rem"></i
+      ></span>
+      }
     </div>
     <h6 class="card-title text-center mb-1">
       {{ product.name }}
@@ -46,7 +58,11 @@
         ><strong>-{{ product.discount }}%</strong></span
       >
       <div class="col d-flex justify-content-center">
-        {{ product.price | discount: product.discount | number : "1.0" : "en-US" }}đ
+        {{
+          product.price
+            | discount : product.discount
+            | number : "1.0" : "en-US"
+        }}đ
       </div>
       <div class="price col d-flex justify-content-center text-secondary">
         {{ product.price | number : "1.0" : "en-US" }}đ
