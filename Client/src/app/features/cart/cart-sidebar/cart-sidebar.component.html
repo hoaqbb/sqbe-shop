@@ -1,0 +1,77 @@
+<div class="card flex flex-wrap justify-content-center gap-2">
+  <p-sidebar [(visible)]="show" position="right">
+    <h4>GIỎ HÀNG</h4>
+    <div class="container">
+      @if(cartService.cart()?.cartItems) {
+      <p-scrollPanel [style]="{ width: '100%', height: '100%' }">
+        @for (cartItem of cartService.cart().cartItems; track $index) {
+        <!-- card sidebar item -->
+        <div class="d-flex">
+          <a routerLink="/products/{{ cartItem.slug }}">
+            <img
+              src="{{
+                cartItem.photo || '../../../../../../assets/no-image.svg'
+              }}"
+              alt=""
+              style="height: 100px; width: 65px"
+            />
+          </a>
+          <div class="list-group p-3" style="font-size: smaller">
+            <h6 style="font-size: small">{{ cartItem.name }}</h6>
+            <div class="d-flex">
+              <span>{{ cartItem.productVariant.color }}</span>
+              <span class="mx-1">/</span>
+              <span>{{ cartItem.productVariant.size }}</span>
+            </div>
+            <div class="d-flex my-2">
+              <span class="me-2 cartItem-quantity">
+                {{ cartItem.quantity }}</span
+              >
+              @if(cartItem.discount > 0) {
+              <span
+                >{{
+                  cartItem.price
+                    | discount : cartItem.discount
+                    | number : "1.0" : "en-US"
+                }}đ</span
+              >
+              <span
+                class="price ms-2 text-secondary"
+              >
+                {{ cartItem.price | number : "1.0" : "en-US" }}đ
+              </span>
+              } @else {
+              <span
+                >{{
+                  cartItem.price * cartItem.quantity | number : "1.0" : "en-US"
+                }}đ</span
+              >
+              }
+            </div>
+          </div>
+          <span class="cursor-pointer" (click)="removeCartItem(cartItem.id)"
+            ><i class="pi pi-times fw-bold fs-6"></i
+          ></span>
+        </div>
+        <!-- End card sidebar item -->
+        }
+      </p-scrollPanel>
+      }
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="list-group m-1">
+        <span class="line"></span>
+        <div class="d-flex justify-content-between">
+          <span>TOTAL</span>
+          <span>{{ cartService.amount() | number : "1.0" : "en-US" }}đ</span>
+        </div>
+      </div>
+      <div class="d-flex gap-2 mt-1 justify-content-between">
+        <button class="animated-btn" routerLink="/cart" (click)="onHide()">
+          XEM GIỎ HÀNG
+        </button>
+        <button class="animated-btn" (click)="checkout()">THANH TOÁN</button>
+      </div>
+    </ng-template>
+  </p-sidebar>
+</div>
