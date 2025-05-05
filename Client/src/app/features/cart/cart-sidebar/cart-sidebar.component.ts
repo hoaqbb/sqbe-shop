@@ -29,4 +29,8 @@ export class CartSidebarComponent {
       this.sidebarService.close('cart');
     }
   }
+
+  checkout() {
+    this.sidebarService.closeAll();
+  }
 }

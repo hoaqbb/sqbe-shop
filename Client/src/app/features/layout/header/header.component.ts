@@ -9,6 +9,8 @@ import { RouterLink } from '@angular/router';
 import { AccountService } from '../../../core/services/account.service';
 import { ShopService } from '../../../core/services/shop.service';
 import { CommonModule } from '@angular/common';
+import { SidebarService } from '../../../core/services/sidebar.service';
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-header',
@@ -23,7 +25,9 @@ export class HeaderComponent {
   constructor(
     public accountService: AccountService,
     private renderer: Renderer2,
-    public shopService: ShopService
+    public shopService: ShopService,
+    public sidebarService: SidebarService,
+    public cartService: CartService
   ) {}
 
   @HostListener('window:scroll', [])

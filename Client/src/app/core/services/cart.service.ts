@@ -9,7 +9,7 @@ import { tap } from 'rxjs';
 })
 export class CartService {
   baseUrl = environment.apiUrl;
-  cart = signal<Cart | null>(null);
+  cart = signal<Cart>(new Cart());
   count = signal<number>(0);
   amount = signal<number>(0);
 

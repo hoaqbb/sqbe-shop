@@ -1,8 +1,8 @@
 import { ProductVariant } from "./product"
 
-export interface Cart {
-    id: string
-    cartItems: CartItem[]
+export class Cart {
+    id = ''
+    cartItems: CartItem[] = []
 }
 
 export interface CartItem {

@@ -38,7 +38,7 @@
       </ul>
 
       <ul class="navbar-nav me-0 mb-2 mb-md-0">
-        @if(accountService.currentUser) {
+        @if(accountService.currentUser()) {
         <li class="nav-item">
           <a
             class="nav-link"
@@ -47,7 +47,7 @@
             >TÀI KHOẢN</a
           >
         </li>
-        } @if(accountService.currentUser === null) {
+        } @if(accountService.currentUser() === null) {
         <li class="nav-item">
           <a
             class="nav-link"
@@ -67,8 +67,8 @@
         <li class="nav-item">
           <a class="nav-link">TÌM KIẾM</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link">GIỎ HÀNG </a>
+        <li class="nav-item" (click)="sidebarService.toggle('cart')">
+          <a class="nav-link">GIỎ HÀNG ({{cartService.count()}})</a>
         </li>
       </ul>
     </div>

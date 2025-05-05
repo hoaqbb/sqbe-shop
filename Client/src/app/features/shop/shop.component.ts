@@ -4,7 +4,6 @@ import { HeaderComponent } from '../layout/header/header.component';
 import { FooterComponent } from '../layout/footer/footer.component';
 import { CartSidebarComponent } from '../cart/cart-sidebar/cart-sidebar.component';
 import { SearchSidebarComponent } from '../search/search-sidebar/search-sidebar.component';
-import { AccountService } from '../../core/services/account.service';
 import { CartService } from '../../core/services/cart.service';
 
 @Component({
@@ -16,13 +15,9 @@ import { CartService } from '../../core/services/cart.service';
 })
 export class ShopComponent implements OnInit{
 
-  constructor(private accountService: AccountService, private cartService: CartService) { }
+  constructor(private cartService: CartService) { }
 
   ngOnInit(): void {
-    if(this.accountService.currentUser()) {
-      this.cartService.getCart().subscribe();
-    }
+    this.cartService.getCart().subscribe();
   }
-
-
 }

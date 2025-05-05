@@ -7,7 +7,7 @@
         @for (cartItem of cartService.cart().cartItems; track $index) {
         <!-- card sidebar item -->
         <div class="d-flex">
-          <a routerLink="/products/{{ cartItem.slug }}">
+          <a routerLink="/products/{{ cartItem.slug }}" (click)="sidebarService.closeAll()">
             <img
               src="{{
                 cartItem.photo || '../../../../../../assets/no-image.svg'
@@ -67,7 +67,7 @@
         </div>
       </div>
       <div class="d-flex gap-2 mt-1 justify-content-between">
-        <button class="animated-btn" routerLink="/cart" (click)="onHide()">
+        <button class="animated-btn" routerLink="/cart" (click)="sidebarService.closeAll()">
           XEM GIỎ HÀNG
         </button>
         <button class="animated-btn" (click)="checkout()">THANH TOÁN</button>
