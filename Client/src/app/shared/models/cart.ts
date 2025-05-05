@@ -2,7 +2,6 @@ import { ProductVariant } from "./product"
 
 export interface Cart {
     id: string
-    userId: number
     cartItems: CartItem[]
 }
 

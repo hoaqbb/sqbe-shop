@@ -54,8 +54,7 @@ namespace API.Data.Entities
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Carts)
                     .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("cart_user_id_fkey");
+                    .HasConstraintName("cart_user_fk");
             });
 
             modelBuilder.Entity<CartItem>(entity =>
@@ -185,7 +184,7 @@ namespace API.Data.Entities
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("order_user_id_fkey");
+                    .HasConstraintName("order_user_fk");
             });
 
             modelBuilder.Entity<OrderItem>(entity =>
@@ -224,8 +223,6 @@ namespace API.Data.Entities
                     .HasMaxLength(50)
                     .HasColumnName("method");
 
-                entity.Property(e => e.OrderId).HasColumnName("order_id");
-
                 entity.Property(e => e.Provider)
                     .HasMaxLength(50)
                     .HasColumnName("provider");
@@ -246,7 +243,7 @@ namespace API.Data.Entities
                     .WithMany(p => p.Payments)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("payment_user_id_fkey");
+                    .HasConstraintName("payment_user_fk");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -394,7 +391,9 @@ namespace API.Data.Entities
             {
                 entity.ToTable("user");
 
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
 
                 entity.Property(e => e.CreateAt)
                     .HasColumnName("create_at")
@@ -462,7 +461,7 @@ namespace API.Data.Entities
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserLikes)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("user_like_user_id_fkey");
+                    .HasConstraintName("user_like_user_fk");
             });
 
             OnModelCreatingPartial(modelBuilder);

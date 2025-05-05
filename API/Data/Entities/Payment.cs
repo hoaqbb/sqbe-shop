@@ -12,8 +12,6 @@ namespace API.Data.Entities
         }
 
         public int Id { get; set; }
-        public int OrderId { get; set; }
-        public int? UserId { get; set; }
         public string Method { get; set; } = null!;
         public string? Provider { get; set; }
         public BitArray Status { get; set; } = null!;
@@ -21,6 +19,7 @@ namespace API.Data.Entities
         public DateTime? CreateAt { get; set; }
         public DateTime? UpdateAt { get; set; }
         public string? TransactionId { get; set; }
+        public Guid? UserId { get; set; }
 
         public virtual User? User { get; set; }
         public virtual ICollection<Order> Orders { get; set; }

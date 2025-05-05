@@ -11,9 +11,9 @@ namespace API.Data.Entities
         }
 
         public string Id { get; set; } = null!;
-        public int? UserId { get; set; }
+        public Guid UserId { get; set; }
 
-        public virtual User? User { get; set; }
+        public virtual User User { get; set; } = null!;
         public virtual ICollection<CartItem> CartItems { get; set; }
     }
 }

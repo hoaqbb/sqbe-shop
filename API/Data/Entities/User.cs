@@ -13,7 +13,6 @@ namespace API.Data.Entities
             UserLikes = new HashSet<UserLike>();
         }
 
-        public int Id { get; set; }
         public string Lastname { get; set; } = null!;
         public string Firstname { get; set; } = null!;
         public DateTime? DateOfBirth { get; set; }
@@ -28,6 +27,7 @@ namespace API.Data.Entities
         public DateTime? UpdateAt { get; set; }
         public string Role { get; set; } = null!;
         public bool IsAuthenticated { get; set; }
+        public Guid Id { get; set; }
 
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Order> Orders { get; set; }

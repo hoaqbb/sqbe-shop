@@ -16,7 +16,6 @@ namespace API.Data.Entities
         public short Status { get; set; }
         public DateTime? CreateAt { get; set; }
         public DateTime? UpdateAt { get; set; }
-        public int? UserId { get; set; }
         public int? PaymentId { get; set; }
         public string Address { get; set; } = null!;
         public string Fullname { get; set; } = null!;
@@ -24,6 +23,7 @@ namespace API.Data.Entities
         public int ShippingFee { get; set; }
         public string Email { get; set; } = null!;
         public short DeliveryMethod { get; set; }
+        public Guid? UserId { get; set; }
 
         public virtual Payment? Payment { get; set; }
         public virtual User? User { get; set; }
