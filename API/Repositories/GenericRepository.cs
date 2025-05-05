@@ -52,19 +52,19 @@ namespace API.Repositories
             return await _dbSet.AsNoTracking().ToListAsync();
         }
 
-        public async Task<IReadOnlyList<TDto>> GetAllProjectedAsync<TDto>(IMapper mapper)
+        public async Task<IReadOnlyList<TDto>> GetAllProjectedAsync<TDto>(AutoMapper.IConfigurationProvider config)
         {
             return await _dbSet
-                .ProjectTo<TDto>(mapper.ConfigurationProvider)
+                .ProjectTo<TDto>(config)
                 .ToListAsync();
         }
 
-        public async Task<TDto?> GetSingleProjectedAsync<TDto>(Expression<Func<T, bool>> predicate, IMapper mapper)
+        public async Task<TDto?> GetSingleProjectedAsync<TDto>(Expression<Func<T, bool>> predicate, AutoMapper.IConfigurationProvider config)
         {
             IQueryable<T> query = _dbSet.Where(predicate);
 
             var product = await query
-                .ProjectTo<TDto?>(mapper.ConfigurationProvider)
+                .ProjectTo<TDto?>(config)
                 .SingleOrDefaultAsync();
 
             return product;
