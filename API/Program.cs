@@ -19,6 +19,7 @@ namespace API
             builder.Services.AddApplicationServices(builder.Configuration);
             builder.Services.AddMappingService();
             builder.Services.AddAuthenticationServices(builder.Configuration);
+            builder.Services.AddRedisCache(builder.Configuration);
 
             var app = builder.Build();
 
