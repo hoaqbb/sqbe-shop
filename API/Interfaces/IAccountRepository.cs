@@ -10,8 +10,8 @@ namespace API.Interfaces
         Task<User?> GetUserByEmailAsync(string email);
         Task<User?> AuthenticateAsync(LoginDto loginDto);
         Task<User> RegisterAsync(User user, string password);
-        Task RemoveUserTokenAsync(User user);
-        Task LikeProductAsync(int userId, Guid productId);
-        Task UnlikeProductAsync(int userId, Guid productId);
+        void RemoveUserToken(User user);
+        Task LikeProductAsync(Guid userId, Guid productId);
+        Task UnlikeProductAsync(Guid userId, Guid productId);
     }
 }

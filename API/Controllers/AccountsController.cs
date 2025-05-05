@@ -15,15 +15,18 @@ namespace API.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
+        private readonly ICartService _cartService;
 
         public AccountsController(
             IUnitOfWork unitOfWork,
             ITokenService tokenService,
-            IMapper mapper)
+            IMapper mapper,
+            ICartService cartService)
         {
             _unitOfWork = unitOfWork;
             _tokenService = tokenService;
             _mapper = mapper;
+            _cartService = cartService;
         }
 
         [HttpPost("register")]
@@ -38,11 +41,20 @@ namespace API.Controllers
             try
             {
                 user = _mapper.Map<User>(registerDto);
+                user.Id = Guid.NewGuid();
                 user = await _unitOfWork.AccountRepository.RegisterAsync(user, registerDto.Password);
                 user.RefreshToken = _tokenService.GenerateRefreshToken();
                 user.TokenExpiryTime = DateTime.UtcNow.AddDays(7);
 
-                if(await _unitOfWork.SaveChangesAsync())
+                // add new cart for user
+                var userCart = new Cart
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = user.Id
+                };
+                await _unitOfWork.CartRepository.AddAsync(userCart);
+
+                if (await _unitOfWork.SaveChangesAsync())
                 {
                     var claims = _tokenService.GenerateClaims(user);
                     var accessToken = _tokenService.GenerateAccessToken(claims);
@@ -114,6 +126,13 @@ namespace API.Controllers
                 user.RefreshToken = _tokenService.GenerateRefreshToken();
                 user.TokenExpiryTime = DateTime.UtcNow.AddDays(7);
 
+                // add new cart for user
+                var userCart = new Cart
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = user.Id
+                };
+                await _unitOfWork.CartRepository.AddAsync(userCart);
                 await _unitOfWork.SaveChangesAsync();
             }
             else if(user.Provider == payload.Issuer)
@@ -157,21 +176,23 @@ namespace API.Controllers
             {
                 var principal = _tokenService.GetPrincipalFromAccessToken(accessToken);
 
-                var isPrincipalContainUserId = Int32.TryParse(principal.FindFirst(ClaimTypes.NameIdentifier)?.Value, out Int32 userId);
+                var isPrincipalContainUserId = Guid.TryParse(principal.FindFirst(ClaimTypes.NameIdentifier)?.Value, out Guid userId);
 
                 if (!isPrincipalContainUserId)
                 {
                     _tokenService.RemoveTokenInsideCookies(HttpContext);
+                    _cartService.RemoveCartIdInsideCookie(HttpContext);
                     return Unauthorized();
                 }
 
-                var user = await _unitOfWork.AccountRepository.FindByIdAsync(userId);
+                var user = await _unitOfWork.AccountRepository.FindAsync(userId);
                 if (user == null
                     || user.RefreshToken != refreshToken
                     || user.TokenExpiryTime <= DateTime.UtcNow)
                 {
                     //remove the cookie save token
                     _tokenService.RemoveTokenInsideCookies(HttpContext);
+                    _cartService.RemoveCartIdInsideCookie(HttpContext);
                     return BadRequest("Invalid client request!");
                 }
 
@@ -193,6 +214,7 @@ namespace API.Controllers
             catch (Exception ex)
             {
                 _tokenService.RemoveTokenInsideCookies(HttpContext);
+                _cartService.RemoveCartIdInsideCookie(HttpContext);
                 return BadRequest("Invalid token!");
             }
         }
@@ -202,19 +224,23 @@ namespace API.Controllers
         [Route("logout")]
         public async Task<ActionResult> Revoke()
         {
-            if(!Int32.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out Int32 userId))
+            if(!Guid.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out Guid userId))
                 return Unauthorized();
 
-            var user = await _unitOfWork.AccountRepository.FindByIdAsync(userId);
+            var user = await _unitOfWork.AccountRepository.FindAsync(userId);
             if (user == null) return BadRequest();
 
-            await _unitOfWork.AccountRepository.RemoveUserTokenAsync(user);
+            _unitOfWork.AccountRepository.RemoveUserToken(user);
 
-            //remove refresh and access token cookie
-            _tokenService.RemoveTokenInsideCookies(HttpContext);
             if(await _unitOfWork.SaveChangesAsync())
-                return NoContent();
+            {
+                //remove cart id, refresh and access token cookie
+                _tokenService.RemoveTokenInsideCookies(HttpContext);
+                _cartService.RemoveCartIdInsideCookie(HttpContext);
 
+                return NoContent();
+            }
+            
             return BadRequest();
         }
 
@@ -223,7 +249,7 @@ namespace API.Controllers
         public async Task<ActionResult> LikeProduct(string id)
         {
             if (!Guid.TryParse(id, out Guid productId)
-                || !Int32.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userId))
+                || !Guid.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out Guid userId))
                 return BadRequest("Invalid client request!");
 
             var product = await _unitOfWork.ProductRepository.FindAsync(productId);
@@ -245,7 +271,7 @@ namespace API.Controllers
         public async Task<ActionResult> UnlikeProduct(string id)
         {
             if (!Guid.TryParse(id, out Guid productId)
-                || !Int32.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out int userId))
+                || !Guid.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out Guid userId))
                 return BadRequest("Invalid client request!");
 
             var product = await _unitOfWork.ProductRepository.FindAsync(productId);

@@ -42,6 +42,7 @@ namespace API.Repositories
 
             var user = new User
             {
+                Id = Guid.NewGuid(),
                 Lastname = payload.FamilyName,
                 Firstname = payload.GivenName,
                 Email = payload.Email,
@@ -64,7 +65,7 @@ namespace API.Repositories
             return user;
         }
 
-        public async Task LikeProductAsync(int userId, Guid productId)
+        public async Task LikeProductAsync(Guid userId, Guid productId)
         {
             var newLike = new UserLike
             {
@@ -86,7 +87,7 @@ namespace API.Repositories
             return user;
         }
 
-        public async Task RemoveUserTokenAsync(User user)
+        public void RemoveUserToken(User user)
         {
             user.RefreshToken = null;
             user.TokenExpiryTime = null;
@@ -94,7 +95,7 @@ namespace API.Repositories
             _context.Update(user);
         }
 
-        public async Task UnlikeProductAsync(int userId, Guid productId)
+        public async Task UnlikeProductAsync(Guid userId, Guid productId)
         {
             var isLiked = await _context.UserLikes
                 .SingleOrDefaultAsync(x => x.ProductId == productId && x.UserId == userId);
