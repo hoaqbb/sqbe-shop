@@ -43,5 +43,14 @@ namespace API.Controllers
 
             return Ok(result);
         }
+
+        [HttpPut("items/{itemId}")]
+        public async Task<ActionResult<CartDto>> UpdateCartItem([FromBody]UpdateCartItemDto updateCartItemDto, int itemId)
+        {
+            var result = await _cartService.UpdateCartItemAsync(HttpContext, updateCartItemDto, itemId);
+            if (!result) return NotFound("Cart item not found.");
+
+            return NoContent();
+        }
     }
 }

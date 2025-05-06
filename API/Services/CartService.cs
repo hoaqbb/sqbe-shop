@@ -96,6 +96,58 @@ namespace API.Services
             return await HandleUserCartAsync(dto, newItem, cart, userId);
         }
 
+        public async Task<bool> UpdateCartItemAsync(HttpContext httpContext, UpdateCartItemDto updateCartItemDto, int cartItemId)
+        {
+            var userId = httpContext.GetUserIdFromTokenInsideCookie(_tokenService);
+            var cartId = httpContext.GetCartIdFromCookie();
+            redisKey = (userId is null) ? $"cart:guest:{cartId}" : $"cart:user:{userId}";
+
+            CartDto? cart = await _cacheService.GetDataAsync<CartDto>(redisKey);
+
+            // Logged-in user
+            if (userId != null)
+            {
+                var cartItem = await _context.CartItems
+                    .Include(x => x.ProductVariant)
+                    .SingleOrDefaultAsync(x => x.Id == cartItemId);
+                if (cartItem == null) return false;
+
+                if (cart == null)
+                {
+                    cart = await _unitOfWork.CartRepository
+                        .GetSingleProjectedAsync<CartDto>(x => x.UserId == userId, _mapper.ConfigurationProvider);
+                    if (cart == null) return false;
+                }
+
+                // Quantity cannot greater than product variant quantity
+                var quantity = Math.Min(updateCartItemDto.Quantity, cartItem.ProductVariant.Quantity);
+                // Update in DB
+                cartItem.Quantity = quantity;
+                _context.Update(cartItem);
+                await _context.SaveChangesAsync();
+
+                // Update in Redis
+                var item = cart.CartItems.FirstOrDefault(x => x.Id == cartItemId);
+                if (item != null)
+                {
+                    item.Quantity = cartItem.Quantity;
+                    await _cacheService.SetDataAsync(redisKey, cart);
+                }
+
+                return true;
+            }
+
+            // Guest user
+            if (cartId == null || cart == null) return false;
+
+            var guestItem = cart.CartItems.FirstOrDefault(x => x.Id == cartItemId);
+            if (guestItem == null) return false;
+
+            guestItem.Quantity = Math.Min(updateCartItemDto.Quantity, guestItem.ProductVariant.Quantity);
+            await _cacheService.SetDataAsync(redisKey, cart);
+            return true;
+        }
+
         public void RemoveCartIdInsideCookie(HttpContext httpContext)
         {
             var cookieOptions = new CookieOptions
