@@ -1,4 +1,5 @@
 ﻿using API.Interfaces;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 
 namespace API.Extensions
@@ -29,11 +30,14 @@ namespace API.Extensions
             return null;
         }
 
-        public static string? GetCartIdFromCookie(this HttpContext httpContext)
+        public static Guid? GetCartIdFromCookie(this HttpContext httpContext)
         {
-            return httpContext.Request.Cookies.TryGetValue(cartIdCookieName, out string? cartId) 
-                ? cartId 
-                : string.Empty;
+            if(httpContext.Request.Cookies.TryGetValue(cartIdCookieName, out string? cartId))
+            {
+                return Guid.TryParse(cartId, out Guid result) ? result : null;
+            }
+
+            return null;
         }
     }
 }

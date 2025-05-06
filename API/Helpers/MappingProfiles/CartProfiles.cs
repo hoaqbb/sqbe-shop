@@ -25,6 +25,21 @@ namespace API.Helpers.MappingProfiles
                     src.ProductVariant.Product.Category.Name))
                 .ForMember(dest => dest.ProductVariant, opt => opt.MapFrom(src =>
                     src.ProductVariant));
+
+            CreateMap<ProductVariant, CartItemDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
+                    src.Product.Name))
+                .ForMember(dest => dest.Photo, opt => opt.MapFrom(src =>
+                    src.Product.ProductImages.FirstOrDefault(x => x.IsMain).ImageUrl))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src =>
+                    src.Product.Price))
+                .ForMember(dest => dest.Discount, opt => opt.MapFrom(src =>
+                    src.Product.Discount))
+                .ForMember(dest => dest.Slug, opt => opt.MapFrom(src =>
+                    src.Product.Slug))
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src =>
+                    src.Product.Category.Name))
+                .ForMember(dest => dest.ProductVariant, opt => opt.MapFrom(src => src));
         }
     }
 }

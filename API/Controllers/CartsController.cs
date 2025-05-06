@@ -10,19 +10,38 @@ namespace API.Controllers
     [ApiController]
     public class CartsController : ControllerBase
     {
+        private readonly ITokenService _tokenService;
         private readonly ICartService _cartService;
-
-        public CartsController(ICartService cartService)
+ 
+        public CartsController(ITokenService tokenService, ICartService cartService)
         {
+            _tokenService = tokenService;
             _cartService = cartService;
         }
 
         [HttpGet]
         public async Task<ActionResult<CartDto>> GetCart()
         {
-            var cart = await _cartService.GetOrCreateCartAsync(HttpContext);
-            if (cart == null) return NotFound();
+            var cart = await _cartService.GetCartAsync(HttpContext);
+
+            if (cart == null)
+                cart = new CartDto();
+
             return Ok(cart);
+        }
+
+        [HttpPost("add-item")]
+        public async Task<ActionResult<CartItemDto>> AddToCart([FromBody]CreateCartItemDto createCartItemDto)
+        {
+            Guid? userId = HttpContext.GetUserIdFromTokenInsideCookie(_tokenService);
+            Guid? cartId = HttpContext.GetCartIdFromCookie();
+
+            var result = await _cartService.AddToCartAsync(createCartItemDto, userId, cartId);
+
+            if (result == null)
+                return BadRequest("Unable to add item to cart.");
+
+            return Ok(result);
         }
     }
 }

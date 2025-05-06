@@ -20,6 +20,7 @@ namespace API
             builder.Services.AddMappingService();
             builder.Services.AddAuthenticationServices(builder.Configuration);
             builder.Services.AddRedisCache(builder.Configuration);
+            builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
 
