@@ -1,0 +1,11 @@
+.order-summary {
+  border: 1px solid #e0e0e0;
+}
+
+.summary-total {
+  border-top: 1px solid #dfe0e1;
+}
+
+.summary-action {
+  border-top: 1px solid #dfe0e1;
+}

@@ -1,1 +1,51 @@
-<p>cart works!</p>
+<div class="container" style="margin: 150px auto">
+  <div class="row m-auto">
+    <div class="col-md-9 col-xs-12">
+      <h2 class="text-center mb-5">Giỏ hàng của bạn</h2>
+      <div class="container" style="background-color: #fafafa">
+        @if(cartService.cart() && cartService.cart().cartItems?.length > 0) {
+        @for (item of cartService.cart().cartItems ; track null) {
+        <div class="row">
+          <app-cart-item
+            [cartItem]="item"
+            (calculate)="calculateAmount()"
+          ></app-cart-item>
+        </div>
+        } } @else {
+        <div class="list-group align-items-center">
+          <p class="text-center my-3">Giỏ hàng của bạn đang trống</p>
+          <a style="width: 25%; height: 40px" routerLink="/collections/all"
+            ><button style="width: 100%; height: 100%">
+              Tiếp tục mua hàng
+            </button></a
+          >
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="col-md-3 col-xs-12 mt-5 d-flex flex-column">
+      <p class="text-muted cursor-pointer align-self-end" routerLink="/">
+        Tiếp tục mua hàng
+        <i class="pi pi-arrow-right" style="font-size: 1rem"></i>
+      </p>
+      <div class="order-summary d-flex flex-column p-3">
+        <h5 class="my-3">Thông tin đơn hàng</h5>
+        <div class="summary-total d-flex justify-content-between py-3">
+          <h6>Tổng tiền:</h6>
+          <h6 class="">
+            {{ cartService.amount() | number : "1.0" : "en-US" }}đ
+          </h6>
+        </div>
+        <div class="summary-action d-flex flex-column py-3">
+          <p class="text-muted my-1">
+            Bạn có thể nhập mã giảm giá ở trang thanh toán
+          </p>
+          <button class="animated-btn fs-6" (click)="checkout()">
+            THANH TOÁN
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

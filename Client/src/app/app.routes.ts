@@ -4,6 +4,7 @@ import { ProductDetailsComponent } from './features/products/product-details/pro
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 import { ServerErrorComponent } from './shared/components/server-error/server-error.component';
 import { ShopComponent } from './features/shop/shop.component';
+import { CartComponent } from './features/cart/cart.component';
 
 export const routes: Routes = [
   {
@@ -17,6 +18,7 @@ export const routes: Routes = [
           import('./features/account/routes').then((r) => r.accountRoutes),
       },
       { path: 'products/:slug', component: ProductDetailsComponent },
+      { path: 'cart', component: CartComponent },
     ],
   },
   { path: 'not-found', component: NotFoundComponent },

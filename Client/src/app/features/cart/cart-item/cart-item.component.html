@@ -1,0 +1,63 @@
+@if(cartItem) {
+<div class="d-flex p-0 m-1" style="background-color: #ffff">
+  <div class="col-2 d-flex justify-content-center align-self-center">
+    <a routerLink="/products/{{ cartItem.slug }}">
+      <img
+        src="{{ cartItem.photo || '../../../../../../assets/no-image.svg' }}"
+        alt=""
+        style="height: 100px; width: 65px"
+      />
+    </a>
+  </div>
+
+  <div class="col-4 align-self-center">
+    <h6 routerLink="/products/{{ cartItem.slug }}">{{ cartItem.name }}</h6>
+    <p class="text-muted">
+      {{ cartItem.productVariant.color }} / {{ cartItem.productVariant.size }}
+    </p>
+  </div>
+
+  <div class="col-2 align-self-center">
+    <p-inputNumber
+      [(ngModel)]="cartItem.quantity"
+      size="1"
+      min="1"
+      [max]="cartItem.productVariant.quantity"
+      [showButtons]="true"
+      buttonLayout="horizontal"
+      spinnerMode="vertical"
+      allowEmpty="false"
+      inputId="vertical"
+      (onBlur)="updateCartItem($event, cartItem.id)"
+      decrementButtonClass="p-button-secondary"
+      incrementButtonClass="p-button-secondary"
+      incrementButtonIcon="pi pi-plus"
+      decrementButtonIcon="pi pi-minus"
+    />
+  </div>
+
+  <div class="col-2 text-center align-self-center">
+    <p>
+      {{
+        (cartItem.price * (100 - cartItem.discount)) / 100
+          | number : "1.0" : "en-US"
+      }}đ
+    </p>
+  </div>
+
+  <div class="col-2 d-flex flex-column align-items-center">
+    <p>Thành tiền:</p>
+    <p class="fw-medium">
+      {{
+        cartItem.price
+          | discount : cartItem.discount
+          | number : "1.0" : "en-US"
+      }}đ
+    </p>
+    <span class="cursor-pointer" (click)="removeCartItem(cartItem.id)">
+      <i class="pi pi-trash text-danger"></i>
+    </span>
+  </div>
+</div>
+
+}

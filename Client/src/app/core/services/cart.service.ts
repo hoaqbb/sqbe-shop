@@ -61,6 +61,28 @@ export class CartService {
     );
   }
 
+  updateCartItem(cartItemId: number, quantity: number) {
+    return this.http.put(this.baseUrl + '/api/Carts/items/' + cartItemId, { quantity: quantity }).pipe(
+      tap(() => {
+        this.itemCount();
+        this.calculateAmount();
+      })
+    );
+  }
+
+  removeCartItem(cartItemId: number){
+    return this.http.delete(this.baseUrl + '/api/Carts/items/' + cartItemId, {}).pipe(
+      tap(() => {
+        this.cart.update(cart => {
+          cart.cartItems = cart.cartItems.filter(item => item.id !== cartItemId);
+          this.itemCount();
+          this.calculateAmount()
+          return cart;
+        });
+      })
+    )
+  }
+
   itemCount(){
     let itemCount = computed(() => {
       return this.cart()?.cartItems.reduce((sum, item) => sum + item.quantity, 0);

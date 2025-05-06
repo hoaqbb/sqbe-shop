@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { SidebarModule } from 'primeng/sidebar';
-import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { SidebarService } from '../../../core/services/sidebar.service';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
@@ -10,7 +9,7 @@ import { DiscountPipe } from '../../../shared/pipes/discount.pipe';
 @Component({
   selector: 'app-cart-sidebar',
   standalone: true,
-  imports: [SidebarModule, ScrollPanelModule, RouterLink, CommonModule, DiscountPipe],
+  imports: [SidebarModule, RouterLink, CommonModule, DiscountPipe],
   templateUrl: './cart-sidebar.component.html',
   styleUrl: './cart-sidebar.component.css',
 })
@@ -28,6 +27,10 @@ export class CartSidebarComponent {
     } else {
       this.sidebarService.close('cart');
     }
+  }
+
+  removeCartItem(cartItemId: number) {
+    this.cartService.removeCartItem(cartItemId).subscribe();
   }
 
   checkout() {
