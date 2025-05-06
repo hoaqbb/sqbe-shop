@@ -1,8 +1,9 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { Cart } from '../../shared/models/cart';
+import { Cart, CartItem } from '../../shared/models/cart';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { catchError, of, tap, throwError } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class CartService {
   count = signal<number>(0);
   amount = signal<number>(0);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private toastr: ToastrService) { }
 
   getCart() {
     return this.http.get<Cart>(this.baseUrl + '/api/Carts').pipe(
@@ -23,6 +24,41 @@ export class CartService {
           this.calculateAmount();
       })
     )
+  }
+
+  addToCart(productVariantId: number) {
+    return this.http.post(this.baseUrl + '/api/Carts/add-item', { productVariantId: productVariantId });
+  }
+
+  addToCartAndUpdate(productVariantId: number) {
+    const cart = this.cart();
+    const existingItem = cart.cartItems.find(x => x.productVariant.id === productVariantId);
+
+    // Nếu đã tồn tại và đạt giới hạn tồn kho
+    if (existingItem && existingItem.quantity >= existingItem.productVariant.quantity) {
+      this.toastr.warning("Sản phẩm đã đạt tới giới hạn trong kho!");
+      return of();
+    }
+
+    return this.addToCart(productVariantId).pipe(
+      tap((updatedItem: CartItem) => {
+        this.cart.update(cart => {
+          const existingIndex = cart.cartItems.findIndex(item => item.productVariant.id === productVariantId);
+          if (existingIndex !== -1) {
+            cart.cartItems[existingIndex] = updatedItem; // replace
+          } else {
+            cart.cartItems.push(updatedItem);
+          }
+          this.itemCount();
+          this.calculateAmount();
+          return cart;
+        }),
+        catchError((error) => {
+          this.toastr.error("Không thể thêm sản phẩm vào giỏ hàng.");
+          return throwError(() => error);
+        })
+      })
+    );
   }
 
   itemCount(){

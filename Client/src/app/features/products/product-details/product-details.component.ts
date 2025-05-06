@@ -2,20 +2,16 @@ import { Component, SecurityContext } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DiscountPipe } from '../../../shared/pipes/discount.pipe';
-import {
-  ProductDetail,
-  ProductVariant
-} from '../../../shared/models/product';
+import { ProductDetail, ProductVariant } from '../../../shared/models/product';
 import { ShopService } from '../../../core/services/shop.service';
 import { ActivatedRoute } from '@angular/router';
-import {
-  GalleryModule,
-  ImageItem,
-  GalleryItem,
-} from 'ng-gallery';
+import { GalleryModule, ImageItem, GalleryItem } from 'ng-gallery';
 import { ColorVariant } from '../../../shared/models/color';
 import { SizeVariant } from '../../../shared/models/size';
 import { DomSanitizer } from '@angular/platform-browser';
+import { CartService } from '../../../core/services/cart.service';
+import { ToastrService } from 'ngx-toastr';
+import { SidebarService } from '../../../core/services/sidebar.service';
 
 @Component({
   selector: 'app-product-details',
@@ -35,18 +31,13 @@ export class ProductDetailsComponent {
 
   images: GalleryItem[] = [];
 
-  onColorChange(color: ColorVariant) {
-    this.selectedColor = color;
-  }
-
-  onSizeChange(size: string) {
-    this.selectedSize = size;
-  }
-
   constructor(
     private shopService: ShopService,
+    private cartService: CartService,
     private sanitizer: DomSanitizer,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService,
+    private sidebarService: SidebarService
   ) {}
 
   ngOnInit(): void {
@@ -65,7 +56,9 @@ export class ProductDetailsComponent {
             new ImageItem({ src: img.imageUrl, thumb: img.imageUrl })
           )
         );
-        this.productDetail.description = this.sanitizeHTML(this.productDetail.description);
+        this.productDetail.description = this.sanitizeHTML(
+          this.productDetail.description
+        );
         this.colorVariants = this.groupVariantsByColor(
           this.productDetail.productVariants
         );
@@ -114,14 +107,54 @@ export class ProductDetailsComponent {
     return false;
   }
 
+  // Update getFirstAvailableSize to also set selectedVariantId
   getFirstAvailableSize(): string | undefined {
     if (this.selectedColor?.sizeVariants) {
       const firstAvailable = this.selectedColor.sizeVariants.find(
         (v) => v.quantity > 0
       );
-      return firstAvailable?.size;
+      if (firstAvailable) {
+        this.selectedVariantId = firstAvailable.id;
+        return firstAvailable.size;
+      }
     }
     return undefined;
+  }
+
+  onColorChange(color: ColorVariant) {
+    this.selectedColor = color;
+    // Get first available size for the new color
+    this.selectedSize = this.getFirstAvailableSize();
+    // Update selectedVariantId based on new color and size
+    this.updateSelectedVariantId();
+  }
+
+  onSizeChange(size: string) {
+    this.selectedSize = size;
+    // Update selectedVariantId when size changes
+    this.updateSelectedVariantId();
+  }
+
+  // Add new method to update selectedVariantId
+  private updateSelectedVariantId() {
+    if (this.selectedColor && this.selectedSize) {
+      const selectedVariant = this.selectedColor.sizeVariants.find(
+        (variant) => variant.size === this.selectedSize
+      );
+      if (selectedVariant) {
+        this.selectedVariantId = selectedVariant.id;
+      }
+    }
+  }
+
+  addToCart(): void {
+    if (!this.selectedVariantId) return;
+
+    this.cartService
+      .addToCartAndUpdate(this.selectedVariantId)
+      .subscribe(() => {
+        this.sidebarService.toggle('cart');
+      });
   }
 
   //sanitizes the product description HTML content to prevent XSS attacks
