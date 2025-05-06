@@ -21,6 +21,11 @@ export const routes: Routes = [
       { path: 'cart', component: CartComponent },
     ],
   },
+  {
+    path: 'admin',
+    loadChildren: () =>
+      import('./features/admin/routes').then((m) => m.adminRoutes),
+  },
   { path: 'not-found', component: NotFoundComponent },
   { path: 'server-error', component: ServerErrorComponent },
   { path: '**', redirectTo: 'not-found', pathMatch: 'full' },
