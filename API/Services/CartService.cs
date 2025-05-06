@@ -148,6 +148,59 @@ namespace API.Services
             return true;
         }
 
+        public async Task<bool> RemoveCartItemAsync(HttpContext httpContext, int cartItemId)
+        {
+            var userId = httpContext.GetUserIdFromTokenInsideCookie(_tokenService);
+            var cartId = httpContext.GetCartIdFromCookie();
+
+            redisKey = (userId is null) ? $"cart:guest:{cartId}" : $"cart:user:{userId}";
+            CartDto? cart = await _cacheService.GetDataAsync<CartDto>(redisKey);
+
+            if (userId != null)
+            {
+                var cartItem = await _context.CartItems
+                        //.SingleOrDefaultAsync(x => x.Id == cartItemId && x.CartId == cart.Id);
+                        .SingleOrDefaultAsync(x => x.Id == cartItemId);
+                if (cartItem == null) return false;
+
+                if (cart == null)
+                {
+                    cart = await _unitOfWork.CartRepository
+                        .GetSingleProjectedAsync<CartDto>(x => x.UserId == userId, _mapper.ConfigurationProvider);
+                    if (cart == null) return false;
+
+                    _context.CartItems.Remove(cartItem);
+                    await _context.SaveChangesAsync();
+
+                    await _cacheService.RemoveDataAsync(redisKey);
+                    return true;
+                }
+                else
+                {
+                    var item = cart.CartItems
+                        .FirstOrDefault(x => x.Id == cartItemId);
+                    if (item == null) return false;
+
+                    _context.CartItems.Remove(cartItem);
+                    await _context.SaveChangesAsync();
+
+                    cart.CartItems.Remove(item);
+                    await _cacheService.SetDataAsync(redisKey, cart);
+                    return true;
+                }
+            }
+
+            // Guest user
+            if (cartId == null || cart == null) return false;
+
+            var guestItem = cart.CartItems.FirstOrDefault(x => x.Id == cartItemId);
+            if (guestItem == null) return false;
+
+            cart.CartItems.Remove(guestItem);
+            await _cacheService.SetDataAsync(redisKey, cart);
+            return true;
+        }
+
         public void RemoveCartIdInsideCookie(HttpContext httpContext)
         {
             var cookieOptions = new CookieOptions

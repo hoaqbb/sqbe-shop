@@ -7,6 +7,7 @@ namespace API.Interfaces
         Task<CartDto?> GetCartAsync(HttpContext context);
         Task<CartItemDto?> AddToCartAsync(CreateCartItemDto dto, Guid? userId, Guid? cartId);
         Task<bool> UpdateCartItemAsync(HttpContext httpContext, UpdateCartItemDto updateCartItemDto, int cartItemId);
+        Task<bool> RemoveCartItemAsync(HttpContext httpContext, int productVariantId);
         void SetCartIdInsideCookie(HttpContext httpContext, string cartId);
         void RemoveCartIdInsideCookie(HttpContext httpContext);
     }

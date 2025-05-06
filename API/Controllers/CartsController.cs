@@ -1,4 +1,5 @@
 ﻿using API.DTOs.CartDtos;
+using API.Extensions;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,14 @@ namespace API.Controllers
             var result = await _cartService.UpdateCartItemAsync(HttpContext, updateCartItemDto, itemId);
             if (!result) return NotFound("Cart item not found.");
 
+            return NoContent();
+        }
+
+        [HttpDelete("items/{itemId}")]
+        public async Task<IActionResult> RemoveCartItem(int itemId)
+        {
+            var result = await _cartService.RemoveCartItemAsync(HttpContext, itemId);
+            if (!result) return NotFound("Cart item not found or already removed.");
             return NoContent();
         }
     }
