@@ -14,5 +14,8 @@ namespace API.Interfaces
         void Update(T entity);
         void Delete(T entity);
         Task<int> CountAsync(Expression<Func<T, bool>> predicate = null);
+        Task<int> CountAsync(ISpecification<T> specifications);
+        Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec);
+        Task<IReadOnlyList<TResult>> ListAsync<TResult>(ISpecification<T> spec, AutoMapper.IConfigurationProvider config);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using API.Data.Entities;
 using API.Interfaces;
+using API.Specifications;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,14 @@ namespace API.Repositories
             IQueryable<T> query = _dbSet;
             if(predicate != null)
                 query = query.Where(predicate);
+            return await query.CountAsync();
+        }
+
+        public async Task<int> CountAsync(ISpecification<T> specifications)
+        {
+            var query = _dbSet.AsQueryable();
+            query = specifications.ApplyCriteria(query);
+
             return await query.CountAsync();
         }
 
@@ -70,9 +79,29 @@ namespace API.Repositories
             return product;
         }
 
+        public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<TResult>> ListAsync<TResult>(ISpecification<T> spec, AutoMapper.IConfigurationProvider config)
+        {
+            return await ApplySpecification<TResult>(spec, config).ToListAsync();
+        }
+
         public void Update(T entity)
         {
             _dbSet.Update(entity);
+        }
+
+        private IQueryable<T> ApplySpecification(ISpecification<T> spec)
+        {
+            return SpecificationEvaluator<T>.GetQuery(_dbSet.AsQueryable(), spec);
+        }
+
+        private IQueryable<TResult> ApplySpecification<TResult>(ISpecification<T> spec, AutoMapper.IConfigurationProvider config)
+        {
+            return SpecificationEvaluator<T>.GetQuery<TResult>(_dbSet.AsQueryable(), spec, config);
         }
     }
 }
