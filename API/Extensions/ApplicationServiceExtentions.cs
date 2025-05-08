@@ -19,6 +19,7 @@ namespace API.Extensions
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IProductService, ProductService>();
 
             return services;
         }

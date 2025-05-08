@@ -16,7 +16,18 @@ namespace API.Repositories
             _context = context;
         }
 
-        public async Task<bool> IsProductLikedByCurrentUser(int userId, Guid productId)
+
+        public async Task<List<Guid>> GetLikedProductIdsAsync(Guid userId, List<Guid> productIds)
+        {
+            var likedProductIds = await _context.UserLikes
+                .Where(x => x.UserId == userId && productIds.Contains(x.ProductId))
+                .Select(x => x.ProductId)
+                .ToListAsync();
+
+            return likedProductIds;
+        }
+
+        public async Task<bool> IsProductLikedByCurrentUser(Guid userId, Guid productId)
         {
             var isLiked = await _context.UserLikes
                 .AnyAsync(x => x.UserId == userId && x.ProductId == productId);
