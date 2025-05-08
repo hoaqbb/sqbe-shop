@@ -62,3 +62,8 @@
     transition: transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
     transition: transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86), -webkit-transform 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
   }
+
+  /* change the color of the text in the p-paginator to black */
+  .p-highlight {
+    color: #000;
+  }

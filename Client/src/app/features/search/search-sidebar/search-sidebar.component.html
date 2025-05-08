@@ -1,0 +1,64 @@
+<div class="card flex flex-wrap justify-content-center gap-2">
+  <p-sidebar [(visible)]="show" position="right">
+    <h4 class="mt-2 mb-4">TÌM KIẾM</h4>
+    <div class="container">
+      <div class="row">
+        <form [formGroup]="searchForm" class="p-0">
+          <input
+            oninput="this.value = this.value.toUpperCase()"
+            formControlName="search"
+            type="text"
+            class="form-control"
+            placeholder="TÌM KIẾM SẢN PHẨM..."
+          />
+        </form>
+      </div>
+
+      <div class="row" *ngIf="products">
+        @for (item of products; track $index) { @if($index < 6) {
+        <div
+          class="item-ult"
+          routerLink="/products/{{ item.slug }}"
+          (click)="sidebarService.closeAll()"
+        >
+          <div class="title">
+            <a title="{{ item.name }}">{{ item.name }} </a>
+            @if (item.discount > 0) {
+            <p class="f-initial">
+              {{
+                item.price
+                  | discount : item.discount
+                  | number : "1.0" : "en-US"
+              }}đ
+              <span class="price ms-2 text-secondary">
+                {{ item.price | number : "1.0" : "en-US" }}đ
+              </span>
+            </p>
+            } @else {
+            <p class="f-initial">
+              {{ item.price | number : "1.0" : "en-US" }}đ
+            </p>
+            }
+          </div>
+
+          <div class="thumbs">
+            <a title="{{ item.name }}">
+              <img
+                alt="{{ item.name }}"
+                src="{{ item.mainPhoto }}"
+                style="width: 100%; height: 100%"
+              />
+            </a>
+          </div>
+        </div>
+        } } @if (pagination && pagination.totalItems > 6) {
+        <div class="results-more">
+          <a (click)="navigateToSearch(searchForm.controls['search'].value); sidebarService.closeAll()"
+            >Xem thêm {{ pagination.totalCount - 1 }} sản phẩm</a
+          >
+        </div>
+        }
+      </div>
+    </div>
+  </p-sidebar>
+</div>

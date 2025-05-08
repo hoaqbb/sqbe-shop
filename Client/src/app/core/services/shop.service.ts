@@ -1,9 +1,10 @@
 import { Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { Category } from '../../shared/models/category';
-import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { of, tap } from 'rxjs';
 import { Product, ProductDetail } from '../../shared/models/product';
+import { ProductSearchParams } from '../../shared/models/productParams';
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,19 @@ export class ShopService {
 
   getProductBySlug(slug: string) {
     return this.http.get<ProductDetail>(this.baseUrl + '/api/Products/'+ slug);
+  }
+
+  searchProduct(keyword: string, productParams: ProductSearchParams) {
+    let params = new HttpParams();
+
+    productParams.keyword = keyword.trim();
+    if (productParams.keyword === '') {
+      return of();
+    }
+
+    params = params.append('keyword', productParams.keyword);
+    params = params.append('pageSize', productParams.pageSize);
+    params = params.append('pageIndex', productParams.pageNumber);
+    return this.http.get(this.baseUrl + '/api/Products/search', {params});
   }
 }

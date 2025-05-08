@@ -1,0 +1,61 @@
+input {
+  width: 100%;
+  height: 50px;
+  border-radius: 0;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.item-ult {
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 75px;
+  border-bottom: 1px dotted #dfe0e1;
+  cursor: pointer;
+}
+
+.item-ult .thumbs {
+  width: 15%;
+  height: 100%;
+}
+
+.item-ult .title {
+  font-size: smaller;
+}
+
+.item-ult .title .f-initial {
+  font-size: small;
+  color: black;
+}
+
+.results-more a {
+  text-align: center;
+  display: block;
+  font-size: 14px;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.price {
+  position: relative;
+}
+
+.price::after {
+  background-color: initial;
+  background-image: url(../../../../assets/slash.png) !important;
+  background-size: contain;
+  background-repeat: no-repeat;
+  content: "";
+  display: block;
+  height: 36px;
+  width: 100%;
+  right: 0;
+  transform: translateY(-50%);
+  position: absolute;
+  z-index: 99;
+}

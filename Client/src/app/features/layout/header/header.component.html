@@ -17,20 +17,20 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav me-auto mb-2 mb-md-0">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" routerLink="/collections/all"
+          <a class="nav-link" aria-current="page" routerLink="/categories/all"
             >SHOP ALL</a
           >
         </li>
         @if (shopService.categories()) { @for (cat of shopService.categories();
         track $index) {
         <li class="nav-item">
-          <a class="nav-link" routerLink="/collections/{{ cat.slug }}">{{
+          <a class="nav-link" routerLink="/categories/{{ cat.slug }}">{{
             cat.name | uppercase
           }}</a>
         </li>
         } }
         <li class="nav-item">
-          <a class="nav-link" routerLink="/collections/sale">SALE</a>
+          <a class="nav-link" routerLink="/categories/sale">SALE</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/recruitment">RECRUITMENT</a>
@@ -64,7 +64,7 @@
           >
         </li>
         }
-        <li class="nav-item">
+        <li class="nav-item" (click)="sidebarService.toggle('search')">
           <a class="nav-link">TÌM KIẾM</a>
         </li>
         <li class="nav-item" (click)="sidebarService.toggle('cart')">
