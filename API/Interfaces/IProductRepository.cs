@@ -10,5 +10,8 @@ namespace API.Interfaces
     {
         Task<bool> IsProductLikedByCurrentUser(Guid userId, Guid productId);
         Task<List<Guid>> GetLikedProductIdsAsync(Guid userId, List<Guid> productIds);
+        Task<ProductColor> AddProductColorAsync(ProductColor productColor);
+        Task<ProductVariant> AddProductVariantAsync(ProductVariant productVariant);
+        Task<ProductImage> AddProductImageAsync(ProductImage productImage);
     }
 }

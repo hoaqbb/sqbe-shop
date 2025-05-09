@@ -1,8 +1,9 @@
 ﻿using API.Data.Entities;
 using API.DTOs.ProductDtos;
+using API.Helpers;
+using API.Helpers.Params;
 using API.Interfaces;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using API.Specifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Repositories
@@ -16,6 +17,23 @@ namespace API.Repositories
             _context = context;
         }
 
+        public async Task<ProductColor> AddProductColorAsync(ProductColor productColor)
+        {
+            var result = await _context.ProductColors.AddAsync(productColor);
+            return result.Entity;
+        }
+
+        public async Task<ProductImage> AddProductImageAsync(ProductImage productImage)
+        {
+            var result = await _context.ProductImages.AddAsync(productImage);
+            return result.Entity;
+        }
+
+        public async Task<ProductVariant> AddProductVariantAsync(ProductVariant productVariant)
+        {
+            var result = await _context.ProductVariants.AddAsync(productVariant);
+            return result.Entity;
+        }
 
         public async Task<List<Guid>> GetLikedProductIdsAsync(Guid userId, List<Guid> productIds)
         {

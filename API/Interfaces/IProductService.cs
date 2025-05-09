@@ -11,7 +11,7 @@ namespace API.Interfaces
             AutoMapper.IConfigurationProvider mapperConfig, 
             HttpContext httpContext
             );
-
+        Task<Product> CreateProductAsync(CreateProductDto dto);
         Task<PaginatedResult<ProductListDto>> MarkLikedProductsAsync(PaginatedResult<ProductListDto> result, Guid userId);
     }
 }

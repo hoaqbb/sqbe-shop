@@ -5,7 +5,6 @@ using API.Helpers.Params;
 using API.Interfaces;
 using API.Specifications.ProductSpecifications;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -38,13 +37,13 @@ namespace API.Controllers
             return Ok(products);
         }
 
-        [HttpGet("{slug}")]
+        [HttpGet("{slug}", Name = "GetProduct")]
         public async Task<ActionResult> GetProductBySlug(string slug)
         {
             var product = await _unitOfWork.ProductRepository
                 .GetSingleProjectedAsync<ProductDetailDto>(
                     (x => x.Slug == slug && x.IsVisible == true), 
-                    _mapper
+                    _mapper.ConfigurationProvider
                 );
 
             if (product == null) return NotFound("Product not found!");
@@ -67,6 +66,15 @@ namespace API.Controllers
                 result = await _productService.MarkLikedProductsAsync(result, (Guid)userId);
 
             return Ok(result);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct([FromForm] CreateProductDto dto)
+        {
+            var newProduct = await _productService.CreateProductAsync(dto);
+
+            return CreatedAtRoute("GetProduct", new { slug = newProduct.Slug }, _mapper.Map<ProductDetailDto>(newProduct));
         }
     }
 }
