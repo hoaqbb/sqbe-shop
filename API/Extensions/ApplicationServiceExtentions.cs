@@ -1,4 +1,5 @@
 ﻿using API.Data.Entities;
+using API.Helpers;
 using API.Interfaces;
 using API.Repositories;
 using API.Services;
@@ -20,6 +21,9 @@ namespace API.Extensions
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IImageService, ImageService>();
+
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
 
             return services;
         }
