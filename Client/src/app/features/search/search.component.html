@@ -1,0 +1,37 @@
+<div
+  class="container list-group align-items-center"
+  style="margin: 100px auto 150px auto"
+>
+  <h1 class="title">TÌM KIẾM</h1>
+  <form [formGroup]="searchForm" style="width: 80%">
+    <input
+      style="width: 100%"
+      formControlName="keyword"
+      oninput="this.value = this.value.toUpperCase()"
+      type="text"
+      class="form-control"
+      placeholder="TÌM KIẾM SẢN PHẨM..."
+    />
+  </form>
+
+  @if(pagination && pagination.data.length > 0) {
+    <div class="container" style="margin: 20px auto">
+      <div class="row">
+        @for (product of pagination.data ; track null) {
+        <div class="col-3">
+          <app-product-item [product]="product"></app-product-item>
+        </div>
+        }
+      </div>
+    </div>
+  } @if(pagination && pagination.totalCount > 1) {
+  <div class="flex justify-content-center">
+    <p-paginator
+      (onPageChange)="pageChanged($event)"
+      [ariaValueNow]="pagination.pageIndex"
+      [rows]="pagination.pageSize"
+      [totalRecords]="pagination.totalCount"
+    />
+  </div>
+  }
+</div>

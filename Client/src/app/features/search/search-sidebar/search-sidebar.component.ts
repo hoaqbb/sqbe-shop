@@ -27,7 +27,6 @@ import { DiscountPipe } from '../../../shared/pipes/discount.pipe';
   styleUrl: './search-sidebar.component.css',
 })
 export class SearchSidebarComponent {
-  products: Product[];
   params: ProductSearchParams;
   pagination: Pagination<Product>;
   searchForm = new FormGroup({
@@ -54,7 +53,6 @@ export class SearchSidebarComponent {
       )
       .subscribe((data: any) => {
         this.pagination = data
-        this.products = this.pagination.data;
       });
   }
 

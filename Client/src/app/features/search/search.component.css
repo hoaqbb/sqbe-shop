@@ -1,0 +1,10 @@
+.title {
+    font-weight: bold;
+}
+
+input {
+    width: 80%;
+    height: 60px;
+    border-radius: 0;
+    margin: 10px 0;
+}

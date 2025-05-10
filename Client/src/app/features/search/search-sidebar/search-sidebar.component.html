@@ -14,8 +14,8 @@
         </form>
       </div>
 
-      <div class="row" *ngIf="products">
-        @for (item of products; track $index) { @if($index < 6) {
+      <div class="row" *ngIf="pagination && pagination.data">
+        @for (item of pagination.data; track $index) { @if($index < 6) {
         <div
           class="item-ult"
           routerLink="/products/{{ item.slug }}"
@@ -51,7 +51,7 @@
             </a>
           </div>
         </div>
-        } } @if (pagination && pagination.totalItems > 6) {
+        } } @if (pagination && pagination.totalCount > 6) {
         <div class="results-more">
           <a (click)="navigateToSearch(searchForm.controls['search'].value); sidebarService.closeAll()"
             >Xem thêm {{ pagination.totalCount - 1 }} sản phẩm</a
