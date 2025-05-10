@@ -7,7 +7,6 @@ using API.Specifications.ProductSpecifications;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,13 +27,18 @@ namespace API.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetProducts()
+        [HttpGet()]
+        public async Task<ActionResult> GetProducts([FromQuery]ProductFilterParams param)
         {
-            var products = await _unitOfWork.ProductRepository
-                .GetAllProjectedAsync<ProductListDto>(_mapper);
+            var userId = HttpContext.GetUserIdFromTokenInsideCookie(_tokenService);
+            var spec = new ProductFilterSpecification(param);
 
-            return Ok(products);
+            var result = await CreatePaginatedResult<Product, ProductListDto>(_unitOfWork.ProductRepository, spec, param.PageIndex, param.PageSize, _mapper.ConfigurationProvider);
+
+            if (userId != null)
+                result = await _productService.MarkLikedProductsAsync(result, (Guid)userId);
+
+            return Ok(result);
         }
 
         [HttpGet("{slug}", Name = "GetProduct")]
