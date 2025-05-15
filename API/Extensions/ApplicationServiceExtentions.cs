@@ -21,6 +21,7 @@ namespace API.Extensions
             services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IVnPayService, VnPayService>();
             services.AddScoped<IPayPalClientFactory, PayPalClientFactory>();
