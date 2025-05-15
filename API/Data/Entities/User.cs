@@ -11,6 +11,7 @@ namespace API.Data.Entities
             Orders = new HashSet<Order>();
             Payments = new HashSet<Payment>();
             UserLikes = new HashSet<UserLike>();
+            UserPromotions = new HashSet<UserPromotion>();
         }
 
         public string Lastname { get; set; } = null!;
@@ -33,5 +34,6 @@ namespace API.Data.Entities
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<UserLike> UserLikes { get; set; }
+        public virtual ICollection<UserPromotion> UserPromotions { get; set; }
     }
 }

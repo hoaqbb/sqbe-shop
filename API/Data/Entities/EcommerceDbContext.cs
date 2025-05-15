@@ -27,9 +27,11 @@ namespace API.Data.Entities
         public virtual DbSet<ProductColor> ProductColors { get; set; } = null!;
         public virtual DbSet<ProductImage> ProductImages { get; set; } = null!;
         public virtual DbSet<ProductVariant> ProductVariants { get; set; } = null!;
+        public virtual DbSet<Promotion> Promotions { get; set; } = null!;
         public virtual DbSet<Size> Sizes { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UserLike> UserLikes { get; set; } = null!;
+        public virtual DbSet<UserPromotion> UserPromotions { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -79,7 +81,6 @@ namespace API.Data.Entities
                 entity.HasOne(d => d.ProductVariant)
                     .WithMany(p => p.CartItems)
                     .HasForeignKey(d => d.ProductVariantId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("cart_item_product_variant_fk");
             });
 
@@ -147,6 +148,10 @@ namespace API.Data.Entities
 
                 entity.Property(e => e.DeliveryMethod).HasColumnName("delivery_method");
 
+                entity.Property(e => e.DiscountAmount)
+                    .HasPrecision(18)
+                    .HasColumnName("discount_amount");
+
                 entity.Property(e => e.Email)
                     .HasMaxLength(50)
                     .HasColumnName("email");
@@ -166,19 +171,19 @@ namespace API.Data.Entities
                     .HasColumnName("phone_number")
                     .IsFixedLength();
 
+                entity.Property(e => e.PromotionId).HasColumnName("promotion_id");
+
                 entity.Property(e => e.ShippingFee).HasColumnName("shipping_fee");
 
                 entity.Property(e => e.Status).HasColumnName("status");
 
+                entity.Property(e => e.Subtotal)
+                    .HasPrecision(18)
+                    .HasColumnName("subtotal");
+
                 entity.Property(e => e.UpdateAt).HasColumnName("update_at");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
-
-                entity.HasOne(d => d.Payment)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.PaymentId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("order_payment_id_fkey");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Orders)
@@ -193,16 +198,38 @@ namespace API.Data.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.Discount).HasColumnName("discount");
+
                 entity.Property(e => e.OrderId).HasColumnName("order_id");
 
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
+                entity.Property(e => e.Price)
+                    .HasPrecision(18)
+                    .HasColumnName("price");
 
-                entity.Property(e => e.QuantityId).HasColumnName("quantity_id");
+                entity.Property(e => e.ProductColor)
+                    .HasMaxLength(30)
+                    .HasColumnName("product_color");
+
+                entity.Property(e => e.ProductImageUrl)
+                    .HasMaxLength(255)
+                    .HasColumnName("product_image_url");
+
+                entity.Property(e => e.ProductName)
+                    .HasMaxLength(100)
+                    .HasColumnName("product_name");
+
+                entity.Property(e => e.ProductSize)
+                    .HasMaxLength(10)
+                    .HasColumnName("product_size");
+
+                entity.Property(e => e.ProductVariantId).HasColumnName("product_variant_id");
+
+                entity.Property(e => e.Quantity).HasColumnName("quantity");
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderItems)
                     .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("order_item_order_id_fkey");
+                    .HasConstraintName("order_item_order_fk");
             });
 
             modelBuilder.Entity<Payment>(entity =>
@@ -219,17 +246,21 @@ namespace API.Data.Entities
                     .HasColumnName("create_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                entity.Property(e => e.CurrencyCode)
+                    .HasMaxLength(10)
+                    .HasColumnName("currency_code");
+
                 entity.Property(e => e.Method)
                     .HasMaxLength(50)
                     .HasColumnName("method");
+
+                entity.Property(e => e.OrderId).HasColumnName("order_id");
 
                 entity.Property(e => e.Provider)
                     .HasMaxLength(50)
                     .HasColumnName("provider");
 
-                entity.Property(e => e.Status)
-                    .HasColumnType("bit(1)")
-                    .HasColumnName("status");
+                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.TransactionId)
                     .HasMaxLength(100)
@@ -238,6 +269,11 @@ namespace API.Data.Entities
                 entity.Property(e => e.UpdateAt).HasColumnName("update_at");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.Payments)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("payment_order_fk");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Payments)
@@ -370,6 +406,54 @@ namespace API.Data.Entities
                     .HasConstraintName("product_variant_size_fk");
             });
 
+            modelBuilder.Entity<Promotion>(entity =>
+            {
+                entity.ToTable("promotion");
+
+                entity.HasIndex(e => e.Code, "promotion_code_key")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Code)
+                    .HasMaxLength(50)
+                    .HasColumnName("code");
+
+                entity.Property(e => e.CreateAt)
+                    .HasColumnName("create_at")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(255)
+                    .HasColumnName("description");
+
+                entity.Property(e => e.DiscountType).HasColumnName("discount_type");
+
+                entity.Property(e => e.DiscountValue)
+                    .HasPrecision(18)
+                    .HasColumnName("discount_value");
+
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
+                entity.Property(e => e.IsUserRestricted).HasColumnName("is_user_restricted");
+
+                entity.Property(e => e.MaxDiscountValue).HasColumnName("max_discount_value");
+
+                entity.Property(e => e.MinOrderAmount)
+                    .HasPrecision(18)
+                    .HasColumnName("min_order_amount");
+
+                entity.Property(e => e.UpdateAt).HasColumnName("update_at");
+
+                entity.Property(e => e.UsageCount).HasColumnName("usage_count");
+
+                entity.Property(e => e.UsageLimit).HasColumnName("usage_limit");
+
+                entity.Property(e => e.ValidateFrom).HasColumnName("validate_from");
+
+                entity.Property(e => e.ValidateTo).HasColumnName("validate_to");
+            });
+
             modelBuilder.Entity<Size>(entity =>
             {
                 entity.ToTable("size");
@@ -462,6 +546,31 @@ namespace API.Data.Entities
                     .WithMany(p => p.UserLikes)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("user_like_user_fk");
+            });
+
+            modelBuilder.Entity<UserPromotion>(entity =>
+            {
+                entity.ToTable("user_promotion");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.PromotionId).HasColumnName("promotion_id");
+
+                entity.Property(e => e.UsedAt)
+                    .HasColumnName("used_at")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+
+                entity.HasOne(d => d.Promotion)
+                    .WithMany(p => p.UserPromotions)
+                    .HasForeignKey(d => d.PromotionId)
+                    .HasConstraintName("user_promotion_promotion_fk");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserPromotions)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("user_promotion_user_fk");
             });
 
             OnModelCreatingPartial(modelBuilder);
