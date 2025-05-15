@@ -46,6 +46,11 @@ namespace API.Repositories
             _dbSet.Remove(entity);
         }
 
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>>? predicate = null)
+        {
+            return await _dbSet.AnyAsync(predicate);
+        }
+
         public async Task<T?> FindAsync(params object[] keyValues)
         {
             return await _dbSet.FindAsync(keyValues);
@@ -66,6 +71,16 @@ namespace API.Repositories
             return await _dbSet
                 .ProjectTo<TDto>(config)
                 .ToListAsync();
+        }
+
+        public async Task<T?> GetSingleOrDefaultAsync(Expression<Func<T, bool>>? predicate = null)
+        {
+            IQueryable<T> query = _dbSet.Where(predicate);
+
+            var product = await query
+                .SingleOrDefaultAsync();
+
+            return product;
         }
 
         public async Task<TDto?> GetSingleProjectedAsync<TDto>(Expression<Func<T, bool>> predicate, AutoMapper.IConfigurationProvider config)

@@ -2,6 +2,7 @@
 {
     public interface IUnitOfWork
     {
+        IGenericRepository<T> Repository<T>() where T : class;
         IAccountRepository AccountRepository { get; }
         ICategoryRepository CategoryRepository { get; }
         IProductRepository ProductRepository { get; }

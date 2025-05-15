@@ -17,5 +17,7 @@ namespace API.Interfaces
         Task<int> CountAsync(ISpecification<T> specifications);
         Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec);
         Task<IReadOnlyList<TResult>> ListAsync<TResult>(ISpecification<T> spec, AutoMapper.IConfigurationProvider config);
+        Task<T?> GetSingleOrDefaultAsync(Expression<Func<T, bool>>? predicate = null);
+        Task<bool> ExistsAsync(Expression<Func<T, bool>>? predicate = null);
     }
 }

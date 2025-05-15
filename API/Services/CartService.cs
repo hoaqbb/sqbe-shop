@@ -201,6 +201,44 @@ namespace API.Services
             return true;
         }
 
+        public async Task<bool> ClearCartAsync(HttpContext httpContext)
+        {
+            try
+            {
+                var userId = httpContext.GetUserIdFromTokenInsideCookie(_tokenService);
+                var cartId = httpContext.GetCartIdFromCookie();
+
+                redisKey = (userId is null) ? $"cart:guest:{cartId}" : $"cart:user:{userId}";
+
+                var cacheRemoved = await _cacheService.RemoveDataAsync(redisKey);
+
+                if (!cacheRemoved) return false;
+
+                if (userId != null)
+                {
+                    // Get cart items from database
+                    var cartItems = await _context.CartItems
+                        .Include(x => x.Cart)
+                        .Where(x => x.Cart.UserId == userId)
+                        .ToListAsync();
+
+                    if (cartItems.Any())
+                    {
+                        // Remove all cart items for this user
+                        _context.CartItems.RemoveRange(cartItems);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+            
+        }
+
         public void RemoveCartIdInsideCookie(HttpContext httpContext)
         {
             var cookieOptions = new CookieOptions
