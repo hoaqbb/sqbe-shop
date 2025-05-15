@@ -45,6 +45,15 @@ namespace API.Repositories
             return likedProductIds;
         }
 
+        public async Task<List<ProductImage>> GetProductImagesAsync(Guid id)
+        {
+            var productImages = await _context.ProductImages
+                .Where(x => x.ProductId == id)
+                .ToListAsync();
+
+            return productImages;
+        }
+
         public async Task<bool> IsProductLikedByCurrentUser(Guid userId, Guid productId)
         {
             var isLiked = await _context.UserLikes

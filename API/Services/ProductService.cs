@@ -12,16 +12,14 @@ namespace API.Services
     public class ProductService : IProductService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly EcommerceDbContext _context;
-        private readonly ITokenService _tokenService;
         private readonly IImageService _imageService;
+        private readonly ILogger<ProductService> _logger;
 
-        public ProductService(IUnitOfWork unitOfWork, EcommerceDbContext context, ITokenService tokenService, IImageService imageService)
+        public ProductService(IUnitOfWork unitOfWork, IImageService imageService, ILogger<ProductService> logger)
         {
             _unitOfWork = unitOfWork;
-            _context = context;
-            _tokenService = tokenService;
             _imageService = imageService;
+            _logger = logger;
         }
 
         public async Task<Product> CreateProductAsync(CreateProductDto createProductDto)
@@ -78,6 +76,48 @@ namespace API.Services
                 await _unitOfWork.RollbackAsync();
                 throw;
             }
+        }
+
+        public async Task<bool> DeleteProductAsync(Guid id)
+        {
+            var product = await _unitOfWork.ProductRepository.FindAsync(id);
+            if (product == null) return false;
+
+            try
+            {
+                await _unitOfWork.BeginTransactionAsync();
+                var productImages = await _unitOfWork.ProductRepository.GetProductImagesAsync(product.Id);
+
+                if (productImages.Count() > 0)
+                {
+                    var publicIds = productImages.Select(x => x.PublicId).ToList();
+                    var deleteResults = await _imageService.DeleteMultipleImagesAsync(publicIds!);
+
+                    var failedImages = deleteResults.Where(r => r.Error != null).ToList();
+                    if (failedImages.Any())
+                    {
+                        foreach (var fail in failedImages)
+                        {
+                            _logger.LogWarning($"Failed to delete image: {fail.Error.Message}");
+                        }
+                    }
+                }
+                _unitOfWork.ProductRepository.Delete(product);
+                if (!await _unitOfWork.SaveChangesAsync())
+                {
+                    throw new ApplicationException("Failed to delete product!");
+                }
+
+                await _unitOfWork.CommitAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackAsync();
+                throw;
+            }
+            
         }
 
         private async Task<List<ProductColor>> AddProductColorsAsync(Guid productId, List<int> colorIds)
@@ -183,30 +223,6 @@ namespace API.Services
                 product.IsLikedByCurrentUser = likedProductIds.Contains(product.Id);
             }
             return result;
-        }
-
-        public async Task<PaginatedResult<ProductListDto>> SearchProducts(ProductSearchParams param, AutoMapper.IConfigurationProvider mapperConfig, HttpContext httpContext)
-        {
-            var userId = httpContext.GetUserIdFromTokenInsideCookie(_tokenService);
-
-            var spec = new ProductSearchSpecification(param);
-            var products = await _unitOfWork.ProductRepository
-                .ListAsync<ProductListDto>(spec, mapperConfig);
-            var count = await _unitOfWork.ProductRepository.CountAsync(spec);
-
-            if (userId != null)
-            {
-                var productIds = products.Select(p => p.Id).ToList();
-                var likedProductIds = await _unitOfWork.ProductRepository
-                    .GetLikedProductIdsAsync((Guid)userId, productIds);
-
-                foreach (var product in products)
-                {
-                    product.IsLikedByCurrentUser = likedProductIds.Contains(product.Id);
-                }
-            }
-
-            return new PaginatedResult<ProductListDto>(products, count, param.PageIndex, param.PageSize);
         }
 
         private string GenerateSlug(string title)

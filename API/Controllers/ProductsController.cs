@@ -80,5 +80,15 @@ namespace API.Controllers
 
             return CreatedAtRoute("GetProduct", new { slug = newProduct.Slug }, _mapper.Map<ProductDetailDto>(newProduct));
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id:Guid}")]
+        public async Task<IActionResult> DeleteProduct(Guid id)
+        {
+            if(await _productService.DeleteProductAsync(id))
+                return NoContent();
+
+            return BadRequest("Problem deleting the product!");
+        }
     }
 }
