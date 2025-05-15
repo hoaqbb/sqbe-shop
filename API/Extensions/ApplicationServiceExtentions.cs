@@ -23,6 +23,7 @@ namespace API.Extensions
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IVnPayService, VnPayService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.Configure<VnPaySettings>(config.GetSection("VNPaySettings"));

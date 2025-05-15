@@ -9,17 +9,31 @@ namespace API.Repositories
     {
         private readonly EcommerceDbContext _context;
         private IDbContextTransaction _transaction;
+        private readonly Dictionary<Type, object> _repositories;
         private bool _disposedValue;
 
         public UnitOfWork(EcommerceDbContext context)
         {
             _context = context;
+            _repositories = new Dictionary<Type, object>();
         }
 
         public IAccountRepository AccountRepository => new AccountRepository(_context);
         public ICategoryRepository CategoryRepository =>  new CategoryRepository(_context);
         public IProductRepository ProductRepository => new ProductRepository(_context);
         public ICartRepository CartRepository => new CartRepository(_context);
+
+        public IGenericRepository<T> Repository<T>() where T : class
+        {
+            var type = typeof(T);
+
+            if (!_repositories.ContainsKey(type))
+            {
+                _repositories[type] = new GenericRepository<T>(_context);
+            }
+
+            return (IGenericRepository<T>)_repositories[type];
+        }
 
         public async Task BeginTransactionAsync()
         {
