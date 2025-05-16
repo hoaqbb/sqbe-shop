@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { AccountService } from './core/services/account.service';
-import { User } from './shared/models/user';
 import { ShopService } from './core/services/shop.service';
 import { CommonModule } from '@angular/common';
 
@@ -19,19 +18,12 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.setCurrentUser();
-    this.getCategories();
+    this.initApp();
   }
 
-  setCurrentUser() {
-    const user: User = JSON.parse(localStorage.getItem('user'));
-
-    if (user) {
-      this.accountService.currentUser.set(user);
-    }
-  }
-
-  getCategories() {
+  initApp() {
     this.shopService.getCategories().subscribe();
+    this.shopService.getColors().subscribe();
+    this.shopService.getSizes().subscribe();
   }
 }

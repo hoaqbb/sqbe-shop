@@ -12,6 +12,8 @@ import { ProductSearchParams } from '../../shared/models/productParams';
 export class ShopService {
   baseUrl = environment.apiUrl;
   categories = signal<Category[] | null>(null);
+  colors = signal<Color[] | null>(null);
+  sizes = signal<Size[] | null>(null);
 
   constructor(private http: HttpClient) { }
 
@@ -21,8 +23,17 @@ export class ShopService {
     );
   }
 
-  getProducts() {
-    return this.http.get<Product[]>(this.baseUrl + '/api/Products');
+  getColors() {
+    return this.http.get<Color[]>(this.baseUrl + '/api/Colors').pipe(
+      tap((res) => this.colors.set(res))
+    );
+  }
+
+  getSizes() {
+    return this.http.get<Size[]>(this.baseUrl + '/api/Sizes').pipe(
+      tap((res) => this.sizes.set(res))
+    );
+  }
   }
 
   getProductBySlug(slug: string) {
