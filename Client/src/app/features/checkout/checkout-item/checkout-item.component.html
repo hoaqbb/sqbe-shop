@@ -1,0 +1,40 @@
+@if(item) {
+<div class="d-flex">
+  <div>
+    <div class="d-flex" style="position: absolute">
+      <p-badge [value]="item.quantity" />
+    </div>
+    <img
+      src="{{ item.photo || '../../../../../../assets/no-image.svg' }}"
+      alt=""
+      style="height: 85px;"
+    />
+  </div>
+
+  <div class="list-group p-1" style="font-size: smaller">
+    <h6 style="font-size: small">{{ item.name }}</h6>
+    <div class="d-flex">
+      <span>{{ item.productVariant.color }}</span>
+      <span> / </span>
+      <span>{{ item.productVariant.size }}</span>
+    </div>
+    <div class="d-flex">
+      @if(item.discount) {
+      <p>
+        <strong
+          >{{
+            item.price * item.quantity | discount: item.discount | number : "1.0" : "en-US"
+          }}đ</strong
+        >
+      </p>
+      } @else {
+      <p>
+        <strong
+          >{{ item.price * item.quantity | number : "1.0" : "en-US" }}đ</strong
+        >
+      </p>
+      }
+    </div>
+  </div>
+</div>
+}

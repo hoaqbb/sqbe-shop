@@ -1,0 +1,23 @@
+<div class="container list-group align-items-center" style="margin: 100px auto">
+  @if(isCheckoutSuccess) {
+  <h1 style="font-size: 800%">200</h1>
+  <p class="lead">Đặt hàng thành công!</p>
+  <button
+    class="px-5 py-2 text-light bttn"
+    style="font-weight: bolder; background-color: black"
+    routerLink="/"
+  >
+    TRỞ VỀ TRANG CHỦ
+  </button>
+  } @else {
+  <h1 style="font-size: 800%">400</h1>
+  <p class="lead">Thanh toán không thành công!</p>
+  <button
+    class="px-5 py-2 text-light bttn"
+    style="font-weight: bolder; background-color: black"
+    routerLink="/"
+  >
+    TRỞ VỀ TRANG CHỦ
+  </button>
+  }
+</div>

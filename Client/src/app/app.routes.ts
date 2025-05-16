@@ -22,6 +22,11 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'checkout',
+    loadChildren: () =>
+      import('./features/checkout/routes').then((m) => m.checkoutRoutes),
+  },
+  {
     path: 'admin',
     canActivate: [adminGuard],
     loadChildren: () =>

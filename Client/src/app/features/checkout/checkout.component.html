@@ -1,0 +1,273 @@
+<div class="container" style="margin: 100px">
+  <div class="row">
+    <div class="col-8">
+      <form [formGroup]="checkoutForm" (ngSubmit)="createOrder()">
+        <h2>SQ&BE Shop</h2>
+        <h5>Thông tin giao hàng</h5>
+        <app-text-input
+          [formControl]="checkoutForm.controls['fullname']"
+          [label]="'Họ và tên'"
+        >
+        </app-text-input>
+        <app-text-input
+          [formControl]="checkoutForm.controls['email']"
+          [label]="'Email'"
+        >
+        </app-text-input>
+        <app-text-input
+          [formControl]="checkoutForm.controls['phoneNumber']"
+          [label]="'Số điện thoại'"
+          [type]="'number'"
+        >
+        </app-text-input>
+        <app-text-input
+          [formControl]="checkoutForm.controls['street']"
+          [label]="'Địa chỉ'"
+        >
+        </app-text-input>
+
+        <div class="d-flex justify-content-between">
+          <div class="form-floating" style="width: 32%">
+            <select
+              formControlName="province"
+              class="form-select"
+              [class.is-invalid]="
+                checkoutForm.get('province').touched &&
+                checkoutForm.get('province').invalid
+              "
+              id="province"
+              (change)="
+                getDistricts($event.target.value) &&
+                  calculateShippingFee($event.target.value)
+              "
+            >
+              <option value="" selected>Chọn tỉnh / thành phố</option>
+              @for (item of provinces; track $index) {
+              <option [value]="item.id">{{ item.name }}</option>
+              }
+            </select>
+
+            <label for="province">Tỉnh / thành phố</label>
+            <small
+              class="text-danger"
+              *ngIf="
+                checkoutForm.get('province').invalid &&
+                checkoutForm.get('province').touched
+              "
+            >
+              *Vui lòng chọn tỉnh / thành phố
+            </small>
+          </div>
+
+          <div class="form-floating" style="width: 32%">
+            <select
+              formControlName="district"
+              class="form-select"
+              [class.is-invalid]="
+                checkoutForm.get('district').touched &&
+                checkoutForm.get('district').invalid
+              "
+              id="district"
+              (change)="getWards($event.target.value)"
+            >
+              <option value="" selected>Chọn quận / huyện</option>
+              @if(districts) { @for (item of districts; track $index) {
+              <option [value]="item.id">{{ item.name }}</option>
+              } }
+            </select>
+            <label for="district">Quận / huyện</label>
+            <small
+              class="text-danger"
+              *ngIf="
+                checkoutForm.get('district').invalid &&
+                checkoutForm.get('district').touched
+              "
+            >
+              *Vui lòng chọn quận / huyện
+            </small>
+          </div>
+          <div class="form-floating" style="width: 32%">
+            <select
+              formControlName="ward"
+              class="form-select"
+              id="ward"
+              [class.is-invalid]="
+                checkoutForm.get('ward').touched &&
+                checkoutForm.get('ward').invalid
+              "
+            >
+              <option value="" selected>Chọn phường / xã</option>
+              @if(wards) { @for (item of wards; track $index) {
+              <option [value]="item.id">{{ item.name }}</option>
+              } }
+            </select>
+            <label for="ward">Phường / xã</label>
+            <small
+              class="text-danger"
+              *ngIf="
+                checkoutForm.get('ward').invalid &&
+                checkoutForm.get('ward').touched
+              "
+            >
+              *Vui lòng chọn phường / xã
+            </small>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center my-2 mb-0">
+          <h6>Phương thức vận chuyển</h6>
+          <p style="font-size: small; padding-top: 10px">
+            (miễn phí vận chuyển cho đơn hàng từ 1 triệu 500)
+          </p>
+        </div>
+
+        <div class="form-check">
+          <input
+            id="deliveryMethod"
+            class="form-check-input ms-3"
+            checked
+            formControlName="deliveryMethod"
+            type="radio"
+            value="1"
+          />
+          <label class="form-check-label ms-1" for="deliveryMethod">
+            Giao hàng tận nơi
+          </label>
+        </div>
+
+        <h6 class="my-2">Phương thức thanh toán</h6>
+        <div class="form-check">
+          <input
+            checked
+            id="payment_method_cod"
+            class="form-check-input ms-3"
+            formControlName="paymentMethod"
+            type="radio"
+            value="cod"
+          />
+          <label class="form-check-label ms-1" for="payment_method_cod">
+            Thanh toán khi giao hàng (COD)
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            id="payment_method_vnpay"
+            class="form-check-input ms-3"
+            formControlName="paymentMethod"
+            type="radio"
+            value="vnpay"
+          />
+          <label class="form-check-label ms-1" for="payment_method_vnpay">
+            Thanh toán bằng VNPay
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            id="payment_method_paypal"
+            class="form-check-input ms-3"
+            formControlName="paymentMethod"
+            type="radio"
+            value="paypal"
+          />
+          <label class="form-check-label ms-1" for="payment_method_paypal">
+            Thanh toán bằng PayPal
+          </label>
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <a routerLink="/cart" style="text-decoration: none" class="m-3"
+            >Giỏ hàng</a
+          >
+          <div class="list-group p-3">
+            <button
+              type="submit"
+              class="animated-btn btn btn-success"
+              [disabled]="checkoutForm.invalid"
+            >
+              Hoàn tất đơn hàng
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-4">
+      <form [formGroup]="checkoutForm">
+        <div *ngIf="cartService.cart()">
+          @for (item of cartService.cart().cartItems; track $index) {
+          <app-checkout-item [item]="item"></app-checkout-item>
+          }
+        </div>
+
+        <div class="border-top justify-content-between py-4">
+          <div class="d-flex gap-3 justify-content-between">
+            <input
+              formControlName="promotionCode"
+              type="text"
+              class="form-control"
+              [class.is-invalid]="checkoutForm.get('promotionCode').invalid"
+              placeholder="Mã giảm giá"
+            />
+            <button
+              [disabled]="checkoutForm.get('promotionCode')?.value === ''"
+              class="btn btn-dark px-4"
+              style="white-space: nowrap"
+              (click)="applyDiscount(checkoutForm.get('promotionCode')?.value)"
+            >
+              Áp dụng
+            </button>
+          </div>
+          <small
+            class="text-danger"
+            *ngIf="checkoutForm.get('promotionCode').invalid"
+          >
+            *Mã khuyến mãi không khả dụng
+          </small>
+        </div>
+
+        <div class="d-flex flex-column border-top py-4">
+          <div class="d-flex justify-content-between">
+            <p>Tạm tính:</p>
+            <p>{{ cartService.subtotal() | number : "1.0" : "en-US" }}đ</p>
+          </div>
+          <div class="d-flex justify-content-between">
+            <p>Phí vận chuyển:</p>
+            <p>{{ shippingFee | number : "1.0" : "en-US" }}đ</p>
+          </div>
+          <div class="d-flex justify-content-between">
+            <p>Giảm giá:</p>
+            <p>{{ discountAmount | number : "1.0" : "en-US" }}đ</p>
+          </div>
+          <div class="d-flex justify-content-between border-top pt-3">
+            <p class="fs-5">Tổng cộng:</p>
+            <p class="fs-5">{{ amount | number : "1.0" : "en-US" }}đ</p>
+          </div>
+        </div>
+
+        <div class="row list-group">
+          <div class="col-md-8 mt-4">
+            <div class="mb-3">
+              <h5>Ghi chú đơn hàng</h5>
+              <textarea
+                class="form-control"
+                formControlName="note"
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+          <div class="mt-4">
+            <h5>Chính sách Đổi/Trả</h5>
+            <ul class="list-unstyled">
+              <li>→ Sản phẩm được đổi 1 lần duy nhất, không hỗ trợ trả.</li>
+              <li>→ Sản phẩm còn đủ tem mác, chưa qua sử dụng.</li>
+              <li>
+                → Sản phẩm nguyên giá được đổi trong 30 ngày trên toàn hệ thống.
+              </li>
+              <li>→ Sản phẩm sale chỉ hỗ trợ đổi size (nếu cửa hàng còn).</li>
+            </ul>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
