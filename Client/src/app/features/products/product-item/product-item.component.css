@@ -39,6 +39,22 @@
   transform: translateY(0);
 }
 
+/* Loại bỏ hiệu ứng hover khi màn hình nhỏ hơn 768px (ví dụ: điện thoại) */
+@media (max-width: 768px) {
+  .card:hover .main-image {
+    opacity: 1;
+  }
+
+  .card:hover .sub-image {
+    opacity: 0;
+  }
+
+  .card:hover .animate {
+    opacity: 0;
+    transform: translateY(50px); /* Trở về trạng thái ban đầu */
+  }
+}
+
 .list-inline {
   display: flex;
   justify-content: center;

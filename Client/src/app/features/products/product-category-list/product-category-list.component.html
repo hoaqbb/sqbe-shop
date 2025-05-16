@@ -1,0 +1,30 @@
+<div class="container" style="margin: 100px auto">
+  <div class="d-flex justify-content-end">
+    <button class="filter-btn" (click)="sidebarService.toggle('filter')">
+      LỌC <i class="pi pi-filter"></i>
+    </button>
+  </div>
+  @if(paginatedProducts) {
+  <div class="container">
+    <div class="row">
+      @for (product of paginatedProducts.data ; track product.id) {
+      <div class="col-6 col-md-3">
+        <app-product-item [product]="product"></app-product-item>
+      </div>
+      }
+    </div>
+  </div>
+  } @if(paginatedProducts) {
+  <div class="flex justify-content-center">
+    <p-paginator
+      (onPageChange)="pageChanged($event)"
+      [alwaysShow]="false"
+      [rows]="paginatedProducts.pageSize"
+      [totalRecords]="paginatedProducts.totalCount"
+      [first]="(paginatedProducts.pageIndex - 1) * paginatedProducts.pageSize"
+    />
+  </div>
+  }
+</div>
+
+<app-filter-sidebar></app-filter-sidebar>

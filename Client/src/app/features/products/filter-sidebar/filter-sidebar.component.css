@@ -1,0 +1,14 @@
+::ng-deep .p-sidebar-header {
+
+  justify-content: space-between !important; 
+
+}
+
+::ng-deep .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+  background: black;
+}
+
+::ng-deep .p-slider .p-slider-range
+ {
+    background: #000;
+}

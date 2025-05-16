@@ -3,8 +3,10 @@ import { environment } from '../../../environments/environment.development';
 import { Category } from '../../shared/models/category';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { of, tap } from 'rxjs';
-import { Product, ProductDetail } from '../../shared/models/product';
-import { ProductSearchParams } from '../../shared/models/productParams';
+import { ProductDetail } from '../../shared/models/product';
+import { ProductFilterParams, ProductSearchParams } from '../../shared/models/productParams';
+import { Color } from '../../shared/models/color';
+import { Size } from '../../shared/models/size';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,19 @@ export class ShopService {
   categories = signal<Category[] | null>(null);
   colors = signal<Color[] | null>(null);
   sizes = signal<Size[] | null>(null);
+  currentCategory = signal<string | null>(null);
+  productFilterParams = signal<ProductFilterParams>(new ProductFilterParams());
+
+  resetProductFilterParams() {
+    const params = new ProductFilterParams();
+    params.category = this.currentCategory();
+    this.productFilterParams.set(params);
+  }
+
+  setProductFilterParams(params: ProductFilterParams) {
+    params.category = this.currentCategory();
+    this.productFilterParams.set(params);
+  }
 
   constructor(private http: HttpClient) { }
 
@@ -34,6 +49,46 @@ export class ShopService {
       tap((res) => this.sizes.set(res))
     );
   }
+
+  getProducts(productParams: ProductFilterParams) {
+    let params = new HttpParams();
+
+    if(productParams.category && productParams.category !== 'all') {
+      params = params.append('category', productParams.category);
+    }
+    
+    if(productParams.colors?.length > 0){
+      productParams.colors.forEach(element => {
+        params = params.append("colors", element)
+      });
+    }
+
+    if(productParams.sizes?.length > 0){
+      productParams.sizes.forEach(element => {
+        params = params.append("sizes", element)
+      });
+    }
+
+    if(productParams.priceFrom){
+      params = params.append("priceFrom", productParams.priceFrom)
+    }
+
+    if(productParams.priceTo){
+      params = params.append("priceTo", productParams.priceTo)
+    }
+
+    if(productParams.promotion){
+      params = params.append("promotion", productParams.promotion)
+    }
+
+    if(productParams.sort){
+      params = params.append("sort", productParams.sort)
+    }
+
+    params = params.append('pageSize', productParams.pageSize);
+    params = params.append('pageIndex', productParams.pageNumber);
+
+    return this.http.get(this.baseUrl + '/api/Products', {params});
   }
 
   getProductBySlug(slug: string) {

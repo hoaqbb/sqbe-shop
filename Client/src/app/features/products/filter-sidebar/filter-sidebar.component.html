@@ -1,0 +1,79 @@
+<div class="card flex flex-wrap justify-content-center gap-2">
+  <p-sidebar [(visible)]="show" position="right">
+    <ng-template pTemplate="header" class="d-flex justify-content-between">
+      <h4>BỘ LỌC</h4>
+    </ng-template>
+
+    <form [formGroup]="filterForm" class="container-fluid p-0">
+      <div class="d-flex justify-content-between my-4">
+        <h5>Sắp xếp</h5>
+        <div>
+          <select formControlName="sort">
+            <option value="dateDesc">MỚI NHẤT</option>
+            <option value="dateAsc">CŨ NHẤT</option>
+            <option value="priceDesc">GIÁ GIẢM DẦN</option>
+            <option value="priceAsc">GIÁ TĂNG DẦN</option>
+          </select>
+        </div>
+      </div>
+      @if(shopService.sizes()) {
+      <div class="my-4">
+        <h5 class="mb-2">Kích thước</h5>
+        <app-size-checkbox-group
+          formControlName="sizes"
+          [sizes]="shopService.sizes()"
+        ></app-size-checkbox-group>
+      </div>
+      } @if(shopService.colors()) {
+      <div class="my-4">
+        <h5 class="mb-2">Màu sắc</h5>
+        <app-color-checkbox-group
+          formControlName="colors"
+          [colors]="shopService.colors()"
+        >
+        </app-color-checkbox-group>
+      </div>
+      }
+
+      <div class="my-4">
+        <h5 class="mb-2">Giảm giá</h5>
+        <div class="d-flex justify-content-between">
+          <p class="text-muted">Các sản phẩm giảm giá</p>
+          <p-inputSwitch formControlName="promotion" />
+        </div>
+      </div>
+    </form>
+
+    <div class="my-4" style="width: 100%">
+      <div class="d-flex justify-content-between mb-2">
+        <h5>Giá</h5>
+        <div class="d-flex gap-1">
+          <p>{{ priceRangeValues[0] * 10000 | number : "1.0" : "en-US" }}đ</p>
+          <span>-</span>
+          <p>{{ priceRangeValues[1] * 10000 | number : "1.0" : "en-US" }}đ</p>
+        </div>
+      </div>
+
+      <div>
+        <p-slider [(ngModel)]="priceRangeValues" [range]="true" />
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="d-flex gap-2 mt-1 justify-content-between">
+        <button
+          class="animated-btn fs-6"
+          (click)="resetFilter(); sidebarService.closeAll()"
+        >
+          ĐẶT LẠI
+        </button>
+        <button
+          class="animated-btn fs-6"
+          (click)="applyFilter(); sidebarService.closeAll()"
+        >
+          ÁP DỤNG
+        </button>
+      </div>
+    </ng-template>
+  </p-sidebar>
+</div>
