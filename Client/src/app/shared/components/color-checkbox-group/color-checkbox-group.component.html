@@ -1,0 +1,17 @@
+<div class="colour-selector">
+  @for (color of colors ; track color.id) {
+  <label class="colour-option">
+    <input
+      type="checkbox"
+      [value]="color.id"
+      [checked]="selectedIds.includes(color.id)"
+      (change)="toggleColor(color.id, $event.target.checked)"
+    />
+    <div
+      class="colour-preview"
+      [ngStyle]="{ 'background-color': color.colorCode }"
+    ></div>
+    <span>{{ color.name }}</span>
+  </label>
+  }
+</div>

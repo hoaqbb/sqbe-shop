@@ -1,0 +1,13 @@
+<div class="size-selector gap-2">
+  @for (size of sizes ; track size.id) {
+  <label class="size-option">
+    <input
+      type="checkbox"
+      [value]="size.id"
+      [checked]="selectedIds.includes(size.id)"
+      (change)="toggleSize(size.id, $event.target.checked)"
+    />
+    <span>{{ size.name }}</span>
+  </label>
+  }
+</div>
