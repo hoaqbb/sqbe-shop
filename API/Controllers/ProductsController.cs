@@ -90,5 +90,15 @@ namespace API.Controllers
 
             return BadRequest("Problem deleting the product!");
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id:Guid}/status")]
+        public async Task<IActionResult> UpdateProductStatus(Guid id)
+        {
+            if (await _productService.UpdateProductStatusAsync(id))
+                return NoContent();
+
+            return BadRequest("Failed to update product status!");
+        }
     }
 }

@@ -139,6 +139,21 @@ namespace API.Services
             return productColors;
         }
 
+        public async Task<bool> UpdateProductStatusAsync(Guid id)
+        {
+            var product = await _unitOfWork.Repository<Product>().FindAsync(id);
+
+            if (product is null) return false;
+
+            product.IsVisible = !product.IsVisible;
+            _unitOfWork.Repository<Product>().Update(product);
+
+            if (await _unitOfWork.SaveChangesAsync())
+                return true;
+
+            return false;
+        }
+
         private async Task AddProductVariantsAsync(Guid productId, List<ProductColor> productColors, List<int> sizeIds)
         {
             foreach (var sizeId in sizeIds)
