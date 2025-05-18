@@ -3,11 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { AccountService } from './core/services/account.service';
 import { ShopService } from './core/services/shop.service';
 import { CommonModule } from '@angular/common';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, NgxSpinnerModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
