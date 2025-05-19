@@ -1,0 +1,66 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table,
+th,
+td {
+    border: 1px solid #ddd;
+}
+
+th {
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+td {
+    padding: 12px;
+    text-align: left;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.product-id{
+    text-align: center;
+}
+
+td img {
+    display: block;
+    margin: 0 auto;
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+tbody tr {
+    height: 85px;
+}
+
+::ng-deep .p-datatable>.p-datatable-wrapper {
+    overflow-x: scroll;
+    width: 100%;
+}
+
+::ng-deep table.p-datatable-table {
+    min-width: 600px !important;
+}
+
+.color-box {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 10%;
+    border: 1px solid black;
+}
+
+.filter-btn {
+    padding: 8px 15px;
+    border-radius: 12px;
+    background-color: white;
+    border: 1px solid black;
+}

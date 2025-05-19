@@ -7,6 +7,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { SliderModule } from 'primeng/slider';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -14,6 +15,9 @@ import {
 import { ProductFilterParams } from '../../../shared/models/productParams';
 import { ColorCheckboxGroupComponent } from '../../../shared/components/color-checkbox-group/color-checkbox-group.component';
 import { SizeCheckboxGroupComponent } from '../../../shared/components/size-checkbox-group/size-checkbox-group.component';
+import { AccountService } from '../../../core/services/account.service';
+import { AdminService } from '../../../core/services/admin.service';
+import { AdminProductFilterParams } from '../../../shared/models/adminParams';
 
 @Component({
   selector: 'app-filter-sidebar',
@@ -39,7 +43,9 @@ export class FilterSidebarComponent implements OnInit {
   constructor(
     public sidebarService: SidebarService,
     public shopService: ShopService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    public accountService: AccountService,
+    private adminService: AdminService
   ) {
     this.resetFilterOnCategoryChange();
   }
@@ -81,6 +87,18 @@ export class FilterSidebarComponent implements OnInit {
       sizes: this.fb.control([]),
       promotion: [false],
     });
+
+    this.checkUserAndAddVisibleControl();
+  }
+
+  checkUserAndAddVisibleControl(): void {
+    if (
+      this.accountService.currentUser() &&
+      this.accountService.currentUser().role === 'Admin'
+    ) {
+      this.filterForm.addControl('visible', new FormControl(null));
+      this.filterForm.addControl('category', new FormControl('all'));
+    }
   }
 
   applyFilter() {
@@ -110,29 +128,60 @@ export class FilterSidebarComponent implements OnInit {
   }
 
   private resetFilterForm() {
-    this.filterForm?.reset({
-      sort: 'dateDesc',
-      colors: [],
-      sizes: [],
-      promotion: false,
-    });
+    if (
+      this.accountService.currentUser() &&
+      this.accountService.currentUser().role == 'Admin'
+    ) {
+      this.filterForm?.reset({
+        sort: ['dateDesc'],
+        colors: this.fb.control([]),
+        sizes: this.fb.control([]),
+        promotion: [false],
+        visible: null,
+        category: 'all',
+      });
+    } else {
+      this.filterForm?.reset({
+        sort: 'dateDesc',
+        colors: [],
+        sizes: [],
+        promotion: false,
+      });
+    }
     this.priceRangeValues = [0, 100];
   }
 
   getFilteredProducts(formValues: any) {
     const currentCategory = this.shopService.currentCategory();
+    const currentUser = this.accountService.currentUser();
 
-    this.filterParams = {
-      ...new ProductFilterParams(),
-      category: currentCategory,
-      sort: formValues.sort,
-      colors: formValues.colors,
-      sizes: formValues.sizes,
-      priceFrom: formValues.priceFrom,
-      priceTo: formValues.priceTo,
-      promotion: formValues.promotion,
-    };
+    if (currentUser && currentUser.role === 'Admin') {
+      const adminParams: AdminProductFilterParams = {
+        ...new AdminProductFilterParams(),
+        category: formValues.category,
+        sort: formValues.sort,
+        colors: formValues.colors,
+        sizes: formValues.sizes,
+        priceFrom: formValues.priceFrom,
+        priceTo: formValues.priceTo,
+        promotion: formValues.promotion,
+        visible: formValues.visible,
+      };
 
-    this.shopService.setProductFilterParams(this.filterParams);
+      this.adminService.setAdminProductFilterParams(adminParams);
+    } else {
+      const userParams: ProductFilterParams = {
+        ...new ProductFilterParams(),
+        category: currentCategory,
+        sort: formValues.sort,
+        colors: formValues.colors,
+        sizes: formValues.sizes,
+        priceFrom: formValues.priceFrom,
+        priceTo: formValues.priceTo,
+        promotion: formValues.promotion,
+      };
+
+      this.shopService.setProductFilterParams(userParams);
+    }
   }
 }

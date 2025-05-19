@@ -1,0 +1,140 @@
+<!-- Page Heading -->
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-dark">Quản lý sản phẩm</h1>
+  <button class="filter-btn" (click)="sidebarService.toggle('filter')">
+    Lọc <i class="pi pi-filter"></i>
+  </button>
+</div>
+
+<div class="card" *ngIf="pagination">
+  <p-table
+    #dt
+    [value]="pagination.data"
+    [globalFilterFields]="['name', 'category', 'price']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [rowHover]="true"
+  >
+    <ng-template pTemplate="caption">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-success">
+          Thêm sản phẩm <i class="pi pi-plus"></i>
+        </button>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 5%">Mã sản phẩm</th>
+        <th pSortableColumn="name" style="min-width: 4rem">
+          Tên sản phẩm<p-sortIcon field="name" />
+        </th>
+        <th>Ảnh</th>
+        <th style="min-width: 7rem">Url</th>
+        <th style="min-width: 5rem">Thể loại</th>
+        <th pSortableColumn="price" style="min-width: 10rem">
+          Giá <p-sortIcon field="price" />
+        </th>
+        <th pSortableColumn="discount">
+          Giảm giá (%)<p-sortIcon field="discount" />
+        </th>
+        <th>Màu sắc</th>
+        <th>Trạng thái</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td class="product-id">
+          {{ product.id }}
+        </td>
+        <td>
+          {{ product.name }}
+        </td>
+        <td>
+          <img
+            src="{{
+              product.mainPhoto || '../../../../../assets/no-image.svg'
+            }}"
+            alt=""
+          />
+        </td>
+        <td>
+          {{ product.slug }}
+        </td>
+        <td style="text-align: center">
+          {{ product.category }}
+        </td>
+        <td style="text-align: center">
+          {{ product.price | number : "1.0" : "en-US" }}đ
+        </td>
+        <td style="text-align: center">
+          {{ product.discount }}
+        </td>
+
+        <td style="text-align: center">
+          <div class="d-flex gap-2">
+            @for (color of product.productColors; track null) {
+            <span
+              class="color-box"
+              [ngStyle]="{ 'background-color': color.colorCode }"
+            >
+            </span>
+            }
+          </div>
+        </td>
+
+        <td>
+          @switch (product.isVisible) { @case (true) {
+          <p-button
+            icon="pi pi-eye"
+            class="m-2"
+            [rounded]="true"
+            [text]="true"
+            size="large"
+            severity="success"
+            (onClick)="updateProductStatus(product.id)"
+          />
+          } @case (false) {
+          <p-button
+            icon="pi pi-eye-slash"
+            class="m-2"
+            [rounded]="true"
+            [text]="true"
+            size="large"
+            severity="danger"
+          />
+          } }
+        </td>
+
+        <td>
+          <p-button
+            icon="pi pi-pencil"
+            class="mr-2"
+            [rounded]="true"
+            [outlined]="true"
+            severity="success"
+          />
+
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            [rounded]="true"
+            [outlined]="true"
+          />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  @if(pagination) {
+  <div class="flex justify-content-center">
+    <p-paginator
+      (onPageChange)="pageChanged($event)"
+      [alwaysShow]="false"
+      [rows]="pagination.pageSize"
+      [totalRecords]="pagination.totalCount"
+      [first]="(pagination.pageIndex - 1) * pagination.pageSize"
+    />
+  </div>
+  }
+</div>
+
+<p-confirmDialog />
+<app-filter-sidebar></app-filter-sidebar>
