@@ -58,6 +58,10 @@ export class AdminService {
     return this.http.get(this.baseUrl + '/api/Admins/products', { params });
   }
 
+  updateProductStatusById(id: string) {
+    return this.http.put(this.baseUrl + '/api/Products/' + id + '/status', {});
+  }
+
   resetAdminProductFilterParams() {
     const params = new AdminProductFilterParams();
     this.adminProductFilterParams.set(params);

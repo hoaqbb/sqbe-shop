@@ -10,6 +10,7 @@ import { AdminProductFilterParams } from '../../../shared/models/adminParams';
 import { Pagination } from '../../../shared/models/pagination';
 import { Product, ProductDetail } from '../../../shared/models/product';
 import { ConfirmationService } from 'primeng/api';
+import { ToastrService } from 'ngx-toastr';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { FilterSidebarComponent } from '../../products/filter-sidebar/filter-sidebar.component';
 import { SidebarService } from '../../../core/services/sidebar.service';
@@ -39,6 +40,8 @@ export class ManageProductComponent {
   constructor(
     public dialogService: DialogService,
     private adminService: AdminService,
+    private confirmationService: ConfirmationService,
+    private toastr: ToastrService,
     public sidebarService: SidebarService
   ) {
     this.fetchProductsOnFilterChange();
@@ -55,6 +58,18 @@ export class ManageProductComponent {
     this.adminService
       .getProducts(filter)
       .subscribe((response: any) => (this.pagination = response));
+  }
+
+  updateProductStatus(id: string) {
+    this.adminService.updateProductStatusById(id).subscribe({
+      next: () => {
+        const index = this.pagination.data.findIndex(p => p.id == id);
+        this.pagination.data[index].isVisible = !this.pagination.data[index].isVisible;
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    })
   }
 
   pageChanged(event: any) {
