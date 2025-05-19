@@ -26,6 +26,8 @@
     align-items: center;
     opacity: 0.6;
     cursor: pointer;
+    font-size: 1.2rem; /* Điều chỉnh kích thước icon */
+    color: white; /* Màu icon khi được chọn */
   }
 
   .colour-preview:hover {
@@ -34,6 +36,10 @@
 
   .colour-option input[type="checkbox"]:checked + .colour-preview {
     opacity: 1;
+  }
+
+  .colour-option input[type="checkbox"]:not(:checked) + .colour-preview i {
+    display: none; /* Ẩn icon khi không được chọn */
   }
 
   .colour-option span {
