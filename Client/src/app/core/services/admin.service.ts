@@ -58,6 +58,10 @@ export class AdminService {
     return this.http.get(this.baseUrl + '/api/Admins/products', { params });
   }
 
+  deleteProductById(id: string) {
+    return this.http.delete(this.baseUrl + '/api/Products/' + id);
+  }
+
   updateProductStatusById(id: string) {
     return this.http.put(this.baseUrl + '/api/Products/' + id + '/status', {});
   }

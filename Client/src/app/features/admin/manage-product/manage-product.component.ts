@@ -78,4 +78,32 @@ export class ManageProductComponent {
     currentParams.pageNumber = event.page + 1;
     this.loadProducts(currentParams);
   }
+
+  deleteProduct(id) {
+    this.adminService.deleteProductById(id).subscribe({
+      next: () => this.toastr.success('Xóa sản phẩm thành công!'),
+      error: (err) => {
+        console.log(err);
+        this.toastr.error('Có lỗi xảy ra khi xóa sản phẩm!');
+      },
+    });
+  }
+
+  deleteConfirmationDialog(event: Event, productId: string) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Bạn có chắc muốn xóa sản phẩm này không?',
+      header: 'Xác nhận xóa',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-text',
+      rejectButtonStyleClass: 'p-button-text p-button-text',
+      acceptIcon: 'none',
+      rejectIcon: 'none',
+
+      accept: () => {
+        this.deleteProduct(productId);
+      },
+      reject: () => {},
+    });
+  }
 }
