@@ -134,8 +134,8 @@ export class FilterSidebarComponent implements OnInit {
     ) {
       this.filterForm?.reset({
         sort: ['dateDesc'],
-        colors: this.fb.control([]),
-        sizes: this.fb.control([]),
+        colors: [],
+        sizes: [],
         promotion: [false],
         visible: null,
         category: 'all',

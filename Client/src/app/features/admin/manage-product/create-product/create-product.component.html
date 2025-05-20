@@ -1,0 +1,135 @@
+<div class="">
+  <form [formGroup]="createProductForm" (ngSubmit)="createProduct()">
+    <div class="mb-3">
+      <label for="name" class="form-label fw-bold"
+        >Tên sản phẩm <small class="text-danger">*</small></label
+      >
+      <input
+        type="text"
+        formControlName="name"
+        [class.is-invalid]="
+          createProductForm.get('name').touched &&
+          createProductForm.get('name').invalid
+        "
+        oninput="this.value = this.value.toUpperCase()"
+        class="form-control p-2"
+      />
+      <div
+        *ngIf="createProductForm.get('name').hasError('required')"
+        class="invalid-feedback"
+      >
+        *Vui lòng nhập Tên sản phẩm
+      </div>
+    </div>
+
+    <div class="mb-3 list-group">
+      <label for="price" class="form-label fw-bold"
+        >Giá sản phẩm <small class="text-danger">*</small></label
+      >
+      <p-inputNumber formControlName="price" min="0" [max]="maxPrice" />
+    </div>
+    <div class="mb-3 list-group">
+      <label for="discount" class="form-label fw-bold">Giảm giá (%)</label>
+      <p-inputNumber formControlName="discount" min="0" max="100" />
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label fw-bold"
+        >Mô tả <small class="text-danger">*</small></label
+      >
+      <p-editor formControlName="description" [style]="{ height: '150px' }" />
+    </div>
+    <div class="mb-3">
+      <label for="category" class="form-label fw-bold"
+        >Thể loại <small class="text-danger">*</small></label
+      >
+      <select
+        *ngIf="shopService.categories()"
+        formControlName="category"
+        class="form-select"
+      >
+        <option *ngFor="let item of shopService.categories()" [value]="item.id">
+          {{ item.name }}
+        </option>
+      </select>
+    </div>
+    <div *ngIf="shopService.colors()" class="mb-3 fw-bold">
+      <label for="productColors" class="form-label fw-bold"
+        >Màu sản phẩm <small class="text-danger">*</small></label
+      >
+      <app-color-checkbox-group
+        formControlName="productColors"
+        [colors]="shopService.colors()"
+      >
+      </app-color-checkbox-group>
+    </div>
+
+    <div *ngIf="shopService.sizes()" class="mb-3 fw-bold">
+      <label for="productSizes" class="form-label fw-bold"
+        >Size sản phẩm <small class="text-danger">*</small></label
+      >
+      <app-size-checkbox-group
+        formControlName="productSizes"
+        [sizes]="shopService.sizes()"
+      ></app-size-checkbox-group>
+    </div>
+
+    <div class="mb-3 fw-bold">
+      Ảnh sản phẩm <small class="text-danger">*</small>
+      <div class="row">
+        <div class="col m-2">
+          <div class="card flex justify-content-center">
+            <p-fileUpload
+              [multiple]="false"
+              accept="image/*"
+              showUploadButton="false"
+              showCancelButton="false"
+              maxFileSize="4000000"
+              (onSelect)="onSelectedFile($event, 'mainImage')"
+            >
+            </p-fileUpload>
+          </div>
+          <label class="mt-1" style="font-weight: bold"
+            >Ảnh chính <small class="text-danger">*</small></label
+          >
+        </div>
+
+        <div class="col m-2">
+          <div class="card flex justify-content-center">
+            <p-fileUpload
+              [multiple]="false"
+              accept="image/*"
+              showUploadButton="false"
+              showCancelButton="false"
+              maxFileSize="4000000"
+              (onSelect)="onSelectedFile($event, 'subImage')"
+            >
+            </p-fileUpload>
+          </div>
+          <label class="mt-1" style="font-weight: bold"
+            >Ảnh phụ <small class="text-danger">*</small></label
+          >
+        </div>
+      </div>
+
+      <div class="row">
+        <p-fileUpload
+          [multiple]="true"
+          accept="image/*"
+          maxFileSize="4000000"
+          (onSelect)="onSelectedFile($event, 'productImages')"
+        >
+        </p-fileUpload>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <button
+        [disabled]="createProductForm.invalid"
+        type="submit"
+        class="btn btn-success"
+      >
+        Thêm sản phẩm
+      </button>
+    </div>
+  </form>
+</div>

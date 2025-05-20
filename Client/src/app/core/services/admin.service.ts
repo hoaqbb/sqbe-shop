@@ -14,6 +14,8 @@ export class AdminService {
 
   constructor(private http: HttpClient) {}
 
+  //#region product
+
   getProducts(productParams: AdminProductFilterParams) {
     let params = new HttpParams();
 
@@ -58,6 +60,32 @@ export class AdminService {
     return this.http.get(this.baseUrl + '/api/Admins/products', { params });
   }
 
+  createNewProduct(newProduct: CreateProduct) {
+    const formData = new FormData();
+
+    formData.append('name', newProduct.name);
+    formData.append('price', newProduct.price.toString());
+    formData.append('description', newProduct.description);
+    formData.append('discount', newProduct.discount.toString());
+    formData.append('categoryId', newProduct.categoryId.toString());
+
+    newProduct.productColors.forEach((colorId) => {
+      formData.append(`productColors`, colorId.toString());
+    });
+
+    newProduct.productSizes.forEach((sizeId) => {
+      formData.append(`productSizes`, sizeId.toString());
+    });
+
+    formData.append('mainImage', newProduct.mainImage);
+    formData.append('subImage', newProduct.subImage);
+    newProduct.productImages.forEach((file) => {
+      formData.append(`productImages`, file);
+    });
+
+    return this.http.post(this.baseUrl + '/api/Products', formData);
+  }
+
   deleteProductById(id: string) {
     return this.http.delete(this.baseUrl + '/api/Products/' + id);
   }
@@ -74,4 +102,5 @@ export class AdminService {
   setAdminProductFilterParams(params: AdminProductFilterParams) {
     this.adminProductFilterParams.set(params);
   }
+  //#endregion product
 }

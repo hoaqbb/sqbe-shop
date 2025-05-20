@@ -1,0 +1,8 @@
+::ng-deep div.m-3.ng-star-inserted {
+  display: flex;
+  align-items: center;
+}
+
+::ng-deep span.p-inputnumber {
+  width: 100%;
+}

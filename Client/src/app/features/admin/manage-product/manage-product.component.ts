@@ -79,6 +79,17 @@ export class ManageProductComponent {
     this.loadProducts(currentParams);
   }
 
+  showCreateProductDialog() {
+    this.ref = this.dialogService.open(CreateProductComponent, {
+      width: '60vw',
+      modal: true,
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+    });
+  }
+
   deleteProduct(id) {
     this.adminService.deleteProductById(id).subscribe({
       next: () => this.toastr.success('Xóa sản phẩm thành công!'),
