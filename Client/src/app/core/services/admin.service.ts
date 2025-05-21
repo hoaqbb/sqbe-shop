@@ -1,6 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
+import {
+  CreateProduct,
+  ProductVariant,
+  UpdateProduct,
+} from '../../shared/models/product';
 import { AdminProductFilterParams } from '../../shared/models/adminParams';
 
 @Injectable({
@@ -92,6 +97,52 @@ export class AdminService {
 
   updateProductStatusById(id: string) {
     return this.http.put(this.baseUrl + '/api/Products/' + id + '/status', {});
+  }
+
+  updateProduct(id: string, updateProduct: UpdateProduct) {
+    return this.http.put(this.baseUrl + '/api/Products/' + id, updateProduct);
+  }
+
+  setMainImage(id: string, imageId: number) {
+    return this.http.put(
+      this.baseUrl +
+        '/api/Products/' +
+        id +
+        '/set-main-image' +
+        '?imageId=' +
+        imageId,
+      {}
+    );
+  }
+
+  setSubImage(id: string, imageId: number) {
+    return this.http.put(
+      this.baseUrl +
+        '/api/Products/' +
+        id +
+        '/set-sub-image' +
+        '?imageId=' +
+        imageId,
+      {}
+    );
+  }
+
+  deleteProductImage(id: string, imageId: number) {
+    return this.http.delete(
+      this.baseUrl + '/api/Products/' + id + '/delete-image/' + imageId
+    );
+  }
+
+  addProductImages(id: string, imageFiles) {
+    let formData: FormData = new FormData();
+    imageFiles.forEach((file) => {
+      formData.append('imageFiles', file);
+    });
+
+    return this.http.post(
+      this.baseUrl + '/api/Products/' + id + '/add-product-images',
+      formData
+    );
   }
 
   resetAdminProductFilterParams() {

@@ -42,3 +42,26 @@ export interface Product {
     colorCode: string
     size: string
   }
+
+  export interface CreateProduct {
+    name: string
+    price: number
+    description: string
+    discount: number
+    categoryId: number
+    productColors: number[]
+    productSizes: number[]
+    mainImage: File
+    subImage: File
+    productImages: File[]
+  }
+
+  export interface UpdateProduct {
+  name: string
+  price: number
+  description: string
+  discount: number
+  categoryId: number
+  productColors: number[]
+  productSizes: number[]
+}
