@@ -1,0 +1,88 @@
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-dark">Quản lý đơn hàng</h1>
+  <button class="filter-btn" (click)="sidebarService.toggle('filter-order')">
+    Lọc <i class="pi pi-filter"></i>
+  </button>
+</div>
+
+<div class="container" style="margin: auto auto">
+  <div *ngIf="paginatedOrders" class="card-wrap">
+    <div class="card">
+      <p-table
+        [value]="paginatedOrders.data"
+        rowHover="true"
+        [tableStyle]="{ 'min-width': '50rem' }"
+      >
+        <ng-template pTemplate="caption">
+          <div
+            class="d-flex justify-content-end gap-5 px-5"
+            style="width: 100%"
+          ></div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 5%">Mã đơn hàng</th>
+            <th pSortableColumn="createAt" style="width: 10%">
+              Ngày tạo<p-sortIcon field="createAt" />
+            </th>
+            <th style="width: 15%">Người nhận</th>
+            <th style="width: 10%">SĐT</th>
+            <th style="width: 20%">Địa chỉ</th>
+            <th pSortableColumn="amount" style="width: 10%">
+              Tổng tiền<p-sortIcon field="amount" />
+            </th>
+            <th style="width: 10%">Phương thức thanh toán</th>
+            <th style="width: 10%">Ngày cập nhật</th>
+            <th pSortableColumn="status" style="width: 15%">
+              Trạng thái<p-sortIcon field="status" />
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-order>
+          <tr (click)="orderDetailDialog(order.id)">
+            <td class="text-align-center">{{ order.id }}</td>
+            <td>{{ order.createAt | date : "dd-MM-yyyy HH:mm a" }}</td>
+            <td>{{ order.fullname }}</td>
+            <td>{{ order.phoneNumber }}</td>
+            <td>{{ order.address }}</td>
+            <td class="text-align-center">
+              {{ order.amount | number : "1.0" : "en-US" }}đ
+            </td>
+            <td class="text-align-center">{{ order.paymentMethod }}</td>
+            <td>{{ order.updateAt | date : "dd-MM-yyyy HH:mm a" || "" }}</td>
+            <td class="text-center">
+              @switch (order.status) { @case (0) {
+              <p-tag [rounded]="true" severity="warning" value="Chờ xác nhận" />
+              } @case (1) {
+              <p-tag [rounded]="true" value="Đã xác nhận" />
+              } @case (2) {
+              <p-tag [rounded]="true" severity="info" value="Đang giao hàng" />
+              } @case (3) {
+              <p-tag
+                [rounded]="true"
+                severity="success"
+                value="Giao hàng thành công"
+              />
+              } @default {
+              <p-tag [rounded]="true" severity="danger" value="Đã hủy" />
+              } }
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      @if(paginatedOrders) {
+      <div class="flex justify-content-center">
+        <p-paginator
+          (onPageChange)="pageChanged($event)"
+          [alwaysShow]="false"
+          [rows]="paginatedOrders.pageSize"
+          [totalRecords]="paginatedOrders.totalCount"
+          [first]="(paginatedOrders.pageIndex - 1) * paginatedOrders.pageSize"
+        />
+      </div>
+      }
+    </div>
+  </div>
+</div>
+
+<app-order-filter-sidebar></app-order-filter-sidebar>

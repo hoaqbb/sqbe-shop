@@ -16,6 +16,7 @@ export class AdminService {
   adminProductFilterParams = signal<AdminProductFilterParams>(
     new AdminProductFilterParams()
   );
+  adminOrderFilterParams = signal<OrderFilterParams>(new OrderFilterParams());
 
   constructor(private http: HttpClient) {}
 
@@ -154,4 +155,49 @@ export class AdminService {
     this.adminProductFilterParams.set(params);
   }
   //#endregion product
+
+  //#region order
+  getOrders(orderParams: OrderFilterParams) {
+    let params = new HttpParams();
+
+    if (orderParams.sort) {
+      params = params.append('sort', orderParams.sort);
+    }
+
+    if (orderParams.status != null) {
+      params = params.append('status', orderParams.status);
+    }
+
+    if (orderParams.amountFrom) {
+      params = params.append('amountFrom', orderParams.amountFrom);
+    }
+
+    if (orderParams.amountTo) {
+      params = params.append('amountTo', orderParams.amountTo);
+    }
+
+    if (orderParams.isDiscounted != null) {
+      params = params.append('isDiscounted', orderParams.isDiscounted);
+    }
+
+    if (orderParams.paymentMethod) {
+      params = params.append('paymentMethod', orderParams.paymentMethod);
+    }
+
+    params = params.append('pageSize', orderParams.pageSize);
+    params = params.append('pageIndex', orderParams.pageNumber);
+
+    return this.http.get(this.baseUrl + '/api/Admins/orders', { params });
+  }
+
+  resetAdminOrderFilterParams() {
+    const params = new OrderFilterParams();
+    this.adminOrderFilterParams.set(params);
+  }
+
+  setAdminOrderFilterParams(params: OrderFilterParams) {
+    this.adminOrderFilterParams.set(params);
+  }
+
+  //#endregion order
 }

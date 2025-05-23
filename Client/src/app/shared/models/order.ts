@@ -12,3 +12,15 @@ export interface OrderRequest {
   promotionCode: string;
   note: string;
 }
+
+export interface Order {
+  id: string;
+  amount: number;
+  status: number;
+  createAt: string;
+  updateAt: any;
+  address: string;
+  fullname: string;
+  phoneNumber: string;
+  paymentMethod: string;
+}
