@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AdminService } from '../../core/services/admin.service';
 
 @Component({
   selector: 'app-admin',
@@ -9,8 +10,16 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   styleUrl: './admin.component.css'
 })
 export class AdminComponent implements OnInit{
+
+  constructor(private adminService: AdminService) {}
+
   ngOnInit(): void {
+    this.initAdminPage();
+  }
+
+  initAdminPage() {
     this.loadScript('assets/js/sb-admin-2.min.js');
+    this.adminService.getCategories().subscribe();
   }
 
   loadScript(scriptUrl: string) {
@@ -18,5 +27,12 @@ export class AdminComponent implements OnInit{
     script.src = scriptUrl;
     script.async = true;
     document.body.appendChild(script);
+  }
+
+  getCategories() {
+    this.adminService.getCategories().subscribe({
+      next: (response: any) => {},
+      error: (error: any) => console.log(error)
+    })
   }
 }

@@ -9,6 +9,10 @@ namespace API.Helpers.MappingProfiles
         public CategoryProfiles()
         {
             CreateMap<Category, CategoryDto>();
+
+            CreateMap<Category, CategoryDetailDto>()
+                .ForMember(dest => dest.ProductCount, opt => opt.MapFrom(src =>
+                    src.Products.Count));
         }
     }
 }

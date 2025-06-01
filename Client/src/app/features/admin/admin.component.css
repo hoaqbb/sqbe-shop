@@ -6,3 +6,7 @@
 #page-top {
     padding: 0;
 }
+
+.nav-item {
+    cursor: pointer;
+}

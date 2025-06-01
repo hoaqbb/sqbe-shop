@@ -28,6 +28,7 @@ namespace API.Extensions
             services.AddScoped<IPayPalService, PayPalService>();
             services.AddScoped<IPromotionService, PromotionService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.Configure<VnPaySettings>(config.GetSection("VNPaySettings"));

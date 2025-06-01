@@ -1,0 +1,69 @@
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-dark">Quản lý thể loại</h1>
+</div>
+
+<div class="card" *ngIf="adminService.categories()">
+  <p-table [value]="adminService.categories()" [rowHover]="true">
+    <ng-template pTemplate="caption">
+      <div [hidden]="!isCreate" class="forgot-password">
+        <h5>Thêm thể loại</h5>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Id</th>
+        <th>Tên thể loại</th>
+        <th>Url</th>
+        <th pSortableColumn="createAt">
+          Ngày tạo<p-sortIcon field="createAt" />
+        </th>
+        <th>Ngày cập nhật</th>
+        <th pSortableColumn="productCount">
+          Số sản phẩm <p-sortIcon field="productCount" />
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-category>
+      <tr>
+        <td>
+          {{ category.id }}
+        </td>
+        <td>
+          {{ category.name }}
+        </td>
+        <td>
+          {{ category.slug }}
+        </td>
+        <td>
+          {{ category.createAt | date : "dd/MM/yyyy HH:mm a" }}
+        </td>
+        <td>
+          {{ category.updateAt | date : "dd/MM/yyyy HH:mm a" }}
+        </td>
+
+        <td>
+          {{ category.productCount }}
+        </td>
+
+        <td>
+          <p-button
+            icon="pi pi-pencil"
+            [style]=""
+            [rounded]="true"
+            [outlined]="true"
+            severity="success"
+          />
+
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            [rounded]="true"
+            [outlined]="true"
+          />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-confirmDialog />

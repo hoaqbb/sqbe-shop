@@ -1,4 +1,5 @@
 ﻿using API.Data.Entities;
+using API.DTOs.CategoryDtos.cs;
 using API.DTOs.OrderDtos;
 using API.DTOs.ProductDtos;
 using API.Helpers.Params;
@@ -17,13 +18,17 @@ namespace API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
+        private readonly EcommerceDbContext _context;
 
-        public AdminsController(IUnitOfWork unitOfWork, IProductService productService, IMapper mapper)
+        public AdminsController(IUnitOfWork unitOfWork, IProductService productService, ICategoryService categoryService, IMapper mapper, EcommerceDbContext context)
         {
             _unitOfWork = unitOfWork;
             _productService = productService;
+            _categoryService = categoryService;
             _mapper = mapper;
+            _context = context;
         }
 
         [HttpGet("products")]
@@ -35,5 +40,14 @@ namespace API.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("categories")]
+        public async Task<ActionResult> GetCategories()
+        {
+            var categories = await _categoryService.GetAllWithDetailsAsync();
+
+            return Ok(categories);
+        }
+
     }
 }

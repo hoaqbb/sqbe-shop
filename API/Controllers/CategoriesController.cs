@@ -10,20 +10,23 @@ namespace API.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
-
+        public CategoriesController(IUnitOfWork unitOfWork, ICategoryService categoryService, IMapper mapper)
         public CategoriesController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _categoryService = categoryService;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetCategories()
+        public async Task<ActionResult<List<CategoryDto>>> GetCategories()
         {
-            var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
+            var categories = await _categoryService.GetAllAsync();
 
-            return Ok(_mapper.Map<List<CategoryDto>>(categories));
+            return Ok(categories);
+        }
         }
     }
 }

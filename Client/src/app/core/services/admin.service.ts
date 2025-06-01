@@ -7,6 +7,8 @@ import {
   UpdateProduct,
 } from '../../shared/models/product';
 import { AdminProductFilterParams } from '../../shared/models/adminParams';
+import { CategoryDetail } from '../../shared/models/category';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +19,7 @@ export class AdminService {
     new AdminProductFilterParams()
   );
   adminOrderFilterParams = signal<OrderFilterParams>(new OrderFilterParams());
+  categories = signal<CategoryDetail[] | null>(null);
 
   constructor(private http: HttpClient) {}
 
@@ -200,4 +203,16 @@ export class AdminService {
   }
 
   //#endregion order
+
+  //#region category
+
+  getCategories() {
+    return this.http.get(this.baseUrl + '/api/Admins/categories').pipe(
+      tap((res: any) => {
+        this.categories.set(res);
+      })
+    );
+  }
+
+  //#endregion category
 }
