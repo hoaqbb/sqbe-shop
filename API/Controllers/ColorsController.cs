@@ -11,17 +11,17 @@ namespace API.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ColorsController(IUnitOfWork unitOfWork, IMapper mapper)
+        public ColorsController(IUnitOfWork unitOfWork, IColorService colorService, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _colorService = colorService;
             _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult> GetColors()
         {
-            var colors = await _unitOfWork.Repository<Color>()
-                .GetAllProjectedAsync<ColorDto>(_mapper.ConfigurationProvider);
+            var colors = await _colorService.GetAllAsync();
 
             return Ok(colors);
         }

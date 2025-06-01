@@ -9,6 +9,10 @@ namespace API.Helpers.MappingProfiles
         public ColorProfiles()
         {
             CreateMap<Color, ColorDto>();
+
+            CreateMap<Color, ColorDetailDto>()
+                .ForMember(dest => dest.ProductCount, opt => opt.MapFrom(src =>
+                    src.ProductColors.Count()));
         }
     }
 }
