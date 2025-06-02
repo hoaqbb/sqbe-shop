@@ -1,22 +1,17 @@
-﻿using API.Data.Entities;
-using API.DTOs.SizeDtos;
+﻿using API.DTOs.SizeDtos;
 using API.Interfaces;
-using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     public class SizesController : BaseApiController
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly ISizeService _sizeService;
-        private readonly IMapper _mapper;
 
-        public SizesController(IUnitOfWork unitOfWork, ISizeService sizeService, IMapper mapper)
+        public SizesController(ISizeService sizeService)
         {
-            _unitOfWork = unitOfWork;
             _sizeService = sizeService;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -25,6 +20,45 @@ namespace API.Controllers
             var sizes = await _sizeService.GetAllAsync();
 
             return Ok(sizes);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<ActionResult> CreateSize(SizeDto dto)
+        {
+            var newSize = await _sizeService.CreateAsync(dto.Name);
+            if (newSize != null)
+                return Ok(newSize);
+
+            return BadRequest();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateSize(int id, SizeDto dto)
+        {
+            var updatedSize = await _sizeService.UpdateAsync(id, dto.Name);
+
+            if (updatedSize != null)
+            {
+                return Ok(updatedSize);
+            }
+
+            return BadRequest();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteSize(int id)
+        {
+            var result = await _sizeService.DeleteAsync(id);
+
+            if (!result)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
         }
     }
 }

@@ -1,0 +1,119 @@
+<p-table [value]="adminService.sizes" [rowHover]="true">
+  <ng-template pTemplate="caption">
+    <div [hidden]="!isCreateFormVisible" class="create-form">
+      <h4>Thêm kích thước</h4>
+      <form [formGroup]="createSizeForm" (ngSubmit)="createSize()">
+        <app-text-input
+          [formControl]="createSizeForm.controls['name']"
+          [label]="'Tên kích thước'"
+        ></app-text-input>
+        <div class="d-flex justify-content-end mx-3">
+          <button
+            class="btn btn-success mb-3"
+            type="submit"
+            [disabled]="createSizeForm.invalid"
+          >
+            Thêm
+          </button>
+          <p
+            class="ms-3 cursor-pointer align-self-center"
+            (click)="manageCreateForm()"
+          >
+            Hủy
+          </p>
+        </div>
+      </form>
+    </div>
+
+    <div *ngIf="isUpdateFormVisible" class="update-form">
+        <h4>Cập nhật thể loại</h4>
+        <form [formGroup]="updateSizeForm" (ngSubmit)="updateSize()">
+          <app-text-input
+            [formControl]="updateSizeForm.controls['name']"
+            [label]="'Tên thể loại'"
+          >
+          </app-text-input>
+          <div class="d-flex justify-content-end mx-3">
+            <button
+              class="btn btn-success mb-3"
+              [disabled]="updateSizeForm.invalid"
+              type="submit"
+            >
+              Lưu
+            </button>
+            <p
+              class="ms-3 cursor-pointer align-self-center"
+              (click)="manageUpdateForm()"
+            >
+              Hủy
+            </p>
+          </div>
+        </form>
+      </div>
+    <div class="d-flex justify-content-end">
+      <button
+        class="btn btn-success"
+        (click)="manageCreateForm()"
+        [hidden]="isCreateFormVisible || isUpdateFormVisible"
+      >
+        Thêm kích thước <i class="pi pi-plus"></i>
+      </button>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="id">Id<p-sortIcon field="id" /></th>
+      <th>Size</th>
+      <th pSortableColumn="createAt">
+        Ngày tạo<p-sortIcon field="createAt" />
+      </th>
+      <th pSortableColumn="updateAt">
+        Ngày cập nhật<p-sortIcon field="updateAt" />
+      </th>
+      <th pSortableColumn="productCount">
+        Số sản phẩm<p-sortIcon field="productCount" />
+      </th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-size>
+    <tr>
+      <td class="product-id">
+        {{ size.id }}
+      </td>
+      <td>
+        {{ size.name }}
+      </td>
+      <td>
+        {{ size.createAt | date : "dd/MM/yyyy HH:mm a" }}
+      </td>
+      <td>
+        {{ size.updateAt | date : "dd/MM/yyyy HH:mm a" }}
+      </td>
+      <td>
+        {{ size.productCount }}
+      </td>
+      <td class="d-flex gap-2">
+        <p-button
+          class="btn-warehouse"
+          icon="pi pi-pencil"
+          class="mr-2"
+          [rounded]="true"
+          [outlined]="true"
+          severity="success"
+          (onClick)="manageUpdateForm(size)"
+        />
+        <p-button
+          class="btn-warehouse"
+          icon="pi pi-trash"
+          severity="danger"
+          [rounded]="true"
+          [outlined]="true"
+          (onClick)="deleteConfirmationDialog(size.id)"
+        />
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-confirmDialog />

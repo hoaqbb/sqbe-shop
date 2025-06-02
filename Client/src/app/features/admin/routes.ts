@@ -10,6 +10,7 @@ export const adminRoutes: Route[] = [
     children: [
       { path: 'product', component: ManageProductComponent },
       { path: 'category', component: ManageCategoryComponent },
+      { path: 'variant', component: ManageVariantComponent },
     ],
   },
 ];

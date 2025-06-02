@@ -9,6 +9,7 @@ import {
 import { AdminProductFilterParams } from '../../shared/models/adminParams';
 import { CategoryDetail, CreateCategory } from '../../shared/models/category';
 import { tap } from 'rxjs';
+import { SizeDetail } from '../../shared/models/size';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,7 @@ export class AdminService {
   );
   adminOrderFilterParams = signal<OrderFilterParams>(new OrderFilterParams());
   categories: CategoryDetail[] = [];
+  sizes: SizeDetail[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -232,4 +234,29 @@ export class AdminService {
   }
 
   //#endregion category
+
+  //#region size
+
+  getSizes() {
+    return this.http.get(this.baseUrl + '/api/Admins/sizes').pipe(
+      tap((res: SizeDetail[]) => {
+        // this.sizes.set(res);
+        this.sizes = res;
+      })
+    );
+  }
+
+  createSize(newSize: any) {
+    return this.http.post(this.baseUrl + '/api/Sizes', { name: newSize.name });
+  }
+
+  updateSize(updatedSize: any) {
+    return this.http.put(this.baseUrl + '/api/Sizes/' + updatedSize.id, { name: updatedSize.name });
+  }
+
+  deleteSize(id) {
+    return this.http.delete(this.baseUrl + '/api/Sizes/' + id);
+  }
+
+  //#endregion size
 }
