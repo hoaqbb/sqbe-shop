@@ -1,0 +1,22 @@
+.color-box {
+    height: 15px;
+    width: 15px;
+    display: inline-block;
+    border-radius: 20%;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+}
+
+th {
+    text-align: center;
+    background-color: #f2f2f2;
+}
+
+td {
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+}

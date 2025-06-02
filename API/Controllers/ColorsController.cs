@@ -1,21 +1,18 @@
 ﻿using API.Data.Entities;
 using API.DTOs.ColorDtos;
 using API.Interfaces;
-using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     public class ColorsController : BaseApiController
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly IColorService _colorService;
 
-        public ColorsController(IUnitOfWork unitOfWork, IColorService colorService, IMapper mapper)
+        public ColorsController(IColorService colorService)
         {
-            _unitOfWork = unitOfWork;
             _colorService = colorService;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -24,6 +21,45 @@ namespace API.Controllers
             var colors = await _colorService.GetAllAsync();
 
             return Ok(colors);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<ActionResult> CreateColor(ColorDto dto)
+        {
+            var newColor = await _colorService.CreateAsync(dto);
+            if (newColor != null)
+                return Ok(newColor);
+
+            return BadRequest();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateColor(int id, ColorDto dto)
+        {
+            var updatedColor = await _colorService.UpdateAsync(id, dto);
+
+            if (updatedColor != null)
+            {
+                return Ok(updatedColor);
+            }
+
+            return BadRequest();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteColor(int id)
+        {
+            var result = await _colorService.DeleteAsync(id);
+
+            if (!result)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
         }
     }
 }

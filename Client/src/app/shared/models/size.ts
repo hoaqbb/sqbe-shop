@@ -8,3 +8,11 @@ export interface SizeVariant {
     size: string
     quantity: number
 }
+
+export interface SizeDetail {
+    id: number
+    name: string
+    createAt: string
+    updateAt: string
+    productCount: number
+}

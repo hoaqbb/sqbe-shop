@@ -1,0 +1,141 @@
+<p-table [value]="adminService.colors" [rowHover]="true">
+  <ng-template pTemplate="caption">
+    <div [hidden]="!isCreateFormVisible" class="create-form">
+      <h4>Thêm màu sắc</h4>
+      <form [formGroup]="createColorForm" (ngSubmit)="createColor()">
+        <app-text-input
+          [formControl]="createColorForm.controls['name']"
+          [label]="'Tên màu sắc'"
+        >
+        </app-text-input>
+        <div class="d-flex align-items-center gap-2">
+          <label>Mã màu:</label>
+          <p-colorPicker formControlName="colorCode" format="hex" />
+          <span>{{ createColorForm.controls["colorCode"].value }}</span>
+        </div>
+        <div class="d-flex justify-content-end mx-3">
+          <button
+            class="btn btn-success mb-3"
+            type="submit"
+            [disabled]="createColorForm.invalid"
+          >
+            Thêm
+          </button>
+          <p
+            class="ms-3 cursor-pointer align-self-center"
+            (click)="manageCreateForm()"
+          >
+            Hủy
+          </p>
+        </div>
+      </form>
+    </div>
+
+    <div *ngIf="isUpdateFormVisible" class="update-form">
+      <h4>Cập nhật màu sắc</h4>
+      <form [formGroup]="updateColorForm" (ngSubmit)="updateColor()">
+        <app-text-input
+          [formControl]="updateColorForm.controls['name']"
+          [label]="'Tên thể loại'"
+        >
+        </app-text-input>
+        <div class="d-flex align-items-center gap-2">
+          <label>Mã màu:</label>
+          <p-colorPicker formControlName="colorCode" format="hex" />
+          <span class="">{{
+            updateColorForm.controls["colorCode"].value
+          }}</span>
+        </div>
+        <div class="d-flex justify-content-end mx-3">
+          <button
+            class="btn btn-success mb-3"
+            [disabled]="updateColorForm.invalid"
+            type="submit"
+          >
+            Lưu
+          </button>
+          <p
+            class="ms-3 cursor-pointer align-self-center"
+            (click)="manageUpdateForm()"
+          >
+            Hủy
+          </p>
+        </div>
+      </form>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <button
+        class="btn btn-success"
+        (click)="manageCreateForm()"
+        [hidden]="isCreateFormVisible || isUpdateFormVisible"
+      >
+        Thêm màu sắc <i class="pi pi-plus"></i>
+      </button>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="id">Id<p-sortIcon field="id" /></th>
+      <th>Màu</th>
+      <th>Mã màu</th>
+      <th pSortableColumn="createAt">
+        Ngày tạo<p-sortIcon field="createAt" />
+      </th>
+      <th pSortableColumn="updateAt">
+        Ngày cập nhật<p-sortIcon field="updateAt" />
+      </th>
+      <th pSortableColumn="productCount">
+        Số sản phẩm<p-sortIcon field="productCount" />
+      </th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-color>
+    <tr>
+      <td class="product-id">
+        {{ color.id }}
+      </td>
+      <td>
+        {{ color.name }}
+      </td>
+      <td>
+        <span
+          class="color-box"
+          [ngStyle]="{ 'background-color': color.colorCode }"
+        ></span>
+        {{ color.colorCode }}
+      </td>
+      <td>
+        {{ color.createAt | date : "dd/MM/yyyy HH:mm a" }}
+      </td>
+      <td>
+        {{ color.updateAt | date : "dd/MM/yyyy HH:mm a" }}
+      </td>
+      <td>
+        {{ color.productCount }}
+      </td>
+      <td>
+        <p-button
+          class="btn-warehouse"
+          icon="pi pi-pencil"
+          class="mr-2"
+          [rounded]="true"
+          [outlined]="true"
+          severity="success"
+          (onClick)="manageUpdateForm(color)"
+        />
+        <p-button
+          class="btn-warehouse"
+          icon="pi pi-trash"
+          severity="danger"
+          [rounded]="true"
+          [outlined]="true"
+          (onClick)="deleteConfirmationDialog(color.id)"
+        />
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-confirmDialog />

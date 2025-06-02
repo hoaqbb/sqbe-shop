@@ -11,3 +11,12 @@ export interface ColorVariant {
     colorCode: string
     sizeVariants?: SizeVariant[]
 }
+
+export interface ColorDetail {
+    id: number
+    name: string
+    colorCode: string
+    createAt: string
+    updateAt: string
+    productCount: number
+}
