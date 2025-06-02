@@ -1,0 +1,196 @@
+<div class="container-fluid">
+  <div class="px-4 custom-form-card">
+    <h4 class="card-title text-center mb-4">Cập Nhật Mã Giảm Giá</h4>
+
+    <form
+      [formGroup]="updatePromotionForm"
+      class="row g-3"
+      (ngSubmit)="updatePromotion()"
+    >
+      <div class="col-md-6">
+        <label for="code" class="form-label"
+          >Mã Giảm Giá <span class="text-danger">*</span></label
+        >
+        <input
+          id="code"
+          type="text"
+          formControlName="code"
+          oninput="this.value = this.value.toUpperCase()"
+          class="form-control"
+          [class.is-invalid]="
+            updatePromotionForm.get('code').invalid &&
+            updatePromotionForm.get('code').touched
+          "
+          placeholder="VD: TET2025"
+        />
+        <div
+          *ngIf="
+            updatePromotionForm.get('code').invalid &&
+            updatePromotionForm.get('code').touched
+          "
+          class="invalid-feedback"
+        >
+          *Vui lòng nhập Mã giảm giá
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label for="description" class="form-label">Mô Tả</label>
+        <input
+          id="description"
+          type="text"
+          formControlName="description"
+          class="form-control"
+          placeholder="Mã giảm giá cho Tết 2025"
+        />
+      </div>
+
+      <div class="col-md-6">
+        <label for="discountType" class="form-label"
+          >Loại Giảm Giá <span class="text-danger">*</span></label
+        >
+        <select
+          id="discountType"
+          formControlName="discountType"
+          class="form-select"
+          (change)="onDiscountTypeChange($event.target.value)"
+        >
+          <option value="0">Phần trăm (%)</option>
+          <option value="1">Giá trị cố định (VNĐ)</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="discountValue" class="form-label"
+          >Giá Trị Giảm Giá <span class="text-danger">*</span></label
+        >
+        <input
+          id="discountValue"
+          type="number"
+          formControlName="discountValue"
+          class="form-control"
+          [class.is-invalid]="
+            updatePromotionForm.get('discountValue').invalid &&
+            updatePromotionForm.get('discountValue').touched
+          "
+          placeholder="VD: 10 (cho %), 50000 (cho VNĐ)"
+        />
+        <div
+          *ngIf="
+            updatePromotionForm.get('discountValue').invalid &&
+            updatePromotionForm.get('discountValue').touched
+          "
+          class="invalid-feedback"
+        >
+          *Vui lòng nhập giá trị giảm giá hợp lệ
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="minOrderAmount" class="form-label"
+          >Đơn Hàng Tối Thiểu (VNĐ)</label
+        >
+        <input
+          id="minOrderAmount"
+          type="number"
+          formControlName="minOrderAmount"
+          class="form-control"
+          placeholder="0 nếu không giới hạn"
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="usageLimit" class="form-label">Số Lần Sử Dụng Tối Đa</label>
+        <input
+          id="usageLimit"
+          type="number"
+          formControlName="usageLimit"
+          class="form-control"
+          placeholder="0 nếu không giới hạn"
+        />
+      </div>
+
+      <div class="col-md-6">
+        <label for="usageCount" class="form-label">Số Lần Đã Sử Dụng</label>
+        <input
+          id="usageCount"
+          type="number"
+          formControlName="usageCount"
+          class="form-control"
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="maxDiscountValue" class="form-label"
+          >Giá Trị Giảm Tối Đa (VNĐ)</label
+        >
+        <input
+          *ngIf="isPercentageDiscount"
+          id="maxDiscountValue"
+          type="number"
+          formControlName="maxDiscountValue"
+          class="form-control"
+          placeholder="Giới hạn giá trị giảm khi là %"
+        />
+        <span *ngIf="!isPercentageDiscount" class="form-text text-muted"
+          >Chỉ áp dụng khi loại giảm giá là "Phần trăm".</span
+        >
+      </div>
+
+      <div class="col-md-6 d-flex flex-column">
+        <label for="validateFrom" class="form-label"
+          >Ngày Bắt Đầu Áp Dụng</label
+        >
+        <p-calendar
+          id="validateFrom"
+          formControlName="validateFrom"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+          [showTime]="true"
+          hourFormat="24"
+          appendTo="body"
+        ></p-calendar>
+      </div>
+      <div class="col-md-6 d-flex flex-column">
+        <label for="validateTo" class="form-label">Ngày Kết Thúc Áp Dụng</label>
+        <p-calendar
+          id="validateTo"
+          formControlName="validateTo"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+          inputStyleClass="w-100"
+          [showTime]="true"
+          hourFormat="24"
+          appendTo="body"
+        ></p-calendar>
+      </div>
+
+      <div class="col-12 mt-4">
+        <div class="form-check form-switch mb-2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="isActive"
+            formControlName="isActive"
+          />
+          <label class="form-check-label" for="isActive"
+            >Kích Hoạt Mã Giảm Giá</label
+          >
+        </div>
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="isUserRestricted"
+            formControlName="isUserRestricted"
+          />
+          <label class="form-check-label" for="isUserRestricted"
+            >Giới Hạn Người Dùng (áp dụng một lần mỗi người dùng)</label
+          >
+        </div>
+      </div>
+
+      <div class="col-12 text-center mt-5">
+        <button type="submit" [disabled]="updatePromotionForm.invalid" class="btn btn-primary px-5 py-2">
+          Cập Nhật Mã Giảm Giá
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

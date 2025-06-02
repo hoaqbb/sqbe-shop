@@ -7,8 +7,15 @@ import {
   UpdateProduct,
 } from '../../shared/models/product';
 import { AdminProductFilterParams } from '../../shared/models/adminParams';
+import { OrderFilterParams } from '../../shared/models/orderParams';
+import {
+  CreatePromotion,
+  PromotionDetail,
+  UpdatePromotion,
+} from '../../shared/models/promotion';
 import { CategoryDetail, CreateCategory } from '../../shared/models/category';
 import { tap } from 'rxjs';
+import { ColorDetail } from '../../shared/models/color';
 import { SizeDetail } from '../../shared/models/size';
 
 @Injectable({
@@ -21,7 +28,9 @@ export class AdminService {
   );
   adminOrderFilterParams = signal<OrderFilterParams>(new OrderFilterParams());
   categories: CategoryDetail[] = [];
+  colors: ColorDetail[] = [];
   sizes: SizeDetail[] = [];
+  promotions: PromotionDetail[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -205,6 +214,29 @@ export class AdminService {
   }
 
   //#endregion order
+
+  //#region promotion
+  getPromotions() {
+    if(this.promotions.length > 0) return null;
+    return this.http.get(this.baseUrl + '/api/Admins/promotions');
+  }
+
+  createPromotion(newPromotion: CreatePromotion) {
+    return this.http.post(this.baseUrl + '/api/Promotions', newPromotion);
+  }
+
+  deletePromotion(id) {
+    return this.http.delete(this.baseUrl + '/api/Promotions/' + id);
+  }
+
+  updatePromotion(id, updatedPromotion: UpdatePromotion) {
+    return this.http.put(
+      this.baseUrl + '/api/Promotions/' + id,
+      updatedPromotion
+    );
+  }
+
+  //#endregion promotion
 
   //#region category
 

@@ -20,6 +20,8 @@ export class AdminComponent implements OnInit{
   initAdminPage() {
     this.loadScript('assets/js/sb-admin-2.min.js');
     this.adminService.getCategories().subscribe();
+    this.adminService.getColors().subscribe();
+    this.adminService.getSizes().subscribe();
   }
 
   loadScript(scriptUrl: string) {

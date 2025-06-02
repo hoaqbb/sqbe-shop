@@ -1,0 +1,125 @@
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-dark">Quản lý mã khuyến mãi</h1>
+</div>
+
+<div class="card" *ngIf="adminService.promotions">
+  <p-table #dt [value]="adminService.promotions" [rowHover]="true">
+    <ng-template pTemplate="caption">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-success" (click)="showCreatePromotionDialog()">
+          Thêm mã giảm giá <i class="pi pi-plus"></i>
+        </button>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Id</th>
+        <th>Mã giảm giá</th>
+        <th>Mô tả</th>
+        <th>Loại giảm giá</th>
+        <th>Giá trị giảm</th>
+        <th>Đã sử dụng</th>
+        <th>Giới hạn sử dụng</th>
+        <th>Hạn chế</th>
+        <th pSortableColumn="price">
+          Hiệu lực từ <p-sortIcon field="price" />
+        </th>
+        <th pSortableColumn="price">
+          Hết hiệu lực từ <p-sortIcon field="price" />
+        </th>
+        <th>Giá trị đơn hàng tối thiểu(VNĐ)</th>
+        <th>Giá trị giảm tối đa(VNĐ)</th>
+        <th pSortableColumn="createAt">
+          Ngày tạo<p-sortIcon field="createAt" />
+        </th>
+        <th pSortableColumn="updateAt">
+          Ngày cập nhật<p-sortIcon field="updateAt" />
+        </th>
+        <th pSortableColumn="status">
+          Trạng thái<p-sortIcon field="status" />
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-promotion>
+      <tr>
+        <td>
+          {{ promotion.id }}
+        </td>
+        <td>
+          {{ promotion.code }}
+        </td>
+        <td>
+          {{ promotion.description }}
+        </td>
+        <td>
+          @switch (promotion.discountType) { @case (0) { Phần trăm } @case (1) {
+          Cố định } }
+        </td>
+        <td>
+          {{ promotion.discountValue | number : "1.0" : "en-US" }}
+        </td>
+        <td>
+          {{ promotion.usageCount }}
+        </td>
+        <td>
+          {{ promotion.usageLimit }}
+        </td>
+        <td>
+          @switch (promotion.isUserRestricted) { @case (true) {
+          <p-button icon="pi pi-check" [text]="true" severity="success" />
+          } @case (false) { - } }
+        </td>
+
+        <td>
+          {{ promotion.validateFrom | date : "dd/MM/yyyy" }}
+        </td>
+        <td>
+          {{ promotion.validateTo | date : "dd/MM/yyyy" }}
+        </td>
+        <td>
+          {{ promotion.minOrderAmount | number : "1.0" : "en-US" }}
+        </td>
+        <td>
+          {{ promotion.maxDiscountValue | number : "1.0" : "en-US" }}
+        </td>
+        <td>
+          {{ promotion.createAt | date : "dd/MM/yyyy" }}
+        </td>
+        <td>
+          {{ promotion.updateAt | date : "dd/MM/yyyy" }}
+        </td>
+
+        <td>
+          @switch (promotion.isActive) { @case (true) {
+          <p-button
+            icon="pi pi-check"
+            [rounded]="true"
+            [text]="true"
+            severity="success"
+          />
+          } @case (false) {
+          <p-button
+            icon="pi pi-times"
+            [rounded]="true"
+            [text]="true"
+            severity="danger"
+          />
+          } }
+        </td>
+
+        <td>
+          <i
+            class="pi pi-pencil text-success cursor-pointer my-2"
+            (click)="showUpdatePromotionDialog(promotion)"
+          ></i>
+          <i
+            class="pi pi-trash text-danger cursor-pointer my-2"
+            (click)="deleteConfirmationDialog(promotion.id)"
+          ></i>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-confirmDialog />

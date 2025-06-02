@@ -52,6 +52,16 @@ namespace API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("promotions")]
+        public async Task<ActionResult> GetPromotions()
+        {
+            var result = await _context.Promotions
+                .ProjectTo<PromotionDetailDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return Ok(result);
+        }
+
         [HttpGet("categories")]
         public async Task<ActionResult> GetCategories()
         {

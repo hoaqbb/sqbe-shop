@@ -11,6 +11,8 @@ namespace API.Helpers.MappingProfiles
         {
             CreateMap<Promotion, PromotionDto>()
                 .ForMember(dest => dest.DiscountType, opt => opt.MapFrom(src => (DiscountTypeEnum)src.DiscountType));
+
+            CreateMap<Promotion, PromotionDetailDto>();
         }
     }
 }

@@ -9,6 +9,7 @@ export const adminRoutes: Route[] = [
     component: AdminComponent,
     children: [
       { path: 'product', component: ManageProductComponent },
+      { path: 'promotion', component: ManagePromotionComponent },
       { path: 'category', component: ManageCategoryComponent },
       { path: 'variant', component: ManageVariantComponent },
     ],

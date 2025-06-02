@@ -1,0 +1,7 @@
+::ng-deep p-calendar span{
+    width: 100%;
+}
+
+::ng-deep.p-calendar .p-datepicker {
+    top: 0;
+}
