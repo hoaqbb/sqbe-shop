@@ -2,11 +2,79 @@
   <h1 class="h3 mb-0 text-dark">Quản lý thể loại</h1>
 </div>
 
-<div class="card" *ngIf="adminService.categories()">
-  <p-table [value]="adminService.categories()" [rowHover]="true">
+<div class="card" *ngIf="adminService.categories.length > 0">
+  <p-table [value]="adminService.categories" [rowHover]="true">
     <ng-template pTemplate="caption">
-      <div [hidden]="!isCreate" class="forgot-password">
-        <h5>Thêm thể loại</h5>
+      <div [hidden]="!isCreateFormVisible" class="create-form">
+        <h4>Thêm thể loại</h4>
+        <form [formGroup]="createCategoryForm" (ngSubmit)="createCategory()">
+          <app-text-input
+            [formControl]="createCategoryForm.controls['name']"
+            [label]="'Tên thể loại'"
+          >
+          </app-text-input>
+          <app-text-input
+            [formControl]="createCategoryForm.controls['slug']"
+            [label]="'Url'"
+          >
+          </app-text-input>
+          <div class="d-flex justify-content-end mx-3">
+            <button
+              class="btn btn-success mb-3"
+              type="submit"
+              [disabled]="createCategoryForm.invalid"
+            >
+              Thêm
+            </button>
+            <p
+              class="ms-3 cursor-pointer align-self-center"
+              (click)="manageCreateForm()"
+            >
+              Hủy
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <div *ngIf="isUpdateFormVisible" class="create-form">
+        <h4>Cập nhật thể loại</h4>
+        <form [formGroup]="updateCategoryForm" (ngSubmit)="updateCategory()">
+          <app-text-input
+            [formControl]="updateCategoryForm.controls['name']"
+            [label]="'Tên thể loại'"
+          >
+          </app-text-input>
+          <app-text-input
+            [formControl]="updateCategoryForm.controls['slug']"
+            [label]="'Url'"
+          >
+          </app-text-input>
+          <div class="d-flex justify-content-end mx-3">
+            <button
+              class="btn btn-success mb-3"
+              [disabled]="updateCategoryForm.invalid"
+              type="submit"
+            >
+              Lưu
+            </button>
+            <p
+              class="ms-3 cursor-pointer align-self-center"
+              (click)="manageUpdateForm()"
+            >
+              Hủy
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <div class="d-flex justify-content-end">
+        <button
+          class="btn btn-success"
+          (click)="manageCreateForm()"
+          [hidden]="isCreateFormVisible || isUpdateFormVisible"
+        >
+          Thêm thể loại <i class="pi pi-plus"></i>
+        </button>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
@@ -52,6 +120,7 @@
             [rounded]="true"
             [outlined]="true"
             severity="success"
+            (onClick)="manageUpdateForm(category.id)"
           />
 
           <p-button
@@ -59,6 +128,7 @@
             severity="danger"
             [rounded]="true"
             [outlined]="true"
+            (onClick)="deleteConfirmationDialog(category.id)"
           />
         </td>
       </tr>

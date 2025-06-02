@@ -9,3 +9,8 @@ export interface CategoryDetail extends Category {
     updateAt: string
     productCount: number
 }
+
+export interface CreateCategory {
+    name: string
+    slug: string
+}

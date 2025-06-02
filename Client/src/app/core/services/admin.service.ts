@@ -7,7 +7,7 @@ import {
   UpdateProduct,
 } from '../../shared/models/product';
 import { AdminProductFilterParams } from '../../shared/models/adminParams';
-import { CategoryDetail } from '../../shared/models/category';
+import { CategoryDetail, CreateCategory } from '../../shared/models/category';
 import { tap } from 'rxjs';
 
 @Injectable({
@@ -19,7 +19,7 @@ export class AdminService {
     new AdminProductFilterParams()
   );
   adminOrderFilterParams = signal<OrderFilterParams>(new OrderFilterParams());
-  categories = signal<CategoryDetail[] | null>(null);
+  categories: CategoryDetail[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -207,11 +207,28 @@ export class AdminService {
   //#region category
 
   getCategories() {
+    if (this.categories.length > 0) return null;
+
     return this.http.get(this.baseUrl + '/api/Admins/categories').pipe(
-      tap((res: any) => {
-        this.categories.set(res);
+      tap((res: CategoryDetail[]) => {
+        this.categories = res;
       })
     );
+  }
+
+  createCategory(newCategory: CreateCategory) {
+    return this.http.post(this.baseUrl + '/api/Categories', newCategory);
+  }
+
+  updateCategory(updatedCategory: any) {
+    return this.http.put(
+      this.baseUrl + '/api/Categories/' + updatedCategory.id,
+      { name: updatedCategory.name, slug: updatedCategory.slug }
+    );
+  }
+
+  deleteCategory(id) {
+    return this.http.delete(this.baseUrl + '/api/Categories/' + id);
   }
 
   //#endregion category

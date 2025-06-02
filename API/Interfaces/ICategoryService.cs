@@ -7,5 +7,8 @@ namespace API.Interfaces
     {
         Task<IReadOnlyList<CategoryDto>> GetAllAsync();
         Task<IReadOnlyList<CategoryDetailDto>> GetAllWithDetailsAsync();
+        Task<CategoryDetailDto?> CreateAsync(CreateCategoryDto dto);
+        Task<CategoryDetailDto?> UpdateAsync(int id, UpdateCategoryDto dto);
+        Task<bool> DeleteAsync(int id);
     }
 }

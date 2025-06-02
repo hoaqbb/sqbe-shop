@@ -1,6 +1,7 @@
 ﻿using API.DTOs.CategoryDtos.cs;
 using API.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -9,15 +10,11 @@ namespace API.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly ICategoryService _categoryService;
-        private readonly IMapper _mapper;
-        public CategoriesController(IUnitOfWork unitOfWork, ICategoryService categoryService, IMapper mapper)
-        public CategoriesController(IUnitOfWork unitOfWork, IMapper mapper)
+
+        public CategoriesController(ICategoryService categoryService)
         {
-            _unitOfWork = unitOfWork;
             _categoryService = categoryService;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -27,6 +24,44 @@ namespace API.Controllers
 
             return Ok(categories);
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<ActionResult> CreateCategory(CreateCategoryDto dto)
+        {
+            var category = await _categoryService.CreateAsync(dto);
+            if (category == null)
+                return BadRequest();
+
+            return Ok(category);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateCategory(int id, [FromBody] UpdateCategoryDto dto)
+        {
+            var modifiedCat = await _categoryService.UpdateAsync(id, dto);
+
+            if (modifiedCat != null)
+            {
+                return Ok(modifiedCat);
+            }
+
+            return BadRequest();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteCategory(int id)
+        {
+            var result = await _categoryService.DeleteAsync(id);
+
+            if (!result)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
         }
     }
 }
