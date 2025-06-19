@@ -1,9 +1,5 @@
 ﻿using API.Data.Entities;
-using API.DTOs.ProductDtos;
-using API.Helpers;
-using API.Helpers.Params;
 using API.Interfaces;
-using API.Specifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Repositories

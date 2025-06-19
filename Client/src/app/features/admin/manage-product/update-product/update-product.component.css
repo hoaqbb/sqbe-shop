@@ -1,9 +1,4 @@
-img.img-thumbnail {
-  height: 75px;
-  min-width: 50px !important;
-  margin-bottom: 2px;
-}
-
-.form-label {
-  margin-right: 10px; /* Khoảng cách giữa nhãn và ô màu */
+.product-img {
+  width: 70px;
+  border: 1px solid;
 }

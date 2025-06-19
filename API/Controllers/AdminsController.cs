@@ -52,6 +52,16 @@ namespace API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("product/{id:Guid}")]
+        public async Task<ActionResult> GetProductById(Guid id)
+        {
+            var product = await _productService.GetProductByIdAsync(id);
+
+            if (product == null) return NotFound();
+
+            return Ok(product);
+        }
+
         [HttpGet("promotions")]
         public async Task<ActionResult> GetPromotions()
         {

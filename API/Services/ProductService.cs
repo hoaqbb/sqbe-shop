@@ -5,6 +5,8 @@ using API.Helpers;
 using API.Helpers.Params;
 using API.Interfaces;
 using API.Specifications.ProductSpecifications;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Slugify;
 
 namespace API.Services
@@ -14,12 +16,16 @@ namespace API.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IImageService _imageService;
         private readonly ILogger<ProductService> _logger;
+        private readonly IMapper _mapper;
+        private readonly EcommerceDbContext _context;
 
-        public ProductService(IUnitOfWork unitOfWork, IImageService imageService, ILogger<ProductService> logger)
+        public ProductService(IUnitOfWork unitOfWork, IImageService imageService, ILogger<ProductService> logger, IMapper mapper, EcommerceDbContext context)
         {
             _unitOfWork = unitOfWork;
             _imageService = imageService;
             _logger = logger;
+            _mapper = mapper;
+            _context = context;
         }
 
         public async Task<Product> CreateProductAsync(CreateProductDto createProductDto)
@@ -154,6 +160,107 @@ namespace API.Services
             return false;
         }
 
+        public async Task<bool> UpdateProductAsync(Guid productId, UpdateProductDto updateProductDto)
+        {
+            var product = await _context.Products
+                .Include(p => p.ProductColors)
+                .Include(p => p.ProductVariants)
+                .FirstOrDefaultAsync(x => x.Id == productId);
+
+            if (product is null) return false;
+
+            try
+            {
+                await _context.Database.BeginTransactionAsync();
+                product.Name = updateProductDto.Name;
+                product.Price = updateProductDto.Price;
+                product.Discount = updateProductDto.Discount;
+                product.CategoryId = updateProductDto.CategoryId;
+                product.Description = updateProductDto.Description;
+                product.UpdateAt = DateTime.UtcNow;
+
+                var colorsToRemove = product.ProductColors
+                    .Where(x => !updateProductDto.ProductColors.Contains(x.ColorId))
+                    .ToList();
+
+                _context.ProductColors.RemoveRange(colorsToRemove);
+
+                foreach (var colorId in updateProductDto.ProductColors)
+                {
+                    // Find or create the product color
+                    ProductColor productColor;
+
+                    var existingProductColor = product.ProductColors
+                        .FirstOrDefault(pc => pc.ColorId == colorId);
+
+                    if (existingProductColor == null)
+                    {
+                        // Create new product color
+                        productColor = new ProductColor
+                        {
+                            ProductId = product.Id,
+                            ColorId = colorId
+                        };
+
+                        product.ProductColors.Add(productColor);
+
+                        // Have to save to get the ProductColorId before creating variants
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        productColor = existingProductColor;
+
+                        // For existing colors, remove variants with sizes not in the update
+                        var variantsToRemove = product.ProductVariants
+                            .Where(pv => pv.ProductColorId == productColor.Id &&
+                                   !updateProductDto.ProductSizes.Contains(pv.SizeId))
+                            .ToList();
+
+                        _context.ProductVariants.RemoveRange(variantsToRemove);
+
+                        await _context.SaveChangesAsync();
+                    }
+
+                    // Add missing variants for this color
+                    foreach (var sizeId in updateProductDto.ProductSizes)
+                    {
+                        // Check if this variant already exists
+                        bool variantExists = product.ProductVariants
+                            .Any(pv => pv.ProductColorId == productColor.Id && pv.SizeId == sizeId);
+
+                        if (!variantExists)
+                        {
+                            // Create new variant
+                            var newVariant = new ProductVariant
+                            {
+                                ProductId = product.Id,
+                                ProductColorId = productColor.Id,
+                                SizeId = sizeId,
+                                Quantity = 0
+                            };
+
+                            _context.ProductVariants.Add(newVariant);
+                        }
+                    }
+                }
+
+                _context.Products.Update(product);
+                if (await _context.SaveChangesAsync() > 0)
+                {
+                    await _context.Database.CommitTransactionAsync();
+                    return true;
+                }
+
+                return false;
+            }
+            catch
+            {
+                await _context.Database.RollbackTransactionAsync();
+                return false;
+            }
+        }
+
         private async Task AddProductVariantsAsync(Guid productId, List<ProductColor> productColors, List<int> sizeIds)
         {
             foreach (var sizeId in sizeIds)
@@ -238,6 +345,14 @@ namespace API.Services
                 product.IsLikedByCurrentUser = likedProductIds.Contains(product.Id);
             }
             return result;
+        }
+
+        public async Task<ProductDetailDto> GetProductByIdAsync(Guid id)
+        {
+            var product = await _unitOfWork.ProductRepository
+                .GetSingleProjectedAsync<ProductDetailDto>(p => p.Id == id, _mapper.ConfigurationProvider);
+
+            return product;
         }
 
         private string GenerateSlug(string title)

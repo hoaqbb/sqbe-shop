@@ -14,6 +14,8 @@ import { ToastrService } from 'ngx-toastr';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { FilterSidebarComponent } from '../../products/filter-sidebar/filter-sidebar.component';
 import { SidebarService } from '../../../core/services/sidebar.service';
+import { UpdateProductComponent } from './update-product/update-product.component';
+import { UpdateProductVariantComponent } from './update-product-variant/update-product-variant.component';
 
 @Component({
   selector: 'app-manage-product',
@@ -63,13 +65,14 @@ export class ManageProductComponent {
   updateProductStatus(id: string) {
     this.adminService.updateProductStatusById(id).subscribe({
       next: () => {
-        const index = this.pagination.data.findIndex(p => p.id == id);
-        this.pagination.data[index].isVisible = !this.pagination.data[index].isVisible;
+        const index = this.pagination.data.findIndex((p) => p.id == id);
+        this.pagination.data[index].isVisible =
+          !this.pagination.data[index].isVisible;
       },
       error: (error) => {
         console.error(error);
-      }
-    })
+      },
+    });
   }
 
   pageChanged(event: any) {
@@ -90,9 +93,31 @@ export class ManageProductComponent {
     });
   }
 
+  showUpdateProductDialog(id) {
+    this.adminService
+      .getProductById(id)
+      .subscribe((response: ProductDetail) => {
+        this.product = response;
+        this.ref = this.dialogService.open(UpdateProductComponent, {
+          data: this.product,
+          width: '60vw',
+          modal: true,
+          breakpoints: {
+            '960px': '75vw',
+            '640px': '90vw',
+          },
+        });
+      });
+  }
+
   deleteProduct(id) {
     this.adminService.deleteProductById(id).subscribe({
-      next: () => this.toastr.success('Xóa sản phẩm thành công!'),
+      next: () => {
+        //remove product is deleted from pagination
+        this.adminService.productsWithFilter.data =
+          this.adminService.productsWithFilter.data.filter((p) => p.id != id);
+        this.toastr.success('Xóa sản phẩm thành công!');
+      },
       error: (err) => {
         console.log(err);
         this.toastr.error('Có lỗi xảy ra khi xóa sản phẩm!');
@@ -100,9 +125,8 @@ export class ManageProductComponent {
     });
   }
 
-  deleteConfirmationDialog(event: Event, productId: string) {
+  deleteConfirmationDialog(productId: string) {
     this.confirmationService.confirm({
-      target: event.target as EventTarget,
       message: 'Bạn có chắc muốn xóa sản phẩm này không?',
       header: 'Xác nhận xóa',
       icon: 'pi pi-info-circle',
@@ -116,5 +140,22 @@ export class ManageProductComponent {
       },
       reject: () => {},
     });
+  }
+
+  showUpdateProductVariantDialog(productId: string) {
+    this.adminService
+      .getProductById(productId)
+      .subscribe((response: ProductDetail) => {
+        this.product = response;
+        this.ref = this.dialogService.open(UpdateProductVariantComponent, {
+          data: this.product,
+          width: '60vw',
+          modal: true,
+          breakpoints: {
+            '960px': '75vw',
+            '640px': '90vw',
+          },
+        });
+      });
   }
 }

@@ -7,13 +7,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { AdminService } from '../../../../core/services/admin.service';
-import { ShopService } from '../../../../core/services/shop.service';
 import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { EditorModule } from 'primeng/editor';
 import { ToastrService } from 'ngx-toastr';
 import {
   ProductDetail,
-  ProductImage,
   UpdateProduct,
 } from '../../../../shared/models/product';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -45,7 +43,6 @@ export class UpdateProductComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    public shopService: ShopService,
     public adminService: AdminService,
     public toastr: ToastrService,
     private ref: DynamicDialogRef,
@@ -76,7 +73,7 @@ export class UpdateProductComponent implements OnInit {
   }
 
   getProductColors() {
-    this.productColors = this.shopService.colors().map((color) => {
+    this.productColors = this.adminService.colors.map((color) => {
       const isChecked = this.product.productVariants.some(
         (pColor) => pColor.colorCode == color.colorCode
       );
@@ -85,7 +82,7 @@ export class UpdateProductComponent implements OnInit {
   }
 
   getProductSizes() {
-    this.productSizes = this.shopService.sizes().map((size) => {
+    this.productSizes = this.adminService.sizes.map((size) => {
       const isChecked = this.product.productVariants.some(
         (pSize) => pSize.size == size.name
       );

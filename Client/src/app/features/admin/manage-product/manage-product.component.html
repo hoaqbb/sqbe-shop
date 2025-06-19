@@ -7,13 +7,7 @@
 </div>
 
 <div class="card" *ngIf="pagination">
-  <p-table
-    #dt
-    [value]="pagination.data"
-    [globalFilterFields]="['name', 'category', 'price']"
-    [tableStyle]="{ 'min-width': '75rem' }"
-    [rowHover]="true"
-  >
+  <p-table [value]="pagination.data" [rowHover]="true">
     <ng-template pTemplate="caption">
       <div class="d-flex justify-content-end">
         <button class="btn btn-success" (click)="showCreateProductDialog()">
@@ -23,26 +17,25 @@
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 5%">Mã sản phẩm</th>
-        <th pSortableColumn="name" style="min-width: 4rem">
-          Tên sản phẩm<p-sortIcon field="name" />
-        </th>
+        <th>Mã sản phẩm</th>
+        <th pSortableColumn="name">Tên sản phẩm<p-sortIcon field="name" /></th>
         <th>Ảnh</th>
-        <th style="min-width: 7rem">Url</th>
-        <th style="min-width: 5rem">Thể loại</th>
-        <th pSortableColumn="price" style="min-width: 10rem">
-          Giá <p-sortIcon field="price" />
-        </th>
+        <th>Url</th>
+        <th>Thể loại</th>
+        <th pSortableColumn="price">Giá <p-sortIcon field="price" /></th>
         <th pSortableColumn="discount">
           Giảm giá (%)<p-sortIcon field="discount" />
         </th>
         <th>Màu sắc</th>
+        <th pSortableColumn="createAt">
+          Ngày tạo<p-sortIcon field="createAt" />
+        </th>
         <th>Trạng thái</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-product>
       <tr>
-        <td class="product-id">
+        <td>
           {{ product.id }}
         </td>
         <td>
@@ -59,18 +52,16 @@
         <td>
           {{ product.slug }}
         </td>
-        <td style="text-align: center">
+        <td>
           {{ product.category }}
         </td>
-        <td style="text-align: center">
-          {{ product.price | number : "1.0" : "en-US" }}đ
-        </td>
-        <td style="text-align: center">
+        <td>{{ product.price | number : "1.0" : "en-US" }}đ</td>
+        <td>
           {{ product.discount }}
         </td>
 
-        <td style="text-align: center">
-          <div class="d-flex gap-2">
+        <td>
+          <div class="d-flex gap-2 justify-content-center">
             @for (color of product.productColors; track null) {
             <span
               class="color-box"
@@ -79,6 +70,10 @@
             </span>
             }
           </div>
+        </td>
+
+        <td>
+          {{ product.createAt | date : "dd/MM/yyyy HH:mm a" }}
         </td>
 
         <td>
@@ -108,10 +103,18 @@
         <td>
           <p-button
             icon="pi pi-pencil"
-            class="mr-2"
             [rounded]="true"
             [outlined]="true"
             severity="success"
+            (onClick)="showUpdateProductDialog(product.id)"
+          />
+
+          <p-button
+            icon="pi pi-warehouse"
+            severity="warning"
+            [rounded]="true"
+            [outlined]="true"
+            (onClick)="showUpdateProductVariantDialog(product.id)"
           />
 
           <p-button
@@ -119,7 +122,7 @@
             severity="danger"
             [rounded]="true"
             [outlined]="true"
-            (onClick)="deleteConfirmationDialog($event, product.id)"
+            (onClick)="deleteConfirmationDialog(product.id)"
           />
         </td>
       </tr>
