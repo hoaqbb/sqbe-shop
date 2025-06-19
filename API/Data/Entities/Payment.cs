@@ -5,6 +5,11 @@ namespace API.Data.Entities
 {
     public partial class Payment
     {
+        public Payment()
+        {
+            Orders = new HashSet<Order>();
+        }
+
         public int Id { get; set; }
         public string Method { get; set; } = null!;
         public string? Provider { get; set; }
@@ -19,5 +24,6 @@ namespace API.Data.Entities
 
         public virtual Order Order { get; set; } = null!;
         public virtual User? User { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

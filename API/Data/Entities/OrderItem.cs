@@ -17,5 +17,6 @@ namespace API.Data.Entities
         public Guid OrderId { get; set; }
 
         public virtual Order Order { get; set; } = null!;
+        public virtual ProductVariant? ProductVariant { get; set; }
     }
 }

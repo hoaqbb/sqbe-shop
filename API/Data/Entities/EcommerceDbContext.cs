@@ -16,6 +16,8 @@ namespace API.Data.Entities
         {
         }
 
+        public virtual DbSet<Banner> Banners { get; set; } = null!;
+        public virtual DbSet<Blog> Blogs { get; set; } = null!;
         public virtual DbSet<Cart> Carts { get; set; } = null!;
         public virtual DbSet<CartItem> CartItems { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
@@ -43,6 +45,75 @@ namespace API.Data.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Banner>(entity =>
+            {
+                entity.ToTable("banner");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreateAt)
+                    .HasColumnName("create_at")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.DisplayType).HasColumnName("display_type");
+
+                entity.Property(e => e.EndDate).HasColumnName("end_date");
+
+                entity.Property(e => e.ImageUrl)
+                    .HasMaxLength(100)
+                    .HasColumnName("image_url");
+
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
+                entity.Property(e => e.LinkUrl)
+                    .HasMaxLength(50)
+                    .HasColumnName("link_url");
+
+                entity.Property(e => e.PublicId)
+                    .HasMaxLength(50)
+                    .HasColumnName("public_id");
+
+                entity.Property(e => e.StartDate).HasColumnName("start_date");
+
+                entity.Property(e => e.UpdateAt).HasColumnName("update_at");
+            });
+
+            modelBuilder.Entity<Blog>(entity =>
+            {
+                entity.ToTable("blog");
+
+                entity.HasIndex(e => e.Slug, "blog_unique")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Content).HasColumnName("content");
+
+                entity.Property(e => e.CreateAt)
+                    .HasColumnName("create_at")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.Excerpt)
+                    .HasMaxLength(3000)
+                    .HasColumnName("excerpt");
+
+                entity.Property(e => e.Slug)
+                    .HasMaxLength(255)
+                    .HasColumnName("slug");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.ThumbnailUrl)
+                    .HasMaxLength(255)
+                    .HasColumnName("thumbnail_url");
+
+                entity.Property(e => e.Title)
+                    .HasMaxLength(255)
+                    .HasColumnName("title");
+
+                entity.Property(e => e.UpdateAt).HasColumnName("update_at");
+            });
+
             modelBuilder.Entity<Cart>(entity =>
             {
                 entity.ToTable("cart");
@@ -185,6 +256,12 @@ namespace API.Data.Entities
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
+                entity.HasOne(d => d.Payment)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.PaymentId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("order_payment_fk");
+
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.UserId)
@@ -230,6 +307,12 @@ namespace API.Data.Entities
                     .WithMany(p => p.OrderItems)
                     .HasForeignKey(d => d.OrderId)
                     .HasConstraintName("order_item_order_fk");
+
+                entity.HasOne(d => d.ProductVariant)
+                    .WithMany(p => p.OrderItems)
+                    .HasForeignKey(d => d.ProductVariantId)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .HasConstraintName("order_item_product_variant_fk");
             });
 
             modelBuilder.Entity<Payment>(entity =>

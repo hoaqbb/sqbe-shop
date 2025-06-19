@@ -8,6 +8,7 @@ namespace API.Data.Entities
         public ProductVariant()
         {
             CartItems = new HashSet<CartItem>();
+            OrderItems = new HashSet<OrderItem>();
         }
 
         public int Id { get; set; }
@@ -20,5 +21,6 @@ namespace API.Data.Entities
         public virtual ProductColor? ProductColor { get; set; }
         public virtual Size Size { get; set; } = null!;
         public virtual ICollection<CartItem> CartItems { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }
