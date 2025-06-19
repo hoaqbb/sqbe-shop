@@ -1,0 +1,68 @@
+<div *ngIf="productVariants.length > 0" class="container d-flex flex-column align-items-center">
+  <img
+    class="card"
+    style="width: 250px"
+    src="{{ product.mainPhoto }}"
+    alt=""
+  />
+  <h4 class="m-2">{{ product.name }}</h4>
+  <h4 class="m-2">#{{ product.id }}</h4>
+</div>
+
+<div class="card">
+  <p-table
+    [value]="productVariants"
+    [rowHover]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Mã kho</th>
+        <th>
+          Màu sắc
+        </th>
+        <th>
+          Size
+        </th>
+        <th>Số lượng</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-variant>
+      <tr>
+        <td>
+          {{ variant.id }}
+        </td>
+        <td>
+          {{ variant.color }}
+          <span
+            class="color-display"
+            [ngStyle]="{ 'background-color': variant.colorCode }"
+          ></span>
+        </td>
+        <td>
+          {{ variant.size }}
+        </td>
+        <td
+          [pEditableColumn]="variant.quantity"
+          pEditableColumnField="quantity"
+        >
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-inputNumber
+                [(ngModel)]="variant.quantity"
+                min="0"
+                (keydown)="onEdit($event, variant.id)"
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ variant.quantity }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<div class="d-flex justify-content-end">
+  <button (click)="updateProductVariantQuantity()" class="btn btn-success m-3">Lưu</button>
+</div>

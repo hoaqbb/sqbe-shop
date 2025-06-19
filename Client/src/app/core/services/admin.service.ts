@@ -3,6 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import {
   CreateProduct,
+  Product,
   ProductVariant,
   UpdateProduct,
 } from '../../shared/models/product';
@@ -17,6 +18,8 @@ import { CategoryDetail, CreateCategory } from '../../shared/models/category';
 import { tap } from 'rxjs';
 import { ColorDetail } from '../../shared/models/color';
 import { SizeDetail } from '../../shared/models/size';
+import { Pagination } from '../../shared/models/pagination';
+import { Order } from '../../shared/models/order';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +33,8 @@ export class AdminService {
   categories: CategoryDetail[] = [];
   colors: ColorDetail[] = [];
   sizes: SizeDetail[] = [];
+  productsWithFilter: Pagination<Product> = null;
+  ordersWithFilter: Pagination<Order> = null;
   promotions: PromotionDetail[] = [];
 
   constructor(private http: HttpClient) {}
@@ -77,7 +82,23 @@ export class AdminService {
 
     params = params.append('pageSize', productParams.pageSize);
     params = params.append('pageIndex', productParams.pageNumber);
-    return this.http.get(this.baseUrl + '/api/Admins/products', { params });
+    return this.http
+      .get<Pagination<Product>>(this.baseUrl + '/api/Admins/products', {
+        params,
+      })
+      .pipe(
+        tap((res) => {
+          this.productsWithFilter = res;
+        })
+      );
+  }
+
+  getProductById(id) {
+    return this.http.get(this.baseUrl + '/api/Admins/product/' + id);
+  }
+
+  getProductVariants(id) {
+    return this.http.get(this.baseUrl + '/api/Products/' + id + '/variants');
   }
 
   createNewProduct(newProduct: CreateProduct) {
@@ -112,6 +133,13 @@ export class AdminService {
 
   updateProductStatusById(id: string) {
     return this.http.put(this.baseUrl + '/api/Products/' + id + '/status', {});
+  }
+
+  updateProductVariantQuantity(id: string, quantityUpdate: ProductVariant[]) {
+    return this.http.put(
+      this.baseUrl + '/api/Products/' + id + '/variant-quantity',
+      quantityUpdate
+    );
   }
 
   updateProduct(id: string, updateProduct: UpdateProduct) {
@@ -291,4 +319,21 @@ export class AdminService {
   }
 
   //#endregion size
+
+  //#region dashboard
+
+  getOverview() {
+    return this.http.get(this.baseUrl + '/api/Admins/overview');
+  }
+
+  getRevenue() {
+    return this.http.get(this.baseUrl + '/api/Admins/revenue');
+  }
+
+  getRevenueWithYear(year: number) {
+    const params = new HttpParams().set('year', year.toString());
+    return this.http.get(this.baseUrl + '/api/Admins/revenue', { params });
+  }
+
+  //#endregion dashboard
 }

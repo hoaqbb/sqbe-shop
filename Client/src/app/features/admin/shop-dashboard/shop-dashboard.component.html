@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>SB Admin 2 - Dashboard</title>
+
+    <!-- Custom styles for this template-->
+    <link href="../css/sb-admin-2.min.css" rel="stylesheet" />
+  </head>
+
+  <body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+      <!-- Content Wrapper -->
+      <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+          <!-- Begin Page Content -->
+          <div class="container-fluid">
+            <!-- Page Heading -->
+            <div
+              class="d-sm-flex align-items-center justify-content-between mb-4"
+            >
+              <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+              <a
+                href="#"
+                class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                ><i class="pi pi-arrow-circle-down"></i> Generate Report</a
+              >
+            </div>
+
+            <!-- Content Row -->
+            <div class="row">
+              <!-- Earnings (Monthly) Card Example -->
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card shadow h-100 py-2 bg-success">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div
+                          class="text-xs font-weight-bold text-light text-uppercase mb-1"
+                        >
+                          Doanh thu tháng
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-light">
+                          {{
+                            overviewData.monthlyRevenue
+                              | number : "1.0" : "en-US"
+                          }}
+                          VNĐ
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-light"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Earnings (Monthly) Card Example -->
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card shadow text-light h-100 py-2 bg-info">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div
+                          class="text-xs font-weight-bold text-uppercase mb-1"
+                        >
+                          Đơn hàng tháng
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold">
+                          {{ overviewData.monthlyOrders }}
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-boxes fa-2x"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Earnings (Monthly) Card Example -->
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card shadow text-light h-100 py-2 bg-secondary">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div
+                          class="text-xs font-weight-bold text-uppercase mb-1"
+                        >
+                          Tin nhắn
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold">18</div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-comments fa-2x"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pending Requests Card Example -->
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card shadow text-light h-100 py-2 bg-warning">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div
+                          class="text-xs font-weight-bold text-uppercase mb-1"
+                        >
+                          Sản phẩm hết hàng
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold">5</div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-cubes fa-2x"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content Row -->
+
+            <div class="row">
+              <!-- Area Chart -->
+              <div class="col-xl-8 col-lg-7">
+                <div class="card shadow mb-4">
+                  <!-- Card Header - Dropdown -->
+                  <div
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                  >
+                    <h6 class="m-0 font-weight-bold text-primary">
+                      Tổng Quan Doanh Thu
+                    </h6>
+                    <select
+                      [(ngModel)]="selectedYear"
+                      class="ms-auto me-0"
+                      style="width: 15%"
+                      (change)="getRevenueChartWithYear($event.target.value)"
+                    >
+                      @for (item of revenueData.years; track $index) {
+                      <option [value]="item">{{ item }}</option>
+                      }
+                    </select>
+                  </div>
+                  <div class="d-flex mx-3 my-2 gap-5 flex-wrap">
+                    <div>
+                      <p class="m-0 text-secondary fw-normal">Tổng đơn hàng</p>
+                      <p class="m-0 p-0 fw-semibold">
+                        {{ revenueData.orderOverview.totalOrders }}
+                      </p>
+                    </div>
+                    <div>
+                      <p class="m-0 text-secondary fw-normal">Tổng sản phẩm</p>
+                      <p class="m-0 p-0 fw-semibold">
+                        {{ revenueData.orderOverview.totalUnits }}
+                      </p>
+                    </div>
+                    <div>
+                      <p class="m-0 text-secondary fw-normal">Tổng doanh thu</p>
+                      <p class="m-0 p-0 fw-semibold">
+                        {{
+                          revenueData.orderOverview.totalSales
+                            | number : "1.0" : "en-US"
+                        }}
+                        VNĐ
+                      </p>
+                    </div>
+                    <div>
+                      <p class="m-0 text-secondary fw-normal">
+                        Trung bình. Giá trị/đơn hàng
+                      </p>
+                      <p class="m-0 p-0 fw-semibold">
+                        {{
+                          revenueData.orderOverview.avgSalesPerOrders
+                            | number : "1.0" : "en-US"
+                        }}
+                        VNĐ
+                      </p>
+                    </div>
+                  </div>
+                  <!-- Card Body -->
+                  <div class="card-body">
+                    <p-chart
+                      type="bar"
+                      [data]="chartData"
+                      [options]="chartOptions"
+                    ></p-chart>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pie Chart -->
+              <div class="col-xl-4 col-lg-5">
+                <div class="card shadow mb-4">
+                  <!-- Card Header - Dropdown -->
+                  <div
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                  >
+                    <h6 class="m-0 font-weight-bold text-primary">
+                      Đơn Hàng Chưa Giao
+                    </h6>
+                  </div>
+                  <!-- Card Body -->
+                  <div class="card-body">
+                    <div class="overflow-auto" style="max-height: 28rem">
+                      @for (item of overviewData.unshippedOrders; track $index)
+                      {
+                      <div
+                        class="card my-2"
+                        style="background-color: #f3fbfb; border: none"
+                      >
+                        <div class="card-body">
+                          <div class="order-id d-flex justify-content-between">
+                            <p-tag
+                              [style]="{ 'font-size': '1rem' }"
+                              [rounded]="true"
+                              severity="danger"
+                              [value]="'#' + item.id"
+                            />
+                            <p>
+                              {{ item.createAt | date : "dd/MM/yyyy, HH:mm a" }}
+                            </p>
+                          </div>
+                          <div class="d-flex justify-content-between">
+                            <p class="ms-2">
+                              <strong
+                                >{{
+                                  item.amount | number : "1.0" : "en-US"
+                                }}
+                                VNĐ</strong
+                              >
+                            </p>
+                            @switch (item.status) { @case (0) {
+                            <p-tag
+                              [rounded]="true"
+                              severity="warning"
+                              value="Chờ xác nhận"
+                            />
+                            } @case (1) {
+                            <p-tag [rounded]="true" value="Đã xác nhận" />
+                            } }
+                          </div>
+                        </div>
+                      </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content Row -->
+            <div class="row">
+              <!-- Content Column -->
+              <div class="col-lg-8 mb-4">
+                <!-- Project Card Example -->
+                <div class="card shadow mb-4">
+                  <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                      Sản Phẩm Bán Chạy
+                    </h6>
+                  </div>
+                  <div class="card-body">
+                    <p-table
+                      rowHover="true"
+                      [value]="overviewData.bestSellingProducts"
+                    >
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th style="width: 15%">Mã sản phẩm</th>
+                          <th>Ảnh</th>
+                          <th>Tên sản phẩm</th>
+                          <th>Doanh số</th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-product>
+                        <tr>
+                          <td class="product-id">
+                            {{ product.productId }}
+                          </td>
+
+                          <td>
+                            <img
+                              style="width: 70px"
+                              src="{{
+                                product.productImage ||
+                                  '../../../../../assets/no-image.svg'
+                              }}"
+                              alt=""
+                            />
+                          </td>
+                          <td>
+                            {{ product.productName }}
+                          </td>
+                          <td>
+                            {{ product.totalSold }}
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-4 mb-4">
+                <!-- Sales By Category -->
+                <div class="card shadow mb-4">
+                  <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                      Doanh Số Theo Danh Mục
+                    </h6>
+                  </div>
+                  <div class="card-body">
+                    <p-chart
+                      type="doughnut"
+                      [data]="pieChartData"
+                      [options]="pieChartOptions"
+                    ></p-chart>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End of Main Content -->
+      </div>
+      <!-- End of Content Wrapper -->
+    </div>
+    <!-- End of Page Wrapper -->
+  </body>
+</html>

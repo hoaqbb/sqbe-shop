@@ -257,5 +257,42 @@ namespace API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("{id:Guid}/variants")]
+        public async Task<ActionResult> GetProductVariants(Guid id)
+        {
+            var variants = await _context.ProductVariants
+                .Where(x => x.ProductId == id)
+                .ProjectTo<ProductVariantDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return Ok(variants);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id:Guid}/variant-quantity")]
+        public async Task<ActionResult> UpdateProductVariantQuantity(Guid id, List<ProductVariantDto> productVariantDtos)
+        {
+            var currentQuantity = _context.ProductVariants
+                .Where(x => x.ProductId == id)
+                .AsQueryable();
+
+            foreach (var item in productVariantDtos)
+            {
+                var quantity = currentQuantity.FirstOrDefault(x => x.Id == item.Id);
+                if (quantity is null)
+                {
+                    return BadRequest();
+                }
+                if (quantity.Quantity == item.Quantity) continue;
+                quantity.Quantity = item.Quantity;
+                _context.ProductVariants.Update(quantity);
+            }
+            if (await _unitOfWork.SaveChangesAsync())
+                return Ok();
+
+            return BadRequest();
+        }
     }
 }

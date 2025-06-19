@@ -1,0 +1,33 @@
+.scroll-to-top {
+  scroll-behavior: smooth;
+}
+
+.card {
+  border-radius: 20px !important;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+}
+
+th {
+  text-align: center !important;
+  font-weight: bold;
+  background-color: #f2f2f2;
+}
+
+td {
+  padding: 12px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+
+::ng-deep .order-id .p-tag-value{
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 80px;
+}

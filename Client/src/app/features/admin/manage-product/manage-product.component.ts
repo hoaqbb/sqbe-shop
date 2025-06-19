@@ -143,19 +143,17 @@ export class ManageProductComponent {
   }
 
   showUpdateProductVariantDialog(productId: string) {
-    this.adminService
-      .getProductById(productId)
-      .subscribe((response: ProductDetail) => {
-        this.product = response;
-        this.ref = this.dialogService.open(UpdateProductVariantComponent, {
-          data: this.product,
-          width: '60vw',
-          modal: true,
-          breakpoints: {
-            '960px': '75vw',
-            '640px': '90vw',
-          },
-        });
-      });
+    let selectedProduct = this.adminService.productsWithFilter.data.find(
+      (p) => p.id == productId
+    );
+    this.ref = this.dialogService.open(UpdateProductVariantComponent, {
+      data: selectedProduct,
+      width: '60vw',
+      modal: true,
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+    });
   }
 }
