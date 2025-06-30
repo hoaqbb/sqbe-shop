@@ -1,7 +1,10 @@
 ﻿using API.DTOs.OrderDtos;
+using API.Extensions;
 using API.Interfaces;
 using API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PaypalServerSdk.Standard.Models;
 
 namespace API.Controllers
 {
@@ -16,11 +19,22 @@ namespace API.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetUserOrders()
+        [Authorize]
+        [HttpGet("{orderId:Guid}")]
+        public async Task<ActionResult<OrderDetailDto>> GetOrderById(Guid orderId)
         {
-            
-            return Ok();
+            var userRole = User.GetUserRole();
+            if(string.IsNullOrEmpty(userRole))
+                return Unauthorized();
+            var userId = User.GetUserId();
+
+            var order = await _orderService.GetOrderByIdAsync(orderId, userId, userRole);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(order);
         }
 
         [HttpPost]

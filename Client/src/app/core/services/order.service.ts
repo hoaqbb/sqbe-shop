@@ -26,4 +26,8 @@ export class OrderService {
   applyDiscount(code: string, subtotal: number) {
     return this.http.get(this.baseUrl + '/api/Promotions/'+ code + '/apply?subtotal=' + subtotal);
   }
+
+  getOrderById(id) {
+    return this.http.get(this.baseUrl + '/api/Orders/' + id);
+  }
 }

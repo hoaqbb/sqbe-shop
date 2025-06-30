@@ -341,5 +341,34 @@ namespace API.Services
                     };
             }
         }
+
+        public async Task<OrderDetailDto?> GetOrderByIdAsync(Guid orderId, Guid? userId, string? role)
+        {
+            try
+            {
+                var order = await _unitOfWork.Repository<Order>()
+                    .GetSingleProjectedAsync<OrderDetailDto>(o => o.Id == orderId, _mapper.ConfigurationProvider);
+
+                if (role == "Admin")
+                {
+                    return order;
+                }
+                if (role == "Customer")
+                {
+                    if(order!.UserId == userId)
+                    {
+                        return order;
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving order with ID: {OrderId}", orderId);
+                throw;
+            }
+            
+        }
     }
 }
