@@ -8,3 +8,8 @@ export class OrderFilterParams {
     pageNumber = 1
     pageSize = 8
 }
+
+export class OrderParams {
+    pageNumber = 1
+    pageSize = 8
+}

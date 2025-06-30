@@ -6,6 +6,7 @@ using API.Helpers.Params;
 using API.Interfaces;
 using API.Specifications.ProductSpecifications;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Slugify;
 
@@ -353,6 +354,23 @@ namespace API.Services
                 .GetSingleProjectedAsync<ProductDetailDto>(p => p.Id == id, _mapper.ConfigurationProvider);
 
             return product;
+        }
+
+        public async Task<List<ProductListDto>> GetUserLikedProductsAsync(Guid userId)
+        {
+            var likedProducts = await _context.UserLikes
+                    .Where(ul => ul.UserId == userId && ul.Product.IsVisible)
+                    .Select(ul => ul.Product)
+                    .OrderByDescending(ul => ul.CreateAt)
+                    .ProjectTo<ProductListDto>(_mapper.ConfigurationProvider)
+                    .ToListAsync();
+
+            foreach (var product in likedProducts)
+            {
+                product.IsLikedByCurrentUser = true;
+            }
+
+            return likedProducts;
         }
 
         private string GenerateSlug(string title)

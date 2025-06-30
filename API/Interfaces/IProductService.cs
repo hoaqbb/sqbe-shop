@@ -13,5 +13,6 @@ namespace API.Interfaces
         Task<ProductDetailDto> GetProductByIdAsync(Guid id);
         Task<bool> UpdateProductStatusAsync(Guid id);
         Task<bool> UpdateProductAsync(Guid productId, UpdateProductDto updateProductDto);
+        Task<List<ProductListDto>> GetUserLikedProductsAsync(Guid userId);
     }
 }

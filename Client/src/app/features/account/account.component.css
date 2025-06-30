@@ -1,0 +1,55 @@
+.container {
+    margin: 100px 0;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.d-flex {
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+p {
+    margin: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+table,
+th,
+td {
+  border: 1px solid #ddd;
+}
+th {
+  padding: 12px;
+  text-align: center;
+}
+th {
+  background-color: #f2f2f2;
+}
+td {
+  padding: 12px;
+  text-align: left;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.align-center {
+  text-align: center;
+}
+
+::ng-deep .p-tabview-nav-link {
+  color: #6B7280;
+  text-decoration: none;
+}
+::ng-deep.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  color: black;
+  border-color: black;
+}

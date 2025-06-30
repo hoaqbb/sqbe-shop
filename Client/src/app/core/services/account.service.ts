@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { tap } from 'rxjs';
@@ -69,5 +69,9 @@ export class AccountService {
 
   unlikeProduct(productId: string) {
     return this.http.delete(this.baseUrl + "/api/Accounts/unlike-product/" + productId, {});
+  }
+
+  getFavoriteProducts() {
+    return this.http.get(this.baseUrl + '/api/Users/liked-product')
   }
 }
