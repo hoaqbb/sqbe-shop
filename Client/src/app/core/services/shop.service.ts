@@ -107,6 +107,10 @@ export class ShopService {
     params = params.append('pageSize', productParams.pageSize);
     params = params.append('pageIndex', productParams.pageNumber);
 
+  getBanners() {
+    return this.http.get(this.baseUrl + '/api/Banners');
+  }
+
   getBlogs() {
     return this.http.get(this.baseUrl + '/api/Blogs');
   }

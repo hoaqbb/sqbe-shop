@@ -32,6 +32,7 @@ namespace API.Extensions
             services.AddScoped<IColorService, ColorService>();
             services.AddScoped<ISizeService, SizeService>();
             services.AddScoped<IBlogService, BlogService>();
+            services.AddScoped<IBannerService, BannerService>();
 
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.Configure<VnPaySettings>(config.GetSection("VNPaySettings"));
