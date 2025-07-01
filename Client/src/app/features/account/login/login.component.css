@@ -37,3 +37,27 @@ h6.mb-1::after {
   font-size: medium;
   font-weight: bolder;
 }
+
+.send-btn {
+  font-size: medium;
+  font-weight: bolder;
+}
+
+.cancle-btn {
+  align-self: center;
+}
+
+.forgot-password {
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep .accept-btn-dialog {
+    color: white;
+    background-color: black;
+    border: none;
+  }
+
+::ng-deep .p-button-text {
+  color: black;
+}

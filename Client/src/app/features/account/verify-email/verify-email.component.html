@@ -1,0 +1,37 @@
+<div class="container list-group align-items-center" style="margin: 100px auto">
+  @if(isSuccess == true) {
+  <h1 style="font-size: 800%">200</h1>
+  <p class="lead">Xác nhận thành công!</p>
+  <button
+    class="px-5 py-2 text-light bttn"
+    style="font-weight: bolder; background-color: black"
+    routerLink="/"
+  >
+    TRỞ VỀ TRANG CHỦ
+  </button>
+  } @else if(isSuccess == false) {
+  <h1 style="font-size: 800%">400</h1>
+  <p class="lead">Xác nhận thất bại!</p>
+  <button
+    class="px-5 py-2 text-light bttn"
+    style="font-weight: bolder; background-color: black"
+    routerLink="/"
+  >
+    TRỞ VỀ TRANG CHỦ
+  </button>
+  }
+<!-- </div>
+<div class="container list-group align-items-center" style="margin: 100px auto">
+  <h1 *ngIf="isSuccess" style="font-size: 800%">200</h1>
+  <h1 *ngIf="!isSuccess" style="font-size: 800%">400</h1>
+  <p *ngIf="isSuccess" class="lead">Xác nhận thành công!</p>
+   <p *ngIf="!isSuccess" class="lead">Xác nhận thất bại!</p>
+  <button
+    class="px-5 py-2 text-light"
+    style="font-weight: bolder; background-color: black"
+    routerLink="/"
+  >
+    TRỞ VỀ TRANG CHỦ
+  </button>
+  
+</div> -->

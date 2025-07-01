@@ -14,5 +14,6 @@ namespace API.Interfaces
         void SetTokenInsideCookies(TokenDto tokenDto, HttpContext httpContext);
         void RemoveTokenInsideCookies(HttpContext httpContext);
         Task<GoogleJsonWebSignature.Payload?> VerifyGoogleToken(string googleToken);
+        string GenerateEmailVerificationToken(User user);
     }
 }

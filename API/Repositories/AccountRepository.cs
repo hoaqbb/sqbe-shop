@@ -105,6 +105,15 @@ namespace API.Repositories
             _context.Remove(isLiked);
         }
 
+        public void ChangePassword(User user, string newPassword)
+        {
+            HashPassword(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            _context.Users.Update(user);
+        }
+
         private void HashPassword(string password, out byte[] passwordHash, out byte[] key)
         {
             using var hmac = new HMACSHA512();

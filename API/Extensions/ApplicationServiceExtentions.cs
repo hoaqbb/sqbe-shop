@@ -33,10 +33,13 @@ namespace API.Extensions
             services.AddScoped<ISizeService, SizeService>();
             services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<IBannerService, BannerService>();
+            services.AddScoped<IEmailSender, EmailSender>();
 
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.Configure<VnPaySettings>(config.GetSection("VNPaySettings"));
             services.Configure<PayPalSettings>(config.GetSection("PayPalSettings"));
+            services.Configure<JwtEmailSettings>(config.GetSection("JwtEmailSettings"));
+            services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
 
             return services;
         }

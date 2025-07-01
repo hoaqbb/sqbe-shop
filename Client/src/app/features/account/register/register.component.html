@@ -4,10 +4,12 @@
         <form [formGroup]="registerForm"
             (ngSubmit)="register()">
             <app-text-input 
+                id="lastName"
                 [formControl]="registerForm.controls['lastName']"
                 [label]='"Họ"'>
             </app-text-input>
             <app-text-input 
+                id="firstName"
                 [formControl]="registerForm.controls['firstName']"
                 [label]='"Tên"'>
             </app-text-input>
@@ -43,16 +45,19 @@
                     />
             </div>
             <app-text-input 
+                id="email"
                 [formControl]="registerForm.controls['email']"
                 [label]='"Email"'
                 [type]="'email'">
             </app-text-input>
             <app-text-input 
+                id="password"
                 [formControl]="registerForm.controls['password']"
                 [label]='"Mật khẩu"'
                 [type]="'password'">
             </app-text-input>
             <app-text-input 
+                id="confirmPassword"
                 [formControl]="registerForm.controls['confirmPassword']"
                 [label]='"Nhập lại mật khẩu"'
                 [type]="'password'">

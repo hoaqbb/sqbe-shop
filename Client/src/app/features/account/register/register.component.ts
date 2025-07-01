@@ -67,7 +67,10 @@ export class RegisterComponent implements OnInit{
     if(this.registerForm.invalid) return this.validationErrors.push("Vui lòng nhập thông tin hợp lệ!");
     
     return this.accountService.register(this.registerForm.value).subscribe({
-      next: () => this.router.navigateByUrl('/'),
+      next: () => {
+        this.toastr.success("Đăng ký tài khoản thành công! Vui lòng kiểm tra email của bạn để kích hoạt tài khoản.")
+        this.router.navigateByUrl('/account/login');
+      },
       error: (error) => {
         console.log(error);
         (this.validationErrors.push(error.error))

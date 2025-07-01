@@ -43,7 +43,6 @@ export class AccountService {
 
   setCurrentUserSource(user: User) {
     this.currentUser.set(user);
-    localStorage.setItem('user', JSON.stringify(user));
   }
 
   logout() {
@@ -60,7 +59,6 @@ export class AccountService {
 
   removeCurrentUserSource() {
     this.currentUser.set(null);
-    localStorage.removeItem('user');
   }
 
   likeProduct(productId: string) {
@@ -71,7 +69,31 @@ export class AccountService {
     return this.http.delete(this.baseUrl + "/api/Accounts/unlike-product/" + productId, {});
   }
 
+  getCurrentUser() {
+    return this.http.get(this.baseUrl + '/api/Users').pipe(
+      tap((res) => {
+          this.currentUser.set(res as User);
+        })
+      );
+  }
+
   getFavoriteProducts() {
     return this.http.get(this.baseUrl + '/api/Users/liked-product')
+  }
+
+  verifyAccount(queryParams: HttpParams) {
+    return this.http.get(this.baseUrl + '/api/Accounts/verify-email?', { params: queryParams });
+  }
+
+  sendVerificationEmail(email) {
+    return this.http.post(this.baseUrl + '/api/Accounts/send-verification-email', { email: email})
+  }
+
+  sendResetPasswordEmail(email: string) {
+    return this.http.post(this.baseUrl + "/api/Accounts/forgot-password", {email: email});
+  }
+
+  sendNewPass(newPass, param: HttpParams) {
+    return this.http.post(this.baseUrl + "/api/Accounts/reset-password?", {newPassword: newPass}, {params: param})
   }
 }

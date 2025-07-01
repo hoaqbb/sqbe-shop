@@ -7,17 +7,21 @@ using System.Security.Cryptography;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Options;
+using API.Helpers;
 
 namespace API.Services
 {
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _config;
+        private readonly JwtEmailSettings _emailSettings;
         private readonly string _googleClientId;
 
-        public TokenService(IConfiguration config)
+        public TokenService(IConfiguration config, IOptions<JwtEmailSettings> emailSettings)
         {
             _config = config;
+            _emailSettings = emailSettings.Value;
             _googleClientId = _config.GetSection("GoogleClientId").Value;
         }
 
@@ -141,6 +145,26 @@ namespace API.Services
                 Console.WriteLine(ex);
                 return null;
             }
+        }
+
+        public string GenerateEmailVerificationToken(User user)
+        {
+            var claims = GenerateClaims(user);
+
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_emailSettings.Key));
+            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+            var tokenOptions = new JwtSecurityToken(
+                //issuer: _options.Issuer,
+                //audience: _options.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(_emailSettings.ExpireMinutes),
+                signingCredentials: signinCredentials
+            );
+
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+            return tokenString;
         }
     }
 }
