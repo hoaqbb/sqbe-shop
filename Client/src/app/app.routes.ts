@@ -5,6 +5,9 @@ import { NotFoundComponent } from './shared/components/not-found/not-found.compo
 import { ServerErrorComponent } from './shared/components/server-error/server-error.component';
 import { ShopComponent } from './features/shop/shop.component';
 import { CartComponent } from './features/cart/cart.component';
+import { SearchComponent } from './features/search/search.component';
+import { ProductCategoryListComponent } from './features/products/product-category-list/product-category-list.component';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -18,7 +21,17 @@ export const routes: Routes = [
           import('./features/account/routes').then((r) => r.accountRoutes),
       },
       { path: 'products/:slug', component: ProductDetailsComponent },
+      {
+        path: 'categories/:categorySlug',
+        component: ProductCategoryListComponent,
+      },
       { path: 'cart', component: CartComponent },
+      { path: 'search', component: SearchComponent },
+      {
+        path: 'blog',
+        loadChildren: () =>
+          import('./features/blog/routes').then((r) => r.blogRoutes),
+      },
     ],
   },
   {

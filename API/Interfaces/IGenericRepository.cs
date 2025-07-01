@@ -7,6 +7,7 @@ namespace API.Interfaces
     {
         Task<IReadOnlyList<T>> GetAllAsync();
         Task<IReadOnlyList<TDto>> GetAllProjectedAsync<TDto>(AutoMapper.IConfigurationProvider config);
+        Task<IReadOnlyList<TDto>> GetAllProjectedAsync<TDto>(Expression<Func<T, bool>> predicate, AutoMapper.IConfigurationProvider config);
         Task<T?> FindByIdAsync(int id);
         Task<TDto?> GetSingleProjectedAsync<TDto>(Expression<Func<T, bool>> predicate, AutoMapper.IConfigurationProvider config);
         Task<T?> FindAsync(params object[] keyValues);

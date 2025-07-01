@@ -106,6 +106,12 @@ export class ShopService {
     params = params.append('keyword', productParams.keyword);
     params = params.append('pageSize', productParams.pageSize);
     params = params.append('pageIndex', productParams.pageNumber);
-    return this.http.get(this.baseUrl + '/api/Products/search', {params});
+
+  getBlogs() {
+    return this.http.get(this.baseUrl + '/api/Blogs');
+  }
+
+  getBlogBySlug(slug) {
+    return this.http.get(this.baseUrl + '/api/Blogs/' + slug);
   }
 }

@@ -1,0 +1,8 @@
+::ng-deep .ql-container {
+  font-size: large;
+  padding: 0;
+}
+
+::ng-deep.ql-editor {
+  padding: 0;
+}

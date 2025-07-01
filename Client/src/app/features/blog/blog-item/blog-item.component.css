@@ -1,0 +1,15 @@
+.blog-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Giới hạn 2 dòng cho tiêu đề */
+  -webkit-box-orient: vertical;
+}
+
+.blog-excerpt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Giới hạn 3 dòng cho mô tả */
+  -webkit-box-orient: vertical;
+}

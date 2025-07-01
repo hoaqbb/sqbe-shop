@@ -1,0 +1,17 @@
+<div class="d-flex flex-column cursor-pointer" routerLink="/blog/{{ blog.slug }}">
+  <img [src]="blog.thumbnailUrl" class="mb-2" alt="{{ blog.title }}" />
+  <h5 class="fw-bold blog-title">
+    <a
+      class="text-dark text-decoration-none hover-underline"
+    >
+      {{ blog.title }}
+    </a>
+  </h5>
+  <span class="text-muted small blog-excerpt">
+    {{ blog.excerpt }}
+  </span>
+  <p class="text-muted small mt-2">
+    <i class="pi pi-calendar me-1"></i> Ngày
+    {{ blog.createAt | date : "dd/MM/yyyy" }}
+  </p>
+</div>

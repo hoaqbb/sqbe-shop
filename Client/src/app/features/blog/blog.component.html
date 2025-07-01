@@ -1,0 +1,9 @@
+<div *ngIf="blogItems.length > 0" class="container py-4" style="margin: 100px auto">
+  <div class="row g-4">
+    @for (blog of blogItems; track blog.id) {
+      <div class="col-12 col-md-4">
+        <app-blog-item [blog]="blog"></app-blog-item>
+      </div>
+    }
+  </div>
+</div>

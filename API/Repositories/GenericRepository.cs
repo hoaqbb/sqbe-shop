@@ -73,6 +73,14 @@ namespace API.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IReadOnlyList<TDto>> GetAllProjectedAsync<TDto>(Expression<Func<T, bool>> predicate, AutoMapper.IConfigurationProvider config)
+        {
+            return await _dbSet
+                .Where(predicate)
+                .ProjectTo<TDto>(config)
+                .ToListAsync();
+        }
+
         public async Task<T?> GetSingleOrDefaultAsync(Expression<Func<T, bool>>? predicate = null)
         {
             IQueryable<T> query = _dbSet.Where(predicate);

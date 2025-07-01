@@ -1,0 +1,21 @@
+@if(blogDetail) {
+<div class="container-fluid" style="margin: 100px 0">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="blog-header">
+        <h1 class="title">{{ blogDetail.title }}</h1>
+        <p class="fst-italic">{{ blogDetail.createAt | date: "dd/MM/yyyy HH:mm a" }}</p>
+        <p class="fst-italic">{{ blogDetail.excerpt }}</p>
+      </div>
+
+      <div class="blog-content">
+        <quill-view-html
+          [content]="blogDetail.content"
+          theme="snow"
+          sanitize="true"
+        ></quill-view-html>
+      </div>
+    </div>
+  </div>
+</div>
+}
