@@ -5,6 +5,7 @@ import { FooterComponent } from '../layout/footer/footer.component';
 import { CartSidebarComponent } from '../cart/cart-sidebar/cart-sidebar.component';
 import { SearchSidebarComponent } from '../search/search-sidebar/search-sidebar.component';
 import { CartService } from '../../core/services/cart.service';
+import { ShopService } from '../../core/services/shop.service';
 
 @Component({
   selector: 'app-shop',
@@ -15,9 +16,14 @@ import { CartService } from '../../core/services/cart.service';
 })
 export class ShopComponent implements OnInit{
 
-  constructor(private cartService: CartService) { }
+  constructor(private cartService: CartService, private shopService: ShopService) { }
 
   ngOnInit(): void {
+    this.initShop();
+  }
+
+  initShop() {
     this.cartService.getCart().subscribe();
+    this.shopService.getItemsLastSee();
   }
 }

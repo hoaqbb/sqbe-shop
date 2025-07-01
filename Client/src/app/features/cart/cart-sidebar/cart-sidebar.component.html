@@ -2,11 +2,15 @@
   <p-sidebar [(visible)]="show" position="right">
     <h4>GIỎ HÀNG</h4>
     <div class="container">
-      @if(cartService.cart()?.cartItems) {
-        @for (cartItem of cartService.cart().cartItems; track $index) {
-        <!-- card sidebar item -->
+      @if(cartService.cart()?.cartItems) { @for (cartItem of
+      cartService.cart().cartItems; track $index) {
+      <!-- card sidebar item -->
+      <div class="d-flex justify-content-between">
         <div class="d-flex">
-          <a routerLink="/products/{{ cartItem.slug }}" (click)="sidebarService.closeAll()">
+          <a
+            routerLink="/products/{{ cartItem.slug }}"
+            (click)="sidebarService.closeAll()"
+          >
             <img
               src="{{
                 cartItem.photo || '../../../../../../assets/no-image.svg'
@@ -34,9 +38,7 @@
                     | number : "1.0" : "en-US"
                 }}đ</span
               >
-              <span
-                class="price ms-2 text-secondary"
-              >
+              <span class="price ms-2 text-secondary">
                 {{ cartItem.price | number : "1.0" : "en-US" }}đ
               </span>
               } @else {
@@ -48,27 +50,38 @@
               }
             </div>
           </div>
-          <span class="cursor-pointer" (click)="removeCartItem(cartItem.id)"
-            ><i class="pi pi-times fw-bold fs-6"></i
-          ></span>
         </div>
-        <!-- End card sidebar item -->
-        }
-      }
+
+        <span class="cursor-pointer" (click)="removeCartItem(cartItem.id)"
+          ><i class="pi pi-times fw-bold fs-6"></i
+        ></span>
+      </div>
+      <!-- End card sidebar item -->
+      } }
     </div>
     <ng-template pTemplate="footer">
       <div class="list-group m-1">
         <span class="line"></span>
         <div class="d-flex justify-content-between">
           <span>TOTAL</span>
-          <span>{{ cartService.amount() | number : "1.0" : "en-US" }}đ</span>
+          <span>{{ cartService.subtotal() | number : "1.0" : "en-US" }}đ</span>
         </div>
       </div>
       <div class="d-flex gap-2 mt-1 justify-content-between">
-        <button class="animated-btn" routerLink="/cart" (click)="sidebarService.closeAll()">
+        <button
+          class="animated-btn"
+          routerLink="/cart"
+          (click)="sidebarService.closeAll()"
+        >
           XEM GIỎ HÀNG
         </button>
-        <button class="animated-btn" (click)="checkout()">THANH TOÁN</button>
+        <button
+          class="animated-btn"
+          routerLink="/checkout"
+          (click)="sidebarService.closeAll()"
+        >
+          THANH TOÁN
+        </button>
       </div>
     </ng-template>
   </p-sidebar>

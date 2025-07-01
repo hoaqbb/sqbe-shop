@@ -14,9 +14,11 @@ import { DiscountPipe } from '../../../shared/pipes/discount.pipe';
   styleUrl: './cart-sidebar.component.css',
 })
 export class CartSidebarComponent {
+  constructor(
+    public sidebarService: SidebarService,
+    public cartService: CartService
+  ) {}
 
-  constructor(public sidebarService: SidebarService, public cartService: CartService) {}
-  
   get show() {
     return this.sidebarService.isOpen('cart');
   }
@@ -31,9 +33,5 @@ export class CartSidebarComponent {
 
   removeCartItem(cartItemId: number) {
     this.cartService.removeCartItem(cartItemId).subscribe();
-  }
-
-  checkout() {
-    this.sidebarService.closeAll();
   }
 }

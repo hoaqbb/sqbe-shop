@@ -34,12 +34,16 @@
   transition: all 0.5s ease-in-out;
 }
 
-.card:hover .animate {
-  opacity: 1;
+.card-img-wrapper.enable-hover-actions:hover .list-inline.animate {
   transform: translateY(0);
+  opacity: 1;
 }
 
-/* Loại bỏ hiệu ứng hover khi màn hình nhỏ hơn 768px (ví dụ: điện thoại) */
+.display {
+  display: flex;
+}
+
+/* Loại bỏ hiệu ứng hover khi màn hình nhỏ hơn 768px */
 @media (max-width: 768px) {
   .card:hover .main-image {
     opacity: 1;
@@ -51,14 +55,14 @@
 
   .card:hover .animate {
     opacity: 0;
-    transform: translateY(50px); /* Trở về trạng thái ban đầu */
+    transform: translateY(50px);
   }
 }
 
 .list-inline {
   display: flex;
   justify-content: center;
-  gap: 5px; /* Khoảng cách giữa 2 nút */
+  gap: 5px; 
 }
 
 .list-inline-item {

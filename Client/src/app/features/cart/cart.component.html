@@ -14,7 +14,7 @@
         } } @else {
         <div class="list-group align-items-center">
           <p class="text-center my-3">Giỏ hàng của bạn đang trống</p>
-          <a style="width: 25%; height: 40px" routerLink="/collections/all"
+          <a style="width: 25%; height: 40px" routerLink="/categories/all"
             ><button style="width: 100%; height: 100%">
               Tiếp tục mua hàng
             </button></a
@@ -34,7 +34,7 @@
         <div class="summary-total d-flex justify-content-between py-3">
           <h6>Tổng tiền:</h6>
           <h6 class="">
-            {{ cartService.amount() | number : "1.0" : "en-US" }}đ
+            {{ cartService.subtotal() | number : "1.0" : "en-US" }}đ
           </h6>
         </div>
         <div class="summary-action d-flex flex-column py-3">

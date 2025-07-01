@@ -2,7 +2,7 @@ import { Component, SecurityContext } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DiscountPipe } from '../../../shared/pipes/discount.pipe';
-import { ProductDetail, ProductVariant } from '../../../shared/models/product';
+import { Product, ProductDetail, ProductVariant } from '../../../shared/models/product';
 import { ShopService } from '../../../core/services/shop.service';
 import { ActivatedRoute } from '@angular/router';
 import { GalleryModule, ImageItem, GalleryItem } from 'ng-gallery';
@@ -12,11 +12,20 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { CartService } from '../../../core/services/cart.service';
 import { ToastrService } from 'ngx-toastr';
 import { SidebarService } from '../../../core/services/sidebar.service';
+import { DialogModule } from 'primeng/dialog';
+import { ProductItemComponent } from '../product-item/product-item.component';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, DiscountPipe, GalleryModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DiscountPipe,
+    GalleryModule,
+    DialogModule,
+    ProductItemComponent
+  ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
 })
@@ -28,29 +37,41 @@ export class ProductDetailsComponent {
   selectedColor: ColorVariant | null = null;
   selectedSize?: string;
   selectedVariantId: number | null;
+  sizeChartImageUrl: string = '';
 
   images: GalleryItem[] = [];
 
+  displaySizeChartDialog: boolean = false;
+
+  relatedProducts: Product[] = [];
+
   constructor(
-    private shopService: ShopService,
+    public shopService: ShopService,
     private cartService: CartService,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private sidebarService: SidebarService
+    private sidebarService: SidebarService,
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       this.slug = params.get('slug');
       this.getProductDetail(this.slug);
+      this.getRelatedProducts(this.slug);
     });
+  }
+
+  getRelatedProducts(slug) {
+    this.relatedProducts = this.shopService.getRelatedProducts(slug)
   }
 
   getProductDetail(slug: string) {
     if (slug) {
       this.shopService.getProductBySlug(this.slug).subscribe((res) => {
         this.productDetail = res;
+        // reset product imgs every get product details
+        this.images = [];
         this.productDetail.productImages.forEach((img) =>
           this.images.push(
             new ImageItem({ src: img.imageUrl, thumb: img.imageUrl })
@@ -65,6 +86,8 @@ export class ProductDetailsComponent {
 
         this.selectedColor = this.colorVariants[0];
         this.selectedSize = this.getFirstAvailableSize();
+
+        this.sizeChartImageUrl = this.getSizeChartByProductCategory(this.productDetail.category.slug);
       });
     }
   }
@@ -160,5 +183,24 @@ export class ProductDetailsComponent {
   //sanitizes the product description HTML content to prevent XSS attacks
   sanitizeHTML(html: string): string {
     return this.sanitizer.sanitize(SecurityContext.HTML, html) || '';
+  }
+
+  
+  //show size chart dialog
+  showSizeChartDialog(): void {
+    this.displaySizeChartDialog = true;
+  }
+
+  getSizeChartByProductCategory(category: string): string {
+    switch (category.toLowerCase()) {
+      case 'top':
+        return 'assets/top-size-chart.jpg';
+      case 'bottom':
+        return 'assets/bottom-size-chart.jpg';
+      case 'outerwear':
+        return 'assets/outerwear-size-chart.jpg';
+      default:
+        return '';
+    }
   }
 }

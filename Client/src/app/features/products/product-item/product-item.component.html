@@ -1,6 +1,13 @@
 @if(product) {
-<div class="card mb-4 cursor-pointer" routerLink="/products/{{ product.slug }}">
-  <div class="card-img-wrapper">
+<div
+  class="card mb-4 cursor-pointer"
+  (click)="shopService.addItemLastSee(product)"
+  routerLink="/products/{{ product.slug }}"
+>
+  <div
+    class="card-img-wrapper"
+    [ngClass]="{ 'enable-hover-actions': actionsOnHover }"
+  >
     <img
       class="main-image"
       src="{{ product.mainPhoto || '../../../../../../assets/no-image.svg' }}"
@@ -30,24 +37,29 @@
         [ngStyle]="{ 'background-color': color.colorCode }"
       >
       </span>
-      } @if (product.isLikedByCurrentUser) {
-      <span
-        class="position-absolute like-button liked cursor-pointer"
-        style="right: 0"
-        (click)="unlikeProduct(product.id); $event.stopPropagation()"
-        ><i
-          class="pi pi-heart-fill heart-icon"
-          style="color: #ff3040; font-size: 1.2rem"
-        ></i
-      ></span>
-      } @else {
-      <span
-        class="position-absolute like-button unliked cursor-pointer"
-        style="right: 0"
-        (click)="likeProduct(product.id); $event.stopPropagation()"
-        ><i class="pi pi-heart heart-icon" style="font-size: 1.2rem"></i
-      ></span>
       }
+      <div
+        [ngStyle]="actionsOnHover ? { display: 'block' } : { display: 'none' }"
+      >
+        @if (product.isLikedByCurrentUser) {
+        <span
+          class="position-absolute like-button liked cursor-pointer"
+          style="right: 0"
+          (click)="unlikeProduct(product.id); $event.stopPropagation()"
+          ><i
+            class="pi pi-heart-fill heart-icon"
+            style="color: #ff3040; font-size: 1.2rem"
+          ></i
+        ></span>
+        } @else {
+        <span
+          class="position-absolute like-button unliked cursor-pointer"
+          style="right: 0"
+          (click)="likeProduct(product.id); $event.stopPropagation()"
+          ><i class="pi pi-heart heart-icon" style="font-size: 1.2rem"></i
+        ></span>
+        }
+      </div>
     </div>
     <h6 class="card-title text-center mb-1">
       {{ product.name }}

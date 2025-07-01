@@ -8,7 +8,7 @@
       <div class="d-flex justify-content-between my-4">
         <h5>Sắp xếp</h5>
         <div>
-          <select formControlName="sort">
+          <select id="sort" formControlName="sort">
             <option value="dateDesc">MỚI NHẤT</option>
             <option value="dateAsc">CŨ NHẤT</option>
             <option value="priceDesc">GIÁ GIẢM DẦN</option>
@@ -32,9 +32,9 @@
       <div class="d-flex justify-content-between my-4">
         <h5>Thể loại</h5>
         <div>
-          <select formControlName="category">
+          <select id="category" formControlName="category">
             <option value="all">ALL</option>
-            @for (cat of shopService.categories(); track $index) {
+            @for (cat of shopService.categories; track $index) {
               <option [value]="cat.slug">{{cat.name | uppercase}}</option>
             }
             
@@ -43,20 +43,22 @@
       </div>
       }
 
-      @if(shopService.sizes()) {
+      @if(shopService.sizes) {
       <div class="my-4">
         <h5 class="mb-2">Kích thước</h5>
         <app-size-checkbox-group
+          id="size"
           formControlName="sizes"
-          [sizes]="shopService.sizes()"
+          [sizes]="shopService.sizes"
         ></app-size-checkbox-group>
       </div>
-      } @if(shopService.colors()) {
+      } @if(shopService.colors) {
       <div class="my-4">
         <h5 class="mb-2">Màu sắc</h5>
         <app-color-checkbox-group
+          id="color"
           formControlName="colors"
-          [colors]="shopService.colors()"
+          [colors]="shopService.colors"
         >
         </app-color-checkbox-group>
       </div>
@@ -89,13 +91,13 @@
     <ng-template pTemplate="footer">
       <div class="d-flex gap-2 mt-1 justify-content-between">
         <button
-          class="animated-btn fs-6"
+          class="reset-btn animated-btn fs-6"
           (click)="resetFilter(); sidebarService.closeAll()"
         >
           ĐẶT LẠI
         </button>
         <button
-          class="animated-btn fs-6"
+          class="apply-btn animated-btn fs-6"
           (click)="applyFilter()"
         >
           ÁP DỤNG

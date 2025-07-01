@@ -16,6 +16,7 @@ import { CheckoutItemComponent } from './checkout-item/checkout-item.component';
 import { ShopService } from '../../core/services/shop.service';
 import { OrderRequest } from '../../shared/models/order';
 import { OrderService } from '../../core/services/order.service';
+import { AccountService } from '../../core/services/account.service';
 
 @Component({
   selector: 'app-checkout',
@@ -46,6 +47,7 @@ export class CheckoutComponent implements OnInit {
     public cartService: CartService,
     private addressService: AddressService,
     private shopService: ShopService,
+    private accountService: AccountService,
     private orderService: OrderService,
     private route: Router,
     private toarstr: ToastrService
@@ -64,7 +66,30 @@ export class CheckoutComponent implements OnInit {
   }
 
   initializeCheckoutForm() {
-    this.checkoutForm = this.formBuilder.group({
+    if(this.accountService.currentUser()) {
+      let userInfo = this.accountService.currentUser();
+      this.checkoutForm = this.formBuilder.group({
+      fullname: [userInfo.lastname + ' ' + userInfo.firstname, Validators.required],
+      email: [userInfo.email, [Validators.required, Validators.email]],
+      phoneNumber: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(10),
+        ],
+      ],
+      street: ['', Validators.required],
+      province: ['', Validators.required],
+      district: ['', Validators.required],
+      ward: ['', Validators.required],
+      deliveryMethod: ['1', Validators.required],
+      paymentMethod: ['cod', Validators.required],
+      note: [''],
+      promotionCode: [''],
+    });
+    } else {
+      this.checkoutForm = this.formBuilder.group({
       fullname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: [
@@ -84,6 +109,8 @@ export class CheckoutComponent implements OnInit {
       note: [''],
       promotionCode: [''],
     });
+    }
+    
   }
 
   getProvinces() {

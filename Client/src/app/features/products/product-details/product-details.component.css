@@ -1,3 +1,17 @@
+/* style size chart dialog */
+::ng-deep p {
+  margin: 0 !important;
+}
+::ng-deep .p-dialog-header {
+  display: none;
+}
+
+::ng-deep .p-dialog-content {
+  padding: 0;
+  border-radius: 10px;
+}
+/* end style size chart dialog */
+
 .color-box {
   display: inline-block;
   width: 15px;
@@ -224,4 +238,9 @@ button.add-to-cart {
 }
 ::ng-deep .g-active-thumb {
   border: #000 solid 1px;
+}
+
+.size-dialog {
+  font-size: small;
+  cursor: pointer;
 }

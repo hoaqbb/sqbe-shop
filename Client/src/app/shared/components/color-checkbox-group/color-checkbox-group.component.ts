@@ -18,7 +18,7 @@ import { Color } from '../../models/color';
   styleUrl: './color-checkbox-group.component.css'
 })
 export class ColorCheckboxGroupComponent implements ControlValueAccessor{
-  @Input() colors: Color[] = [];
+  @Input() colors: any[] = [];
 
   selectedIds: number[] = [];
 

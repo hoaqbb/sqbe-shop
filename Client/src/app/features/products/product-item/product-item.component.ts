@@ -5,6 +5,7 @@ import { DiscountPipe } from '../../../shared/pipes/discount.pipe';
 import { RouterLink } from '@angular/router';
 import { AccountService } from '../../../core/services/account.service';
 import { ToastrService } from 'ngx-toastr';
+import { ShopService } from '../../../core/services/shop.service';
 
 @Component({
   selector: 'app-product-item',
@@ -15,21 +16,27 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ProductItemComponent {
   @Input() product!: Product;
+  @Input() actionsOnHover: boolean = true;
 
   constructor(
     private accountService: AccountService,
+    public shopService: ShopService,
     private toastr: ToastrService
   ) {}
 
   likeProduct(productId: string) {
-    this.accountService.likeProduct(productId).subscribe({
-      next: () => {
-        this.product.isLikedByCurrentUser = true;
-      },
-      error: (error) => {
-        this.toastr.error(error.error);
-      },
-    });
+    if (!this.accountService.currentUser()) {
+      return this.toastr.show('Vui lòng đăng nhập để tiếp tục.');
+    } else {
+      return this.accountService.likeProduct(productId).subscribe({
+        next: () => {
+          this.product.isLikedByCurrentUser = true;
+        },
+        error: (error) => {
+          this.toastr.error(error.error);
+        },
+      });
+    }
   }
 
   unlikeProduct(productId: string) {

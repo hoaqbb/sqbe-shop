@@ -31,8 +31,11 @@ export class ProductCategoryListComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       const categorySlug = params.get('categorySlug');
-      this.shopService.currentCategory.set(categorySlug);
-      this.shopService.resetProductFilterParams();
+
+      if(categorySlug !== this.shopService.currentCategory()) {
+        this.shopService.currentCategory.set(categorySlug);
+        this.shopService.resetProductFilterParams();
+      }
     });
   }
 
@@ -54,6 +57,7 @@ export class ProductCategoryListComponent implements OnInit {
   pageChanged(event: any) {
     const currentParams = this.shopService.productFilterParams();
     currentParams.pageNumber = event.page + 1;
+    this.shopService.setProductFilterParams(currentParams);
     this.getProductsByFilter(currentParams);
   }
 }

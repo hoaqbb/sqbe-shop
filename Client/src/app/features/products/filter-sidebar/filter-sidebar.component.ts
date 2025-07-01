@@ -1,4 +1,4 @@
-import { Component, effect, OnInit, signal } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { SidebarService } from '../../../core/services/sidebar.service';
 import { SidebarModule } from 'primeng/sidebar';
 import { CommonModule } from '@angular/common';
@@ -57,8 +57,9 @@ export class FilterSidebarComponent implements OnInit {
   resetFilterOnCategoryChange() {
     effect(
       () => {
-        const category = this.shopService.currentCategory();
-        if (category) {
+        const selectedCategory = this.shopService.productFilterParams().category;
+        const currentCategory = this.shopService.currentCategory();
+        if (selectedCategory !== currentCategory) {
           this.resetFilter();
         }
       },

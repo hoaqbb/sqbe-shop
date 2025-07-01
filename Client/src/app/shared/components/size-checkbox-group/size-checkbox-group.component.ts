@@ -17,7 +17,7 @@ import { Size } from '../../models/size';
   styleUrl: './size-checkbox-group.component.css'
 })
 export class SizeCheckboxGroupComponent implements ControlValueAccessor{
-  @Input() sizes: Size[] = [];
+  @Input() sizes: any[] = [];
 
   selectedIds: number[] = [];
 
