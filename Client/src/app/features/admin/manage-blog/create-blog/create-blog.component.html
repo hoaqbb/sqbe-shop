@@ -1,0 +1,87 @@
+<div class="container py-4">
+  <form [formGroup]="blogForm" (ngSubmit)="createBlog()" class="row g-4 justify-content-center">
+    <div class="col-12 col-md-8">
+      <div class="mb-3">
+        <input
+          [class.is-invalid]="blogForm.controls['title'].touched && blogForm.controls['title'].errors?.['required']"
+          type="text"
+          formControlName="title"
+          placeholder="Tiêu đề"
+          class="form-control fs-2 fw-bold"
+        />
+        <div
+          *ngIf="blogForm.controls['title'].errors?.['required']"
+          class="invalid-feedback mx-2"
+        >
+          *Vui lòng nhập Tiêu đề bài viết.
+        </div>
+      </div>
+
+      <input
+        type="text"
+        formControlName="excerpt"
+        placeholder="Mô tả ngắn"
+        class="form-control mb-3"
+      />
+      <div class="my-3">
+        <div
+          *ngIf="
+            blogForm.get('content')?.touched &&
+            blogForm.get('content')?.hasError('required')
+          "
+          class="text-danger mx-2"
+        >
+          *Vui lòng nhập nội dung bài viết.
+        </div>
+        <quill-editor
+          *ngIf="quillModules"
+          [modules]="quillModules"
+          formControlName="content"
+          [styles]="{ height: '100vh' }"
+          [required]="true"
+          theme="snow"
+        ></quill-editor>
+      </div>
+    </div>
+
+    <!-- Cột bên phải cho Thumbnail Upload -->
+    <div class="col-12 col-md-4"> <!-- Chiếm 4/12 cột trên md trở lên -->
+      <div class="card shadow-sm p-3 sticky-top" style="top: 20px;"> <!-- Sticky cho dễ nhìn khi cuộn -->
+        <h5 class="card-title mb-3">Ảnh Thumbnail <span class="text-danger">*</span></h5>
+        <div class="mb-3">
+          <!-- Preview Thumbnail -->
+        <div *ngIf="thumbnailUrl" class="text-center mb-3">
+          <img [src]="thumbnailUrl" alt="Preview Thumbnail" class="img-thumbnail img-fluid rounded" style="object-fit: cover;" />
+        </div>
+
+          <input
+            id="thumbnailFile"
+            type="file"
+            class="form-control"
+            (change)="onThumbnailSelected($event)"
+            accept="image/*"
+          />
+        </div>
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="isActive"
+            formControlName="status"
+          />
+          <label class="form-check-label" for="isActive"
+            >Trạng Thái Bài Viết</label
+          >
+        </div>
+      </div>
+
+      <div class="text-center my-4">
+    <button type="submit" class="btn btn-primary" [disabled]="blogForm.invalid">
+      <i class="pi pi-save me-2"></i> Tạo Bài Viết
+    </button>
+  </div>
+    </div>
+
+    
+  </form>
+</div>

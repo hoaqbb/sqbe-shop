@@ -6,5 +6,6 @@ namespace API.Interfaces
     {
         Task<IEnumerable<BlogDto>> GetBlogsAsync();
         Task<BlogDetailDto?> GetBlogBySlugAsync(string slug);
+        Task<BlogDto?> CreateBlogAsync(CreateBlogDto createBlogDto);
     }
 }

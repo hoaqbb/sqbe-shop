@@ -1,0 +1,22 @@
+:host ::ng-deep .ql-container {
+  font-size: x-large;
+}
+
+/* Tùy chỉnh cho ảnh thumbnail preview */
+.img-thumbnail {
+  border: 1px solid #dee2e6;
+  padding: 0.25rem;
+  background-color: #fff;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* Nếu muốn card thumbnail dính vào top khi cuộn */
+.sticky-top {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 20px; /* Khoảng cách từ đỉnh viewport */
+  z-index: 1020; /* Đảm bảo nó nằm trên các phần tử khác nếu cần */
+}

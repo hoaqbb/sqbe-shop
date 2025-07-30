@@ -1,7 +1,5 @@
-﻿using API.Data.Entities;
-using API.DTOs.BlogDtos;
+﻿using API.DTOs.BlogDtos;
 using API.Interfaces;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -11,18 +9,16 @@ namespace API.Controllers
     public class BlogsController : ControllerBase
     {
         private readonly IBlogService _blogService;
-        private readonly IMapper _mapper;
 
-        public BlogsController(IBlogService blogService, IMapper mapper)
+        public BlogsController(IBlogService blogService)
         {
             _blogService = blogService;
-            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult> GetBlogs()
         {
-            var blogs = await _blogService.GetBlogsAsync(true);
+            var blogs = await _blogService.GetBlogsAsync();
 
             return Ok(blogs);
         }
@@ -37,6 +33,16 @@ namespace API.Controllers
             }
 
             return Ok(blog);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateBlog([FromForm] CreateBlogDto createBlogDto)
+        {
+            var newBlog = await _blogService.CreateBlogAsync(createBlogDto);
+            if(newBlog == null)
+                return BadRequest("Failed to create blog.");
+
+            return Ok(newBlog);
         }
     }
 }
