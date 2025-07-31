@@ -10,6 +10,9 @@ namespace API.Helpers.MappingProfiles
         {
             CreateMap<RegisterDto, User>();
             CreateMap<User, UserDto>();
+            CreateMap<User, UserDetailDto>()
+                .ForMember(dest => dest.UserOrders, opt => opt.MapFrom(src =>
+                    src.Orders));
         }
     }
 }

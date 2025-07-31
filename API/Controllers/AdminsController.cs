@@ -1,4 +1,5 @@
 ﻿using API.Data.Entities;
+using API.DTOs.BlogDtos;
 using API.DTOs.CategoryDtos.cs;
 using API.DTOs.ColorDtos;
 using API.DTOs.OrderDtos;
@@ -99,6 +100,44 @@ namespace API.Controllers
                 .ToListAsync();
 
             return Ok(result);
+        }
+
+        [HttpGet("banners")]
+        public async Task<ActionResult> GetBanners()
+        {
+            var banners = await _unitOfWork.Repository<Banner>()
+                .GetAllAsync();
+
+            return Ok(banners);
+        }
+
+        [HttpGet("blogs")]
+        public async Task<ActionResult> GetBlogs()
+        {
+            var blogs = await _unitOfWork.Repository<Blog>()
+                .GetAllProjectedAsync<BlogDto>(_mapper.ConfigurationProvider);
+
+            return Ok(blogs);
+        }
+
+        [HttpGet("accounts")]
+        public async Task<ActionResult> GetAccounts()
+        {
+            var accounts = await _unitOfWork.Repository<User>()
+                .GetAllProjectedAsync<UserDto>(_mapper.ConfigurationProvider);
+
+            return Ok(accounts);
+        }
+
+        [HttpGet("account/{userId}")]
+        public async Task<ActionResult> GetAccountInfoById(Guid userId)
+        {
+            var accountInfo = await _context.Users
+                .Where(u => u.Id == userId)
+                .ProjectTo<UserDetailDto>(_mapper.ConfigurationProvider)
+                .SingleOrDefaultAsync();
+
+            return Ok(accountInfo);
         }
 
         [HttpGet("categories")]
@@ -219,7 +258,7 @@ namespace API.Controllers
 
             int selectedYear = 0;
             if (year.HasValue) selectedYear = year.Value;
-            else selectedYear = years.Last();
+            else selectedYear = years.First();
 
             List<int> months = Enumerable.Range(1, 12).ToList();
 

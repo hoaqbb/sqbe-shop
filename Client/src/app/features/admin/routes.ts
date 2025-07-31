@@ -5,6 +5,7 @@ import { ManageOrderComponent } from './manage-order/manage-order.component';
 import { ShopDashboardComponent } from './shop-dashboard/shop-dashboard.component';
 import { ManagePromotionComponent } from './manage-promotion/manage-promotion.component';
 import { ManageAccountComponent } from './manage-account/manage-account.component';
+import { ManageBannerComponent } from './manage-banner/manage-banner.component';
 import { ManageCategoryComponent } from './manage-category/manage-category.component';
 import { ManageVariantComponent } from './manage-variant/manage-variant.component';
 import { ManageBlogComponent } from './manage-blog/manage-blog.component';
@@ -19,6 +20,7 @@ export const adminRoutes: Route[] = [
       { path: 'product', component: ManageProductComponent },
       { path: 'order', component: ManageOrderComponent },
       { path: 'promotion', component: ManagePromotionComponent },
+      { path: 'banner', component: ManageBannerComponent },
       { path: 'blog', component: ManageBlogComponent },
       { path: 'blog/create', component: CreateBlogComponent },
       { path: 'account', component: ManageAccountComponent },

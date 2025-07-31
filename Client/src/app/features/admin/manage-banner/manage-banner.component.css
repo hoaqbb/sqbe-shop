@@ -1,0 +1,16 @@
+th,
+td {
+    border: 1px solid #ddd;
+}
+
+th {
+    text-align: center;
+    background-color: #f2f2f2;
+}
+
+td {
+    padding: 12px;
+    text-align: center;
+    /* align-items: center; */
+    vertical-align: middle;
+}

@@ -282,6 +282,18 @@ export class AdminService {
 
   //#endregion promotion
 
+  //#region banner
+
+  getBanners() {
+    return this.http.get(this.baseUrl + '/api/Admins/banners');
+  }
+
+  createBanner() {
+    return this.http.post(this.baseUrl + '/api/Banners', {});
+  }
+
+  //#endregion banner
+
   //#region category
 
   getCategories() {
@@ -311,6 +323,37 @@ export class AdminService {
 
   //#endregion category
 
+  //#region color
+
+  getColors() {
+    return this.http.get(this.baseUrl + '/api/Admins/colors').pipe(
+      tap((res: ColorDetail[]) => {
+        // this.colors.set(res);
+        this.colors = res;
+      })
+    );
+  }
+
+  createColor(newColor: any) {
+    return this.http.post(this.baseUrl + '/api/Colors', {
+      name: newColor.name,
+      colorCode: newColor.colorCode,
+    });
+  }
+
+  updateColor(updatedColor: any) {
+    return this.http.put(this.baseUrl + '/api/Colors/' + updatedColor.id, {
+      name: updatedColor.name,
+      colorCode: updatedColor.colorCode,
+    });
+  }
+
+  deleteColor(id) {
+    return this.http.delete(this.baseUrl + '/api/Colors/' + id);
+  }
+
+  //#endregion color
+
   //#region size
 
   getSizes() {
@@ -337,6 +380,25 @@ export class AdminService {
   }
 
   //#endregion size
+
+  //#region blog
+
+  getBlogs() {
+    return this.http.get(this.baseUrl + '/api/Admins/blogs');
+  }
+
+  createBlog(newBlog: any) {
+    const formData = new FormData();
+
+    formData.append('title', newBlog.title);
+    formData.append('excerpt', newBlog.excerpt);
+    formData.append('content', newBlog.content);
+    formData.append('status', newBlog.status);
+    formData.append('thumbnailFile', newBlog.thumbnailFile);
+    return this.http.post(this.baseUrl + '/api/Blogs', formData);
+  }
+
+  //#endregion blog
 
   //#region account
 

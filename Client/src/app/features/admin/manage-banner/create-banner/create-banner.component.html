@@ -1,0 +1,97 @@
+<div class="container-fluid py-4">
+  <div class="card shadow-sm p-4 custom-form-card">
+    <h4 class="card-title text-center mb-4">Thêm Banner Mới</h4>
+
+    <form
+      [formGroup]="createBannerForm"
+      (ngSubmit)="createBanner()"
+      class="row g-3"
+    >
+      <div class="col-md-6">
+        <label for="linkUrl" class="form-label">URL Liên Kết</label>
+        <input
+          id="linkUrl"
+          type="text"
+          formControlName="linkUrl"
+          class="form-control"
+          placeholder="VD: categories/top"
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="displayType" class="form-label"
+          >Loại Hiển Thị <span class="text-danger">*</span></label
+        >
+        <select
+          id="displayType"
+          formControlName="displayType"
+          class="form-select"
+        >
+          <option value="0">Slider</option>
+          <option value="1">Standee</option>
+          <option value="2">Hero</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label for="startDate" class="form-label">Ngày Bắt Đầu</label>
+        <p-calendar
+          id="startDate"
+          formControlName="startDate"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+          hourFormat="24"
+          appendTo="body"
+        ></p-calendar>
+      </div>
+      <div class="col-md-6">
+        <label for="endDate" class="form-label">Ngày Kết Thúc</label>
+        <p-calendar
+          id="endDate"
+          formControlName="endDate"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+          inputStyleClass="w-100"
+          hourFormat="24"
+          appendTo="body"
+        ></p-calendar>
+      </div>
+
+      <div class="col-12">
+        <label for="bannerFile" class="form-label"
+          >Chọn Ảnh Banner <span class="text-danger">*</span></label
+        >
+        <p-fileUpload
+          [multiple]="true"
+          accept="image/*"
+          maxFileSize="4000000"
+          (onSelect)="onSelectedFile($event)"
+        >
+        </p-fileUpload>
+      </div>
+
+      <div class="col-12 mt-4">
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="isActive"
+            formControlName="isActive"
+          />
+          <label class="form-check-label" for="isActive"
+            >Kích Hoạt Banner</label
+          >
+        </div>
+      </div>
+
+      <div class="col-12 text-center mt-5">
+        <button
+          type="submit"
+          class="btn btn-primary px-5 py-2"
+          [disabled]="createBannerForm.invalid"
+        >
+          Tạo Banner
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

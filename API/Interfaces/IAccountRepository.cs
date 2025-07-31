@@ -13,5 +13,6 @@ namespace API.Interfaces
         void RemoveUserToken(User user);
         Task LikeProductAsync(Guid userId, Guid productId);
         Task UnlikeProductAsync(Guid userId, Guid productId);
+        void ChangePassword(User user, string newPassword);
     }
 }

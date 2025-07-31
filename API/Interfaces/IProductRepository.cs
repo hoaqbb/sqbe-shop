@@ -13,5 +13,6 @@ namespace API.Interfaces
         Task<ProductColor> AddProductColorAsync(ProductColor productColor);
         Task<ProductVariant> AddProductVariantAsync(ProductVariant productVariant);
         Task<ProductImage> AddProductImageAsync(ProductImage productImage);
+        Task<List<ProductImage>> GetProductImagesAsync(Guid id);
     }
 }
