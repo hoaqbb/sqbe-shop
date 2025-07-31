@@ -229,7 +229,13 @@ export class AdminService {
     params = params.append('pageSize', orderParams.pageSize);
     params = params.append('pageIndex', orderParams.pageNumber);
 
-    return this.http.get(this.baseUrl + '/api/Admins/orders', { params });
+    return this.http
+      .get<Pagination<Order>>(this.baseUrl + '/api/Admins/orders', { params })
+      .pipe(
+        tap((res) => {
+          this.ordersWithFilter = res;
+        })
+      );
   }
 
   resetAdminOrderFilterParams() {
@@ -239,6 +245,16 @@ export class AdminService {
 
   setAdminOrderFilterParams(params: OrderFilterParams) {
     this.adminOrderFilterParams.set(params);
+  }
+  
+  getOrderById(id) {
+    return this.http.get(this.baseUrl + '/api/Admins/order/' + id);
+  }
+
+  updateOrderStatus(id, status) {
+    return this.http.put(this.baseUrl + '/api/Orders/' + id + '/status', {
+      status: status,
+    });
   }
 
   //#endregion order

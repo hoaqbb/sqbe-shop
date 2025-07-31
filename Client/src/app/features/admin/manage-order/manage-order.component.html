@@ -39,9 +39,9 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-order>
-          <tr (click)="orderDetailDialog(order.id)">
+          <tr (click)="showUpdateOrderStatusDialog(order.id)">
             <td class="text-align-center">{{ order.id }}</td>
-            <td>{{ order.createAt | date : "dd-MM-yyyy HH:mm a" }}</td>
+            <td>{{ order.createAt | date : "dd/MM/yyyy HH:mm a" }}</td>
             <td>{{ order.fullname }}</td>
             <td>{{ order.phoneNumber }}</td>
             <td>{{ order.address }}</td>
@@ -49,7 +49,7 @@
               {{ order.amount | number : "1.0" : "en-US" }}đ
             </td>
             <td class="text-align-center">{{ order.paymentMethod }}</td>
-            <td>{{ order.updateAt | date : "dd-MM-yyyy HH:mm a" || "" }}</td>
+            <td>{{ order.updateAt | date : "dd/MM/yyyy HH:mm a" || "" }}</td>
             <td class="text-center">
               @switch (order.status) { @case (0) {
               <p-tag [rounded]="true" severity="warning" value="Chờ xác nhận" />
@@ -63,7 +63,7 @@
                 severity="success"
                 value="Giao hàng thành công"
               />
-              } @default {
+              } @case (4) {
               <p-tag [rounded]="true" severity="danger" value="Đã hủy" />
               } }
             </td>
