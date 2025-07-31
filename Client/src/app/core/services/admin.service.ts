@@ -320,6 +320,18 @@ export class AdminService {
 
   //#endregion size
 
+  //#region account
+
+  getAccounts() {
+    return this.http.get(this.baseUrl + '/api/Admins/accounts');
+  }
+
+  getAccountInfo(id) {
+    return this.http.get(this.baseUrl + '/api/Admins/account/' + id);
+  }
+
+  //#endregion account
+
   //#region dashboard
 
   getOverview() {

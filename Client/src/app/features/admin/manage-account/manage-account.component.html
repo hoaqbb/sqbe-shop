@@ -1,0 +1,73 @@
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-dark">Quản lý tài khoản</h1>
+</div>
+
+@if(paginatedAccounts) {
+<p-table
+    [value]="paginatedAccounts"
+    [rowHover]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Mã tài khoản</th>
+        <th pSortableColumn="name">
+          Họ<p-sortIcon field="name" />
+        </th>
+        <th>Tên</th>
+        <th>Email</th>
+        <th>Giới tính</th>
+        <th>Ngày sinh</th>
+        <th>Vai trò</th>
+        <th>Loại tài khoản</th>
+        <th pSortableColumn="createAt">
+          Ngày tạo <p-sortIcon field="createAt" />
+        </th>
+        <th pSortableColumn="status">
+          Trạng thái<p-sortIcon field="status" />
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-account>
+      <tr (click)="getAccountDetail(account.id)">
+        <td>
+          {{ account.id }}
+        </td>
+        <td>
+          {{ account.lastname }}
+        </td>
+        <td>
+          {{ account.firstname }}
+        </td>
+        <td>
+          {{ account.email }}
+        </td>
+        <td>
+          @switch (account.gender) { @case (0) {
+          Nam
+          } @case (1) {
+          Nữ
+          } }
+        </td>
+        <td>
+          {{ account.dateOfBirth | date: 'dd/MM/yyyy' }}
+        </td>
+        <td>
+          {{ account.role }}
+        </td>
+        <td>
+          {{ account.provider }}
+        </td>
+        <td>{{ account.createAt | date : "dd-MM-yyyy HH:mm a" }}</td>
+
+        <td>
+          @switch (account.isAuthenticated) { @case (true) {
+          <p-tag [rounded]="true" severity="success" value="Đã xác thực" />
+          } @case (false) {
+          <p-tag [rounded]="true" severity="danger" value="Chưa xác thực" />
+          } }
+        </td>
+
+      </tr>
+    </ng-template>
+  </p-table>
+  }

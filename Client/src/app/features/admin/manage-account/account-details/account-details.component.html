@@ -1,0 +1,78 @@
+<div *ngIf="userDetail" class="row">
+  <div class="col-2">
+    <div class="d-flex justify-content-between">
+      <p class="fw-bold">Email:</p>
+      <p>
+        {{ userDetail.email }}
+      </p>
+      @if(userDetail.isAuthenticated) {
+      <p class="text-success">(đã xác thực)</p>
+      } @else {
+      <p class="text-danger">(chưa xác thực)</p>
+      }
+    </div>
+    <div class="d-flex justify-content-between">
+      <p class="fw-bold">Giới tính:</p>
+      @if(userDetail.gender) {
+      <p>Nữ</p>
+      } @else {
+      <p>Nam</p>
+      }
+    </div>
+    <div class="d-flex justify-content-between">
+      <p class="fw-bold">Ngày sinh:</p>
+      <p>
+        {{ userDetail.dateOfBirth | date : "dd/MM/yyyy" }}
+      </p>
+    </div>
+    <div class="d-flex">
+      <p class="me-1">Giới tính:</p>
+    </div>
+  </div>
+
+  <div class="col-10">
+    <h3>Đơn hàng</h3>
+    <p-table rowHover="true" [value]="userDetail.userOrders">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Mã đơn hàng</th>
+          <th>Ngày tạo</th>
+          <th>Người nhận</th>
+          <th>SĐT</th>
+          <th>Địa chỉ</th>
+          <th>Tổng tiền</th>
+          <th>Phương thức thanh toán</th>
+          <th>Trạng thái</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-order>
+        <tr routerLink="order/{{ order.id }}">
+          <td class="align-center">{{ order.id }}</td>
+          <td>{{ order.createAt | date : "dd-MM-yyyy HH:mm a" }}</td>
+          <td>{{ order.fullname }}</td>
+          <td>{{ order.phoneNumber }}</td>
+          <td>{{ order.address }}</td>
+          <td>{{ order.amount | number : "1.0" : "en-US" }}đ</td>
+          <td class="align-center">{{ order.paymentMethod }}</td>
+          <td class="text-center">
+            @switch (order.status) { @case (0) {
+            <p-tag [rounded]="true" severity="warning" value="Chờ xác nhận" />
+            } @case (1) {
+            <p-tag [rounded]="true" value="Đã xác nhận" />
+            } @case (2) {
+            <p-tag [rounded]="true" severity="info" value="Đang giao hàng" />
+            } @case (3) {
+            <p-tag
+              [rounded]="true"
+              severity="success"
+              value="Giao hàng thành công"
+            />
+            } @default {
+            <p-tag [rounded]="true" severity="danger" value="Đã hủy" />
+            } }
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
