@@ -63,6 +63,34 @@ namespace API.Controllers
             return Ok(product);
         }
 
+        [HttpGet("orders")]
+        public async Task<ActionResult> GetOrders([FromQuery] AdminOrderFilterParams param)
+        {
+            var spec = new AdminOrderFilterSpecification(param);
+
+            var result = await CreatePaginatedResult<Order, OrderDto>(_unitOfWork.Repository<Order>(), spec, param.PageIndex, param.PageSize, _mapper.ConfigurationProvider);
+
+            return Ok(result);
+        }
+
+        [HttpGet("order/{id}")]
+        public async Task<ActionResult> GetOrderById(Guid id)
+        {
+            //in order service have a func, check it
+            var order = await _context.Orders
+                .Where(x => x.Id == id)
+                .ProjectTo<OrderDetailDto>(_mapper.ConfigurationProvider)
+                .SingleOrDefaultAsync();
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(order);
+
+        }
+
         [HttpGet("promotions")]
         public async Task<ActionResult> GetPromotions()
         {

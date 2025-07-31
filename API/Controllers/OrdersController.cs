@@ -57,5 +57,18 @@ namespace API.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id:Guid}/status")]
+        public async Task<ActionResult> UpdateOrderStatus(Guid id, UpdateOrderStatus orderStatus)
+        {
+            var result = await _orderService.UpdateOrderStatusAsync(id, orderStatus.Status);
+
+            if(result)
+            {
+                return NoContent();
+            }
+
+            return BadRequest();
+        }
     }
 }

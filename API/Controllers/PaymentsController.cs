@@ -1,7 +1,8 @@
 ﻿using API.Data.Entities;
 using API.Data.Enums;
-using API.Extensions;
+using API.DTOs.OrderDtos;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
@@ -15,17 +16,21 @@ namespace API.Controllers
         private readonly IVnPayService _vnPayService;
         private readonly EcommerceDbContext _context;
         private readonly IPayPalService _payPalService;
+        private readonly IEmailSender _emailSender;
+        private readonly IMapper _mapper;
 
-        public PaymentsController(IUnitOfWork unitOfWork, IVnPayService vnPayService, EcommerceDbContext context, IPayPalService payPalService)
+        public PaymentsController(IUnitOfWork unitOfWork, IVnPayService vnPayService, EcommerceDbContext context, IPayPalService payPalService, IEmailSender emailSender, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _vnPayService = vnPayService;
             _context = context;
             _payPalService = payPalService;
+            _emailSender = emailSender;
+            _mapper = mapper;
         }
 
         [HttpGet("vnpay-callback")]
-        public async Task<IActionResult> VnPayPaymentCallback()
+        public async Task<ActionResult> VnPayPaymentCallback()
         {
             try
             {
@@ -39,6 +44,7 @@ namespace API.Controllers
 
                 var payment = await _context.Payments
                     .Include(x => x.Order)
+                        .ThenInclude(x => x.OrderItems)
                     .SingleOrDefaultAsync(x => x.OrderId == vnPayResponse.OrderId);
                 if (payment == null)
                 {
@@ -59,7 +65,7 @@ namespace API.Controllers
         }
 
         [HttpGet("paypal-callback")]
-        public async Task<IActionResult> PaypalExecute()
+        public async Task<ActionResult> PaypalExecute()
         {
             try
             {
@@ -79,6 +85,7 @@ namespace API.Controllers
 
                 var payment = await _context.Payments
                     .Include(x => x.Order)
+                        .ThenInclude(x => x.OrderItems)
                     .SingleOrDefaultAsync(x =>
                         x.OrderId == paypalResponse.OrderId);
 
@@ -100,7 +107,7 @@ namespace API.Controllers
             }
         }
 
-        private async Task<IActionResult> ProcessSuccessfulPayment(Order order, Payment payment, string transactionId)
+        private async Task<ActionResult> ProcessSuccessfulPayment(Order order, Payment payment, string transactionId)
         {
             try
             {
@@ -119,6 +126,9 @@ namespace API.Controllers
                 
                 await _context.SaveChangesAsync();
                 await _unitOfWork.CommitAsync();
+
+                var mapOrderToOrderDetail = _mapper.Map<OrderDetailDto>(order);
+                await _emailSender.SendOrderConfirmationEmailAsync(mapOrderToOrderDetail);
 
                 return Ok();
             }
