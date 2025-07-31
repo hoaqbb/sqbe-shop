@@ -67,3 +67,12 @@
   .p-highlight {
     color: #000;
   }
+
+  /* change the color of the step module in primeng */
+  a.p-menuitem-link{
+    text-decoration: none;
+  }
+
+  .p-steps .p-steps-item.p-highlight .p-steps-number {
+    background: #000;
+  }

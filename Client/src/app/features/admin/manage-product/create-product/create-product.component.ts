@@ -8,14 +8,14 @@ import {
 } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
 import { EditorModule } from 'primeng/editor';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ShopService } from '../../../../core/services/shop.service';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ColorCheckboxGroupComponent } from '../../../../shared/components/color-checkbox-group/color-checkbox-group.component';
 import { SizeCheckboxGroupComponent } from '../../../../shared/components/size-checkbox-group/size-checkbox-group.component';
 import { CreateProduct } from '../../../../shared/models/product';
 import { AdminService } from '../../../../core/services/admin.service';
 import { ToastrService } from 'ngx-toastr';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { AdminProductFilterParams } from '../../../../shared/models/adminParams';
 
 @Component({
   selector: 'app-create-product',
@@ -42,8 +42,7 @@ export class CreateProductComponent implements OnInit {
   constructor(
     private ref: DynamicDialogRef,
     private formBuilder: FormBuilder,
-    public shopService: ShopService,
-    private adminService: AdminService,
+    public adminService: AdminService,
     private toastr: ToastrService
   ) {}
 
@@ -79,6 +78,7 @@ export class CreateProductComponent implements OnInit {
 
     this.adminService.createNewProduct(product).subscribe({
       next: (response) => {
+        this.adminService.adminProductFilterParams.set(new AdminProductFilterParams());
         this.ref.destroy()
         this.toastr.success('Thêm sản phẩm thành công!');
       },

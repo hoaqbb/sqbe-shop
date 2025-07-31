@@ -38,7 +38,7 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
               // Logout the user and redirect to login page
               isRefreshing = false;
               accountService.removeCurrentUserSource();
-              router.navigateByUrl('/login');
+              // router.navigateByUrl('/login');
               return throwError(
                 () => new Error('Session expired. Please login again.')
               );

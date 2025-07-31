@@ -261,7 +261,7 @@ export class AdminService {
 
   //#region promotion
   getPromotions() {
-    if(this.promotions.length > 0) return null;
+    if (this.promotions.length > 0) return null;
     return this.http.get(this.baseUrl + '/api/Admins/promotions');
   }
 
@@ -327,7 +327,9 @@ export class AdminService {
   }
 
   updateSize(updatedSize: any) {
-    return this.http.put(this.baseUrl + '/api/Sizes/' + updatedSize.id, { name: updatedSize.name });
+    return this.http.put(this.baseUrl + '/api/Sizes/' + updatedSize.id, {
+      name: updatedSize.name,
+    });
   }
 
   deleteSize(id) {

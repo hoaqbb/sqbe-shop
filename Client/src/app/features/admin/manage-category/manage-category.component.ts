@@ -152,9 +152,8 @@ export class ManageCategoryComponent implements OnInit {
     this.isCreateFormVisible = !this.isCreateFormVisible;
   }
 
-  manageUpdateForm(id) {
+  manageUpdateForm(category) {
     if (this.isUpdateFormVisible == false) {
-      const category = this.adminService.categories.find((c) => c.id === id);
       this.initializeUpdateForm(category);
       this.isUpdateFormVisible = !this.isUpdateFormVisible;
     } else {

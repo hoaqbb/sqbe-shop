@@ -1,10 +1,12 @@
 <div class="">
+  <h4 class="card-title text-center mb-2">Thêm Sản Phẩm</h4>
   <form [formGroup]="createProductForm" (ngSubmit)="createProduct()">
     <div class="mb-3">
       <label for="name" class="form-label fw-bold"
         >Tên sản phẩm <small class="text-danger">*</small></label
       >
       <input
+        id="name"
         type="text"
         formControlName="name"
         [class.is-invalid]="
@@ -26,50 +28,51 @@
       <label for="price" class="form-label fw-bold"
         >Giá sản phẩm <small class="text-danger">*</small></label
       >
-      <p-inputNumber formControlName="price" min="0" [max]="maxPrice" />
+      <p-inputNumber id="price" formControlName="price" min="0" [max]="maxPrice" />
     </div>
     <div class="mb-3 list-group">
       <label for="discount" class="form-label fw-bold">Giảm giá (%)</label>
-      <p-inputNumber formControlName="discount" min="0" max="100" />
+      <p-inputNumber id="discount" formControlName="discount" min="0" max="100" />
     </div>
     <div class="mb-3">
       <label for="description" class="form-label fw-bold"
         >Mô tả <small class="text-danger">*</small></label
       >
-      <p-editor formControlName="description" [style]="{ height: '150px' }" />
+      <p-editor id="description" formControlName="description" [style]="{ height: '150px' }" />
     </div>
     <div class="mb-3">
       <label for="category" class="form-label fw-bold"
         >Thể loại <small class="text-danger">*</small></label
       >
       <select
-        *ngIf="shopService.categories()"
+        id="category"
+        *ngIf="adminService.categories.length > 0"
         formControlName="category"
         class="form-select"
       >
-        <option *ngFor="let item of shopService.categories()" [value]="item.id">
+        <option *ngFor="let item of adminService.categories" [value]="item.id">
           {{ item.name }}
         </option>
       </select>
     </div>
-    <div *ngIf="shopService.colors()" class="mb-3 fw-bold">
+    <div *ngIf="adminService.colors.length > 0" class="mb-3 fw-bold">
       <label for="productColors" class="form-label fw-bold"
         >Màu sản phẩm <small class="text-danger">*</small></label
       >
       <app-color-checkbox-group
         formControlName="productColors"
-        [colors]="shopService.colors()"
+        [colors]="adminService.colors"
       >
       </app-color-checkbox-group>
     </div>
 
-    <div *ngIf="shopService.sizes()" class="mb-3 fw-bold">
+    <div *ngIf="adminService.sizes.length > 0" class="mb-3 fw-bold">
       <label for="productSizes" class="form-label fw-bold"
         >Size sản phẩm <small class="text-danger">*</small></label
       >
       <app-size-checkbox-group
         formControlName="productSizes"
-        [sizes]="shopService.sizes()"
+        [sizes]="adminService.sizes"
       ></app-size-checkbox-group>
     </div>
 
@@ -79,6 +82,7 @@
         <div class="col m-2">
           <div class="card flex justify-content-center">
             <p-fileUpload
+              id="mainImage"
               [multiple]="false"
               accept="image/*"
               showUploadButton="false"
@@ -96,6 +100,7 @@
         <div class="col m-2">
           <div class="card flex justify-content-center">
             <p-fileUpload
+              id="subImage"
               [multiple]="false"
               accept="image/*"
               showUploadButton="false"
@@ -113,6 +118,7 @@
 
       <div class="row">
         <p-fileUpload
+          id="otherImages"
           [multiple]="true"
           accept="image/*"
           maxFileSize="4000000"
@@ -126,7 +132,7 @@
       <button
         [disabled]="createProductForm.invalid"
         type="submit"
-        class="btn btn-success"
+        class="create-btn btn btn-success"
       >
         Thêm sản phẩm
       </button>

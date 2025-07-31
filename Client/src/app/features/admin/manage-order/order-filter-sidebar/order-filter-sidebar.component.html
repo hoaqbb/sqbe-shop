@@ -8,7 +8,7 @@
       <div class="d-flex justify-content-between my-4">
         <h5>Sắp xếp</h5>
         <div>
-          <select formControlName="sort">
+          <select id="sort" formControlName="sort">
             <option value="dateDesc">MỚI NHẤT</option>
             <option value="dateAsc">CŨ NHẤT</option>
             <option value="amountDesc">GIÁ GIẢM DẦN</option>
@@ -20,7 +20,7 @@
       <div class="d-flex justify-content-between my-4">
         <h5>Trạng thái</h5>
         <div>
-          <select formControlName="status">
+          <select id="status" formControlName="status">
             <option [ngValue]="null">TẤT CẢ</option>
             <option [ngValue]="0">CHỜ XÁC NHẬN</option>
             <option [ngValue]="1">ĐÃ XÁC NHẬN</option>
@@ -34,7 +34,7 @@
       <div class="d-flex justify-content-between my-4">
         <h5>Phương thức thanh toán</h5>
         <div>
-          <select formControlName="paymentMethod">
+          <select id="paymentMethod" formControlName="paymentMethod">
             <option [ngValue]="null">TẤT CẢ</option>
             <option [ngValue]="'COD'">COD</option>
             <option [ngValue]="'VnPay'">VnPay</option>
@@ -73,12 +73,12 @@
     <ng-template pTemplate="footer">
       <div class="d-flex gap-2 mt-1 justify-content-between">
         <button
-          class="animated-btn fs-6"
+          class="reset-btn animated-btn fs-6"
           (click)="resetFilter(); sidebarService.closeAll()"
         >
           ĐẶT LẠI
         </button>
-        <button class="animated-btn fs-6" (click)="applyFilter()">
+        <button class="apply-btn animated-btn fs-6" (click)="applyFilter()">
           ÁP DỤNG
         </button>
       </div>

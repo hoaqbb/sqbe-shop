@@ -36,7 +36,7 @@
         </form>
       </div>
 
-      <div *ngIf="isUpdateFormVisible" class="create-form">
+      <div *ngIf="isUpdateFormVisible" class="update-form">
         <h4>Cập nhật thể loại</h4>
         <form [formGroup]="updateCategoryForm" (ngSubmit)="updateCategory()">
           <app-text-input
@@ -120,7 +120,7 @@
             [rounded]="true"
             [outlined]="true"
             severity="success"
-            (onClick)="manageUpdateForm(category.id)"
+            (onClick)="manageUpdateForm(category)"
           />
 
           <p-button

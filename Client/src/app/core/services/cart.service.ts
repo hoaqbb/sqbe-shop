@@ -12,7 +12,7 @@ export class CartService {
   baseUrl = environment.apiUrl;
   cart = signal<Cart>(new Cart());
   count = signal<number>(0);
-  amount = signal<number>(0);
+  subtotal = signal<number>(0);
 
   constructor(private http: HttpClient, private toastr: ToastrService) { }
 
@@ -103,6 +103,6 @@ export class CartService {
         return amount;
       }, 0)
     })
-    this.amount.set(calculate());
+    this.subtotal.set(calculate());
   }
 }

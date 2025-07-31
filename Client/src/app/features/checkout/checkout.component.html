@@ -5,22 +5,26 @@
         <h2>SQ&BE Shop</h2>
         <h5>Thông tin giao hàng</h5>
         <app-text-input
+          id="fullname"
           [formControl]="checkoutForm.controls['fullname']"
           [label]="'Họ và tên'"
         >
         </app-text-input>
         <app-text-input
+          id="email"
           [formControl]="checkoutForm.controls['email']"
           [label]="'Email'"
         >
         </app-text-input>
         <app-text-input
+          id="phoneNumber"
           [formControl]="checkoutForm.controls['phoneNumber']"
           [label]="'Số điện thoại'"
           [type]="'number'"
         >
         </app-text-input>
         <app-text-input
+          id="street"
           [formControl]="checkoutForm.controls['street']"
           [label]="'Địa chỉ'"
         >
@@ -180,6 +184,7 @@
           >
           <div class="list-group p-3">
             <button
+              id="checkout-btn"
               type="submit"
               class="animated-btn btn btn-success"
               [disabled]="checkoutForm.invalid"
@@ -249,6 +254,7 @@
             <div class="mb-3">
               <h5>Ghi chú đơn hàng</h5>
               <textarea
+                id="note"
                 class="form-control"
                 formControlName="note"
                 rows="3"

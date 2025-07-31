@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AdminService } from '../../core/services/admin.service';
+import { AccountService } from '../../core/services/account.service';
 
 @Component({
   selector: 'app-admin',
@@ -10,11 +11,13 @@ import { AdminService } from '../../core/services/admin.service';
   styleUrl: './admin.component.css'
 })
 export class AdminComponent implements OnInit{
+  userFullname: string;
 
-  constructor(private adminService: AdminService) {}
+  constructor(private adminService: AdminService, private accountService: AccountService) {}
 
   ngOnInit(): void {
     this.initAdminPage();
+    this.getUserFullname();
   }
 
   initAdminPage() {
@@ -36,5 +39,9 @@ export class AdminComponent implements OnInit{
       next: (response: any) => {},
       error: (error: any) => console.log(error)
     })
+  }
+
+  getUserFullname() {
+    this.userFullname = this.accountService.currentUser().lastname + ' ' + this.accountService.currentUser().firstname;
   }
 }

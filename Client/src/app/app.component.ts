@@ -13,12 +13,10 @@ import { NgxSpinnerModule } from 'ngx-spinner';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  constructor(
-    private accountService: AccountService,
-    private shopService: ShopService
-  ) {}
+  constructor(private accountService: AccountService, private shopService: ShopService) {}
 
   ngOnInit(): void {
+    this.accountService.getCurrentUser().subscribe();
     this.initApp();
   }
 

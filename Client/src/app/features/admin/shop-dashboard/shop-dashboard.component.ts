@@ -39,7 +39,7 @@ export class ShopDashboardComponent implements OnInit {
   getRevenueChart() {
     this.adminService.getRevenue().subscribe((res: any) => {
       this.revenueData = res;
-      this.selectedYear = this.revenueData.years.at(-1); //get last element of array
+      this.selectedYear = this.revenueData.years.at(0); //get first element of array
       this.chartInit();
     });
   }

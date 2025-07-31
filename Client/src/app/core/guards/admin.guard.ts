@@ -6,7 +6,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
   const accountService = inject(AccountService);
   const router = inject(Router);
 
-  if(accountService.currentUser().role === 'Admin') return true;
+  if(accountService.currentUser() && accountService.currentUser().role === 'Admin') return true;
 
   router.navigateByUrl('not-found');
 
